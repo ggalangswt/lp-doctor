@@ -1,11 +1,17 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
 import { config } from "./config.js";
+import { buildHealthResponse } from "./health.js";
 import { logger } from "./logger.js";
 import { diagnoseHandler } from "./routes/diagnose.js";
 import { migrateRecordedHandler } from "./routes/migrate.js";
+import { ensWriter } from "./services/ensWriter.js";
+import { ogChain } from "./services/ogChain.js";
+import { ogCompute } from "./services/ogCompute.js";
+import { ogStorage } from "./services/ogStorage.js";
 import { reportCache } from "./services/reportCache.js";
 import { subgraph } from "./services/subgraph.js";
+import { tradingApi } from "./services/tradingApi.js";
 import { deriveV4Positions } from "./services/v4Aggregator.js";
 import { v4PositionManager } from "./services/v4PositionManager.js";
 
@@ -14,15 +20,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/health", (_req: Request, res: Response) => {
-  res.json({
-    status: "ok",
-    service: "lpdoctor-server",
+function readHealth() {
+  return buildHealthResponse({
     env: config.NODE_ENV,
-    subgraph: subgraph.isReady() ? "ready" : "no-api-key",
-    subgraphV4: subgraph.isReadyV4() ? "ready" : "no-api-key",
-    v4PositionManager: v4PositionManager.isReady() ? "ready" : "no-rpc",
+    port: config.PORT,
+    chainId: config.OG_CHAIN_ID,
+    databaseConfigured: Boolean(config.DATABASE_URL),
+    redisConfigured: Boolean(config.REDIS_URL),
+    galileoRpcConfigured: Boolean(config.OG_GALILEO_RPC),
+    reportsContractConfigured: Boolean(config.LPDOCTOR_REPORTS_CONTRACT),
+    agentContractConfigured: Boolean(config.LPDOCTOR_AGENT_CONTRACT),
+    agentTokenId: config.LPDOCTOR_AGENT_TOKEN_ID,
+    subgraphV3Ready: subgraph.isReady(),
+    subgraphV4Ready: subgraph.isReadyV4(),
+    v4PositionManagerReady: v4PositionManager.isReady(),
+    tradingApiReady: tradingApi.isReady(),
+    storageReady: ogStorage.isReady(),
+    anchorReady: ogChain.isReady(),
+    computeReady: ogCompute.isReady(),
+    ensReady: ensWriter.isReady(),
   });
+}
+
+app.get("/health", (_req: Request, res: Response) => {
+  res.json(readHealth());
 });
 
 app.get<{ address: string }>(
@@ -100,6 +121,35 @@ app.get<{ rootHash: string }>("/api/report/:rootHash", (req, res) => {
   res.json(cached);
 });
 
-app.listen(config.PORT, () => {
+const server = app.listen(config.PORT, () => {
   logger.info(`lpdoctor-server listening on :${config.PORT}`);
+  const health = readHealth();
+  logger.info(
+    [
+      "backend readiness",
+      `readPath=${health.mode.readPath}`,
+      `writePath=${health.mode.writePath}`,
+      `chain=${health.chain.network}:${health.chain.chainId}`,
+      `database=${health.dependencies.database}`,
+      `redis=${health.dependencies.redis}`,
+      `reports=${health.chain.reportsContract}`,
+      `agent=${health.chain.agentContract}`,
+      `agentToken=${health.chain.agentToken}`,
+      `subgraphV3=${health.dependencies.subgraphV3}`,
+      `subgraphV4=${health.dependencies.subgraphV4}`,
+      `v4pm=${health.dependencies.v4PositionManager}`,
+      `storage=${health.adapters.storage}`,
+      `anchor=${health.adapters.anchor}`,
+      `compute=${health.adapters.compute}`,
+      `ens=${health.adapters.ens}`,
+    ].join(" "),
+  );
+});
+
+server.on("error", (err) => {
+  logger.error(
+    `lpdoctor-server failed to bind :${config.PORT}: ${
+      err instanceof Error ? err.message : String(err)
+    }`,
+  );
 });
