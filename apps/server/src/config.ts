@@ -1,11 +1,16 @@
 import { z } from "zod";
 
+const optionalUrl = z.preprocess(
+  (value) => (value === "" ? undefined : value),
+  z.string().url().optional(),
+);
+
 const schema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().int().positive().default(3001),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: optionalUrl,
   REDIS_URL: z.string().default("redis://localhost:6379"),
 
   THE_GRAPH_KEY: z.string().optional(),
