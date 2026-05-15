@@ -1,5 +1,6 @@
 // Typed fetch wrapper for the LPDoctor server. The vite dev server proxies
-// /api and /health to localhost:3001 — see apps/web/vite.config.ts.
+// /api and /health to the configured backend base URL — see
+// apps/web/vite.config.ts.
 
 export interface V3PositionRaw {
   id: string;
