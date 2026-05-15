@@ -1112,7 +1112,7 @@ function HeroComposition({ nav }: { nav: (path: string) => void }) {
       {/* Wireframe grid in this zone */}
       <div
         className="lp-grid-bg"
-        style={{ borderRadius: 3, border: "1px solid var(--lp-border-soft)" }}
+        style={{ borderRadius: 3 }}
       />
 
       {/* Panel B: verdict.rootHash — upper-right, static, behind */}
@@ -1142,7 +1142,7 @@ function HeroComposition({ nav }: { nav: (path: string) => void }) {
               <span className="lp-tone-verified" style={{ fontWeight: 700, fontSize: 9 }}>
                 VERIFIED
               </span>
-              <span style={{ color: "var(--lp-ink-ghost)" }}>· 5 paths</span>
+              <span style={{ color: "var(--lp-ink-ghost)" }}>· 4 paths</span>
             </div>
           </div>
         </WindowPanel>
@@ -1187,7 +1187,7 @@ function HeroComposition({ nav }: { nav: (path: string) => void }) {
           animation: "lp-fadein 0.5s 0.5s cubic-bezier(0.22,1,0.36,1) both",
         }}
       >
-        5 VERIFY PATHS
+        4 VERIFY PATHS
       </StickerBadge>
       <StickerBadge
         variant="purple"
