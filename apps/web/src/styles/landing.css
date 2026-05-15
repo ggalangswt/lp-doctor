@@ -264,6 +264,22 @@
   border-radius:  1px;
 }
 
+.lp-verification-grid {
+  align-items: stretch;
+}
+
+@media (max-width: 1120px) {
+  .lp-verification-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-verification-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
 /* ── Scroll-reveal ──────────────────────────────────────────────────── */
 .lp-reveal {
   opacity:    0;

@@ -544,20 +544,25 @@ export function Landing() {
                 color: "var(--lp-ink)",
               }}
             >
-              Five paths, one rootHash, no LP Doctor server in the trust.
+              Four paths, one rootHash, no LP Doctor server in the trust.
             </h2>
             <p
               style={{
                 margin: "0 auto",
-                maxWidth: 640,
+                maxWidth: 760,
                 color: "var(--lp-ink-soft)",
-                fontSize: 14,
-                lineHeight: 1.6,
+                fontSize: 15,
+                lineHeight: 1.75,
+                textAlign: "justify",
+                textAlignLast: "center",
+                textWrap: "pretty",
               }}
             >
-              Same hash, five independent surfaces. The AT-4 hallucination guard
-              fires <em>before</em> anchoring, so unsupported model claims never
-              reach any of them.
+              The same rootHash is recoverable through four independent surfaces:
+              the LP Doctor report API, the 0G Chain registry, the agent&apos;s
+              onchain memory cursor, and the 0G Storage blob itself. The AT-4
+              hallucination guard fires <em>before</em> anchoring, so unsupported
+              model claims never reach any of them.
             </p>
           </div>
 
@@ -1350,9 +1355,10 @@ function VerificationPaths() {
   return (
     <div
       ref={ref}
+      className="lp-verification-grid"
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(5, 1fr)",
+        gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
         gap: 12,
       }}
     >
@@ -1362,11 +1368,16 @@ function VerificationPaths() {
           className={`lp-reveal${visible ? " lp-visible" : ""}`}
           style={{
             transitionDelay: visible ? `${i * 80}ms` : "0ms",
+            height: "100%",
           }}
         >
           <div
             className="lp-window"
-            style={{ border: `2px solid ${p.color}`, boxShadow: `3px 3px 0 ${p.color}` }}
+            style={{
+              border: `2px solid ${p.color}`,
+              boxShadow: `3px 3px 0 ${p.color}`,
+              height: "100%",
+            }}
           >
             <div
               style={{
@@ -1388,7 +1399,15 @@ function VerificationPaths() {
                 {p.n}
               </span>
             </div>
-            <div style={{ padding: "12px 12px" }}>
+            <div
+              style={{
+                padding: "12px 12px",
+                minHeight: 108,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
               <div
                 style={{
                   fontFamily: "var(--font-sans)",
@@ -1407,7 +1426,7 @@ function VerificationPaths() {
                   fontSize: 9,
                   color: "var(--lp-ink-faint)",
                   lineHeight: 1.5,
-                  wordBreak: "break-all",
+                  wordBreak: "break-word",
                 }}
               >
                 {p.sub}
