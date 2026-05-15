@@ -19,7 +19,7 @@ function readGitTag(): string {
 }
 
 // Load env from the workspace root so VITE_LPDOCTOR_AGENT_CONTRACT,
-// VITE_LPDOCTOR_API_URL, VITE_OG_NEWTON_RPC etc. resolved by /agent +
+// VITE_LPDOCTOR_API_URL, VITE_OG_GALILEO_RPC etc. resolved by /agent +
 // /developers + usePermit2Migration come from the same .env the
 // server reads — single source of truth across server + web.
 export default defineConfig({

@@ -13,7 +13,7 @@ import {
 // a screenshot. No-op (returns null) when the contract address isn't
 // configured at build time.
 
-// Defaults match the live deployment on 0G Newton — env overrides win
+// Defaults match the live deployment on 0G Galileo — env overrides win
 // when a redeploy points the page at a fresh contract.
 const DEFAULT_AGENT_CONTRACT =
   "0x938f3B7841b3faCbBE967F90B548d991e9882c6C" as Address;
@@ -24,7 +24,7 @@ const AGENT_TOKEN_ID = BigInt(
   (import.meta.env.VITE_LPDOCTOR_AGENT_TOKEN_ID as string | undefined) ?? "1",
 );
 const NEWTON_RPC =
-  (import.meta.env.VITE_OG_NEWTON_RPC as string | undefined) ??
+  (import.meta.env.VITE_OG_GALILEO_RPC as string | undefined) ??
   "https://evmrpc-testnet.0g.ai";
 const NEWTON_CHAIN_ID = Number(
   (import.meta.env.VITE_OG_CHAIN_ID as string | undefined) ?? "16602",
@@ -65,7 +65,7 @@ const ABI = [
 
 const newtonChain = defineChain({
   id: NEWTON_CHAIN_ID,
-  name: "0G Newton Testnet",
+  name: "0G Galileo Testnet",
   nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
   rpcUrls: { default: { http: [NEWTON_RPC] } },
 });

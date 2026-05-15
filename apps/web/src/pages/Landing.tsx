@@ -225,7 +225,7 @@ export function Landing() {
           <ProductCard
             badge="AGENT"
             title="The iNFT, in real time."
-            desc="LP Doctor/01 — ERC-7857 on 0G Newton. Live memoryRoot, reputation counter, migrationsTriggered, license terms — all read direct from chain every 30 s."
+            desc="LP Doctor/01 — ERC-7857 on 0G Galileo. Live memoryRoot, reputation counter, migrationsTriggered, license terms — all read direct from chain every 30 s."
             cta="Open /agent →"
             onClick={() => nav("/agent")}
           />
@@ -707,7 +707,7 @@ export function Landing() {
             gap: 12,
           }}
         >
-          <Mono />
+          <Mono color="text-tertiary">GALILEO TESTNET</Mono>
           <span>© 2026 LP Doctor</span>
         </div>
       </footer>

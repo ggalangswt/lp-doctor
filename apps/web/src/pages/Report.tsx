@@ -18,7 +18,7 @@ function formatNumber(n: number, digits = 4): string {
 }
 
 function chainExplorerUrl(chainId: number, txHash: string): string | null {
-  if (chainId === 16602) return `https://chainscan-newton.0g.ai/tx/${txHash}`;
+  if (chainId === 16602) return `https://chainscan-galileo.0g.ai/tx/${txHash}`;
   if (chainId === 16661) return `https://chainscan.0g.ai/tx/${txHash}`;
   return null;
 }

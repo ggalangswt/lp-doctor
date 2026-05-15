@@ -178,7 +178,7 @@ export function usePermit2Migration() {
    * Posts the just-signed typed data to the backend so it can verify
    * the signature, compute the digest server-side, and call
    * LPDoctorAgent.recordMigration to bump the iNFT's
-   * `migrationsTriggered` counter on 0G Newton.
+   * `migrationsTriggered` counter on 0G Galileo.
    *
    * Best-effort: any HTTP failure surfaces in `error` but does not
    * throw — the migration sign UX is already complete by the time
