@@ -26,6 +26,18 @@ const NAV: NavItem[] = [
       p.startsWith("/diagnose") ||
       p.startsWith("/report"),
   },
+  {
+    to: "/agent",
+    label: "Agent",
+  },
+  {
+    to: "/deck",
+    label: "Deck",
+  },
+  {
+    to: "/roadmap",
+    label: "Roadmap",
+  },
 ];
 
 const GIT_TAG =
