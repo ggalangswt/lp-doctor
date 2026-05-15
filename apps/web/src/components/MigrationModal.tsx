@@ -15,33 +15,27 @@ export interface MigrationPreviewMeta {
   targetHook?: { address: string; family: string };
   steps: MigrationStep[];
   warnings: string[];
-  // address of the token that needs Permit2 approval (token0 for the swap leg)
   tokenAddress?: string;
-  // Universal Router or PoolManager address that becomes the spender
   spender?: string;
-  // sample notional in raw units; UI will display human-friendly
   amount?: string;
 }
 
 interface Props {
   preview: MigrationPreviewMeta;
-  /** Uniswap LP NFT id this migration was diagnosed against. Used to
-   *  POST the signed Permit2 digest back to the server, which records
-   *  it on the LPDoctorAgent iNFT (`migrationsTriggered` counter). */
   lpTokenId?: string;
   onClose: () => void;
 }
 
-const KIND_DOT: Record<MigrationStep["kind"], string> = {
+const KIND_SYMBOL: Record<MigrationStep["kind"], string> = {
   close: "✕",
   swap: "↔",
   mint: "✦",
 };
 
-const KIND_TONE: Record<MigrationStep["kind"], string> = {
-  close: "var(--bleed)",
-  swap: "var(--toxic)",
-  mint: "var(--healthy)",
+const KIND_COLOR: Record<MigrationStep["kind"], string> = {
+  close: "var(--diagnose-bleed)",
+  swap: "var(--diagnose-toxic)",
+  mint: "var(--diagnose-healthy)",
 };
 
 function shortHash(s: string): string {
@@ -51,13 +45,7 @@ function shortHash(s: string): string {
 
 export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
   const { isConnected } = useAccount();
-  const {
-    sign,
-    recordMigration,
-    isPending,
-    error,
-    result,
-  } = usePermit2Migration();
+  const { sign, recordMigration, isPending, error, result } = usePermit2Migration();
   const [submitted, setSubmitted] = useState(false);
   const [recordReceipt, setRecordReceipt] = useState<{
     migrationsTriggered: number;
@@ -113,12 +101,11 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(6,9,18,0.74)",
-        backdropFilter: "blur(8px)",
+        background: "oklch(0.18 0.04 290 / 0.72)",
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "center",
-        paddingTop: 110,
+        paddingTop: 100,
       }}
     >
       <div
@@ -126,53 +113,83 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
         style={{
           width: 640,
           maxWidth: "92vw",
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: "var(--radius-lg)",
-          boxShadow: "0 0 40px var(--cyan-glow), 0 24px 60px rgba(0,0,0,0.6)",
+          background: "linear-gradient(180deg, oklch(0.995 0.006 300 / 0.98), oklch(0.972 0.014 300))",
+          border: "2px solid var(--diagnose-border)",
+          borderRadius: 3,
+          boxShadow: "8px 8px 0 var(--diagnose-border)",
           overflow: "hidden",
         }}
       >
-        <header
-          style={{
-            padding: "16px 20px",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>
-            <span className="cap" style={{ color: "var(--cyan)" }}>
-              MIGRATE · PERMIT2 BUNDLE
-            </span>
-            <h2
-              style={{
-                margin: "6px 0 0 0",
-                fontFamily: "var(--font-display)",
-                fontSize: 18,
-                fontWeight: 500,
-              }}
-            >
-              {preview.targetHook
-                ? `Close v3 → swap → mint v4 (${preview.targetHook.family.toLowerCase().replace(/_/g, "-")})`
-                : "Close v3 → mint v3 (no v4 target)"}
-            </h2>
-          </div>
+        {/* Title bar */}
+        <div className="diagnose-window-bar" style={{ minHeight: 32, padding: "8px 12px" }}>
+          <span className="diagnose-window-dot diagnose-window-dot-red" />
+          <span className="diagnose-window-dot diagnose-window-dot-yellow" />
+          <span className="diagnose-window-dot diagnose-window-dot-green" />
+          <span className="diagnose-window-title" style={{ flex: 1 }}>
+            permit2.sign &middot;{" "}
+            {preview.targetHook
+              ? preview.targetHook.family.toLowerCase().replace(/_/g, "-")
+              : "v3 rebalance"}
+          </span>
           <button
             type="button"
             onClick={onClose}
             style={{
-              padding: "4px 10px",
-              color: "var(--text-tertiary)",
-              fontSize: 12,
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              color: "var(--diagnose-ink-faint)",
+              letterSpacing: "0.06em",
+              padding: "2px 6px",
+              background: "transparent",
+              border: "1px solid var(--diagnose-border-mid)",
+              borderRadius: 2,
+              cursor: "pointer",
             }}
           >
-            ✕ esc
+            ESC
           </button>
-        </header>
+        </div>
 
-        <div style={{ padding: 20 }}>
+        {/* Header */}
+        <div
+          style={{
+            padding: "14px 18px 12px",
+            borderBottom: "1px solid var(--diagnose-border-soft)",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "var(--diagnose-cobalt)",
+              marginBottom: 6,
+            }}
+          >
+            MIGRATE · PERMIT2 BUNDLE
+          </div>
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: "var(--font-display)",
+              fontSize: 18,
+              fontWeight: 700,
+              color: "var(--diagnose-ink)",
+              textTransform: "uppercase",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {preview.targetHook
+              ? `Close v3 · swap · mint v4 (${preview.targetHook.family.toLowerCase().replace(/_/g, "-")})`
+              : "Close v3 · mint v3 (no v4 target)"}
+          </h2>
+        </div>
+
+        {/* Body */}
+        <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
+
+          {/* Steps */}
           <ol
             style={{
               margin: 0,
@@ -180,7 +197,7 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
               listStyle: "none",
               display: "flex",
               flexDirection: "column",
-              gap: 8,
+              gap: 6,
             }}
           >
             {preview.steps.map((step, i) => (
@@ -188,34 +205,47 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
                 key={i}
                 style={{
                   display: "flex",
-                  gap: 12,
-                  padding: "10px 12px",
-                  border: "1px solid var(--border)",
-                  borderLeft: `3px solid ${KIND_TONE[step.kind]}`,
-                  borderRadius: 6,
+                  gap: 10,
+                  padding: "9px 12px",
+                  border: "1.5px solid var(--diagnose-border-mid)",
+                  borderRadius: 3,
+                  background: "oklch(0.985 0.012 300 / 0.6)",
                   fontFamily: "var(--font-mono)",
                   fontSize: 12,
                 }}
               >
-                <span style={{ width: 18, color: KIND_TONE[step.kind] }}>
-                  {KIND_DOT[step.kind]}
+                <span
+                  style={{
+                    width: 18,
+                    height: 18,
+                    lineHeight: "18px",
+                    textAlign: "center",
+                    borderRadius: 2,
+                    background: `color-mix(in oklch, ${KIND_COLOR[step.kind]} 14%, oklch(0.985 0.012 300))`,
+                    color: KIND_COLOR[step.kind],
+                    fontSize: 10,
+                    fontWeight: 800,
+                    flexShrink: 0,
+                  }}
+                >
+                  {KIND_SYMBOL[step.kind]}
                 </span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: "var(--text)" }}>{step.description}</div>
+                  <div style={{ color: "var(--diagnose-ink)" }}>{step.description}</div>
                   {step.detail && (
                     <div
                       style={{
                         marginTop: 4,
-                        color: "var(--text-tertiary)",
+                        color: "var(--diagnose-ink-faint)",
                         fontSize: 10,
                         display: "flex",
                         flexWrap: "wrap",
-                        gap: 12,
+                        gap: "2px 12px",
                       }}
                     >
                       {Object.entries(step.detail).map(([k, v]) => (
                         <span key={k}>
-                          <span style={{ color: "var(--text-faint)" }}>{k}=</span>
+                          <span style={{ opacity: 0.6 }}>{k}=</span>
                           {v}
                         </span>
                       ))}
@@ -226,14 +256,19 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
             ))}
           </ol>
 
+          {/* Warnings */}
           {preview.warnings.length > 0 && (
             <ul
               style={{
-                marginTop: 14,
-                paddingLeft: 18,
-                fontSize: 11,
-                color: "var(--toxic)",
-                lineHeight: 1.6,
+                margin: 0,
+                padding: "8px 12px 8px 28px",
+                border: "1.5px solid oklch(0.78 0.19 88 / 0.40)",
+                borderRadius: 3,
+                background: "oklch(0.78 0.19 88 / 0.06)",
+                fontSize: 10,
+                color: "var(--diagnose-toxic)",
+                lineHeight: 1.7,
+                fontFamily: "var(--font-mono)",
               }}
             >
               {preview.warnings.map((w, i) => (
@@ -242,19 +277,29 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
             </ul>
           )}
 
+          {/* Permit2 data panel */}
           <div
             style={{
-              marginTop: 18,
-              padding: 12,
-              borderRadius: 6,
-              background: "var(--surface-raised)",
-              border: "1px solid var(--border)",
+              padding: "10px 14px",
+              border: "1.5px solid var(--diagnose-border-mid)",
+              borderRadius: 3,
+              background: "oklch(0.975 0.014 300 / 0.7)",
               fontFamily: "var(--font-mono)",
               fontSize: 11,
-              color: "var(--text-secondary)",
+              color: "var(--diagnose-ink-soft)",
+              lineHeight: 1.8,
             }}
           >
-            <div style={{ marginBottom: 6, color: "var(--cyan)" }}>
+            <div
+              style={{
+                marginBottom: 6,
+                fontWeight: 700,
+                fontSize: 9,
+                textTransform: "uppercase",
+                letterSpacing: "0.10em",
+                color: "var(--diagnose-cobalt)",
+              }}
+            >
               Permit2 EIP-712 typed data
             </div>
             <div>verifyingContract 0x0000…78BA3 (Permit2)</div>
@@ -263,27 +308,30 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
             <div>sigDeadline now + 30 min</div>
           </div>
 
+          {/* Signed result */}
           {result && (
             <div
               style={{
-                marginTop: 14,
-                padding: 12,
-                borderRadius: 6,
-                background: "rgba(142, 232, 135, 0.06)",
-                border: "1px solid var(--healthy)",
+                padding: "10px 14px",
+                border: "1.5px solid var(--diagnose-healthy)",
+                borderRadius: 3,
+                background: "color-mix(in oklch, var(--diagnose-healthy) 6%, oklch(0.985 0.012 300))",
                 fontFamily: "var(--font-mono)",
                 fontSize: 11,
-                color: "var(--healthy)",
+                color: "var(--diagnose-healthy)",
+                lineHeight: 1.7,
                 wordBreak: "break-all",
               }}
             >
-              <div style={{ marginBottom: 6 }}>✓ signed by {shortHash(result.signer)}</div>
-              <div style={{ color: "var(--text-secondary)" }}>{shortHash(result.signature)}</div>
-              <div style={{ marginTop: 4, color: "var(--text-tertiary)", fontSize: 10 }}>
+              <div style={{ marginBottom: 4, fontWeight: 700 }}>
+                ✓ signed by {shortHash(result.signer)}
+              </div>
+              <div style={{ color: "var(--diagnose-ink-faint)" }}>{shortHash(result.signature)}</div>
+              <div style={{ marginTop: 4, color: "var(--diagnose-ink-faint)", fontSize: 10 }}>
                 digest {shortHash(result.digest)}
               </div>
               {recording && (
-                <div style={{ marginTop: 8, color: "var(--cyan)" }}>
+                <div style={{ marginTop: 8, color: "var(--diagnose-cobalt)" }}>
                   recording on iNFT…
                 </div>
               )}
@@ -292,10 +340,8 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
                   style={{
                     marginTop: 8,
                     paddingTop: 8,
-                    borderTop: "1px dashed var(--border)",
-                    color: recordReceipt.stub
-                      ? "var(--text-tertiary)"
-                      : "var(--cyan)",
+                    borderTop: "1px dashed var(--diagnose-border-mid)",
+                    color: recordReceipt.stub ? "var(--diagnose-ink-faint)" : "var(--diagnose-cobalt)",
                   }}
                 >
                   iNFT migrationsTriggered → {recordReceipt.migrationsTriggered}
@@ -306,7 +352,7 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
                         href={recordReceipt.explorerUrl}
                         target="_blank"
                         rel="noreferrer"
-                        style={{ color: "var(--cyan)" }}
+                        style={{ color: "var(--diagnose-cobalt)" }}
                       >
                         tx ↗
                       </a>
@@ -318,12 +364,18 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
             </div>
           )}
 
+          {/* Error */}
           {error && submitted && (
             <p
               style={{
-                marginTop: 12,
-                color: "var(--bleed)",
-                fontSize: 12,
+                margin: 0,
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                color: "var(--diagnose-bleed)",
+                padding: "8px 12px",
+                border: "1.5px solid oklch(0.62 0.24 24 / 0.35)",
+                borderRadius: 3,
+                background: "oklch(0.62 0.24 24 / 0.06)",
               }}
             >
               {error}
@@ -331,47 +383,83 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
           )}
         </div>
 
-        <footer
+        {/* Footer */}
+        <div
           style={{
-            padding: 16,
-            borderTop: "1px solid var(--border)",
+            padding: "12px 18px",
+            borderTop: "1px solid var(--diagnose-border-soft)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: 12,
-            background: "var(--surface-raised)",
+            background: "var(--diagnose-base-deep)",
           }}
         >
           {!isConnected ? (
             <>
-              <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
-                Connect a wallet to sign the Permit2 bundle.
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  color: "var(--diagnose-ink-faint)",
+                }}
+              >
+                Connect wallet to sign the Permit2 bundle.
               </span>
               <ConnectButton />
             </>
           ) : (
             <>
-              <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  color: "var(--diagnose-ink-faint)",
+                  flex: 1,
+                  lineHeight: 1.5,
+                }}
+              >
                 {result
-                  ? "Signature captured. Submit it via the agent's relayer to execute."
+                  ? "Signature captured. Submit via the agent relayer to execute."
                   : "Sign the EIP-712 PermitSingle. The agent never executes — you stay in custody."}
               </span>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn-primary"
                 onClick={handleSign}
                 disabled={isPending || !!result}
-                style={{ padding: "10px 16px", fontSize: 13 }}
+                style={{
+                  padding: "10px 20px",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  background: "var(--diagnose-neon)",
+                  color: "var(--diagnose-ink)",
+                  border: "2px solid var(--diagnose-border)",
+                  borderRadius: 2,
+                  boxShadow: "var(--diagnose-shadow-sm)",
+                  cursor: isPending || !!result ? "not-allowed" : "pointer",
+                  opacity: isPending || !!result ? 0.6 : 1,
+                  transition: "box-shadow 80ms ease-out, transform 80ms ease-out",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={(e) => {
+                  if (isPending || !!result) return;
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "2px 2px 0 var(--diagnose-border)";
+                  (e.currentTarget as HTMLButtonElement).style.transform = "translate(2px, 2px)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--diagnose-shadow-sm)";
+                  (e.currentTarget as HTMLButtonElement).style.transform = "";
+                }}
               >
-                {isPending
-                  ? "signing…"
-                  : result
-                    ? "signed"
-                    : "Sign Permit2"}
+                {isPending ? "signing…" : result ? "signed ✓" : "Sign Permit2"}
               </button>
             </>
           )}
-        </footer>
+        </div>
       </div>
     </div>
   );

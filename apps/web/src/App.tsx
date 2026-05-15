@@ -1,7 +1,7 @@
 // Top-level router. /deck mirrors the submission PDF as a webpage.
 import { Route, Routes } from "react-router-dom";
-import { Atlas } from "./pages/Atlas.js";
 import { Agent } from "./pages/Agent.js";
+import { Atlas } from "./pages/Atlas.js";
 import { Deck } from "./pages/Deck.js";
 import { Diagnose } from "./pages/Diagnose.js";
 import { Landing } from "./pages/Landing.js";

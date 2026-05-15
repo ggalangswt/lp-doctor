@@ -378,6 +378,9 @@
   .lp-how-grid         { grid-template-columns: 1fr !important; }
   .lp-agent-grid       { grid-template-columns: 1fr !important; }
   .lp-hero-cols        { grid-template-columns: 1fr !important; }
+  .lp-agent-detail-grid  { grid-template-columns: 1fr !important; }
+  .lp-roadmap-phase-grid { grid-template-columns: 1fr !important; }
+  .lp-solution-grid    { grid-template-columns: 1fr !important; }
 }
 
 /* ── Reduced motion ─────────────────────────────────────────────────── */

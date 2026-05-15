@@ -26,16 +26,16 @@ export interface MigrationPreview {
   warnings: string[];
 }
 
-const KIND_CLS: Record<MigrationStep["kind"], string> = {
-  close: "text-rose-300 border-rose-500/40",
-  swap: "text-amber-300 border-amber-500/40",
-  mint: "text-emerald-300 border-emerald-500/40",
-};
-
-const KIND_DOT: Record<MigrationStep["kind"], string> = {
+const KIND_SYMBOL: Record<MigrationStep["kind"], string> = {
   close: "✕",
   swap: "↔",
   mint: "✦",
+};
+
+const KIND_COLOR: Record<MigrationStep["kind"], string> = {
+  close: "var(--diagnose-bleed)",
+  swap: "var(--diagnose-toxic)",
+  mint: "var(--diagnose-healthy)",
 };
 
 function shortAddr(addr: string): string {
@@ -44,9 +44,6 @@ function shortAddr(addr: string): string {
 
 interface Props {
   preview: MigrationPreview;
-  /** Uniswap LP NFT id this preview was diagnosed against. Forwarded
-   *  to the modal so the signed Permit2 digest can be recorded on the
-   *  LPDoctorAgent iNFT. */
   lpTokenId?: string;
 }
 
@@ -56,99 +53,244 @@ export function MigrationPanel({ preview, lpTokenId }: Props) {
   const canMigrate = preview.steps.length > 0;
 
   return (
-    <section className="p-4 rounded-lg border border-slate-700 bg-slate-900/50">
-      <header className="flex items-center justify-between gap-2">
-        <h2 className="text-xs uppercase tracking-wider text-slate-500">
-          Migration preview
-        </h2>
-        <LabelBadge label="EMULATED" />
-      </header>
-
-      {targetHook ? (
-        <p className="mt-3 text-sm text-slate-400">
-          Target hook{" "}
-          <span className="text-violet-300 font-mono">
-            {shortAddr(targetHook.address)}
-          </span>{" "}
-          —{" "}
-          <span className="text-slate-300">
-            {targetHook.family.toLowerCase().replace(/_/g, "-")}
-          </span>
-        </p>
-      ) : (
-        <p className="mt-3 text-sm text-slate-500">
-          No V4 target hook discovered for this pair.
-        </p>
-      )}
-
-      <ol className="mt-3 space-y-2">
-        {steps.map((step, i) => (
-          <li
-            key={i}
-            className={`flex items-start gap-3 text-xs font-mono pl-2 border-l ${KIND_CLS[step.kind]}`}
-          >
-            <span className="mt-0.5 w-4 inline-block text-center">
-              {KIND_DOT[step.kind]}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="text-slate-200">{step.description}</div>
-              {step.detail && (
-                <div className="mt-1 text-[10px] text-slate-500 flex flex-wrap gap-x-3 gap-y-0.5">
-                  {Object.entries(step.detail).map(([k, v]) => (
-                    <span key={k}>
-                      <span className="text-slate-600">{k}=</span>
-                      {v}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      {swapQuote && (
-        <div className="mt-3 grid grid-cols-3 gap-3 text-[11px] font-mono pt-3 border-t border-slate-800">
-          <div>
-            <div className="text-slate-500">routing</div>
-            <div className="text-slate-200">{swapQuote.routing}</div>
-          </div>
-          <div>
-            <div className="text-slate-500">price impact</div>
-            <div className="text-slate-200">
-              {(swapQuote.priceImpact * 100).toFixed(3)}%
-            </div>
-          </div>
-          <div>
-            <div className="text-slate-500">gas fee</div>
-            <div className="text-slate-200">${swapQuote.gasFeeUsd}</div>
+    <>
+      <section
+        style={{
+          background: "linear-gradient(180deg, oklch(0.995 0.006 300 / 0.96), oklch(0.972 0.014 300 / 0.98))",
+          border: "2px solid var(--diagnose-border)",
+          borderRadius: 3,
+          boxShadow: "var(--diagnose-shadow)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Title bar */}
+        <div className="diagnose-window-bar">
+          <span className="diagnose-window-dot diagnose-window-dot-red" />
+          <span className="diagnose-window-dot diagnose-window-dot-yellow" />
+          <span className="diagnose-window-dot diagnose-window-dot-green" />
+          <span className="diagnose-window-title">migration.preview</span>
+          <div style={{ marginLeft: "auto" }}>
+            <LabelBadge label="EMULATED" />
           </div>
         </div>
-      )}
 
-      {warnings.length > 0 && (
-        <ul className="mt-3 text-[10px] text-orange-300/80 space-y-0.5 list-disc pl-4">
-          {warnings.map((w, i) => (
-            <li key={i}>{w}</li>
-          ))}
-        </ul>
-      )}
+        <div style={{ padding: "16px 18px" }}>
+          {/* Target hook */}
+          {targetHook ? (
+            <p
+              style={{
+                margin: "0 0 14px",
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                color: "var(--diagnose-ink-soft)",
+                lineHeight: 1.5,
+              }}
+            >
+              target{" "}
+              <span style={{ color: "var(--diagnose-purple)", fontWeight: 700 }}>
+                {shortAddr(targetHook.address)}
+              </span>{" "}
+              &middot;{" "}
+              <span style={{ color: "var(--diagnose-ink)" }}>
+                {targetHook.family.toLowerCase().replace(/_/g, "-")}
+              </span>
+            </p>
+          ) : (
+            <p
+              style={{
+                margin: "0 0 14px",
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                color: "var(--diagnose-ink-faint)",
+              }}
+            >
+              no v4 target hook discovered for this pair
+            </p>
+          )}
 
-      <div className="mt-3 flex items-center justify-between gap-2">
-        <p className="text-[10px] text-slate-500 flex-1">
-          Quote fetched live from the Uniswap Trading API for a small sample
-          notional. The agent never executes the swap — the user signs at
-          migration time with their own slippage budget.
-        </p>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          disabled={!canMigrate}
-          className="text-[11px] text-cyan-300 hover:text-cyan-200 px-3 py-1.5 rounded border border-cyan-500/40 hover:border-cyan-400/60 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Migrate →
-        </button>
-      </div>
+          {/* Steps — full border, health dot, no side stripe */}
+          <ol
+            style={{
+              margin: 0,
+              padding: 0,
+              listStyle: "none",
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+            }}
+          >
+            {steps.map((step, i) => (
+              <li
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  padding: "9px 12px",
+                  border: `1.5px solid var(--diagnose-border-mid)`,
+                  borderRadius: 3,
+                  background: "oklch(0.985 0.012 300 / 0.6)",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                }}
+              >
+                <span
+                  style={{
+                    width: 18,
+                    height: 18,
+                    lineHeight: "18px",
+                    textAlign: "center",
+                    borderRadius: 2,
+                    background: `color-mix(in oklch, ${KIND_COLOR[step.kind]} 14%, oklch(0.985 0.012 300))`,
+                    color: KIND_COLOR[step.kind],
+                    fontSize: 10,
+                    fontWeight: 800,
+                    flexShrink: 0,
+                  }}
+                >
+                  {KIND_SYMBOL[step.kind]}
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ color: "var(--diagnose-ink)" }}>{step.description}</div>
+                  {step.detail && (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        color: "var(--diagnose-ink-faint)",
+                        fontSize: 10,
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "2px 12px",
+                      }}
+                    >
+                      {Object.entries(step.detail).map(([k, v]) => (
+                        <span key={k}>
+                          <span style={{ color: "var(--diagnose-border-mid)", opacity: 0.7 }}>{k}=</span>
+                          {v}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          {/* Swap quote grid */}
+          {swapQuote && (
+            <div
+              style={{
+                marginTop: 12,
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 1,
+                border: "1.5px solid var(--diagnose-border-mid)",
+                borderRadius: 3,
+                overflow: "hidden",
+              }}
+            >
+              {[
+                { label: "routing", value: swapQuote.routing },
+                { label: "price impact", value: `${(swapQuote.priceImpact * 100).toFixed(3)}%` },
+                { label: "gas fee", value: `$${swapQuote.gasFeeUsd}` },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  style={{
+                    padding: "8px 10px",
+                    background: "oklch(0.975 0.014 300 / 0.7)",
+                    borderRight: "1px solid var(--diagnose-border-soft)",
+                    fontFamily: "var(--font-mono)",
+                  }}
+                >
+                  <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--diagnose-ink-faint)" }}>
+                    {label}
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--diagnose-ink)", marginTop: 2 }}>{value}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Warnings */}
+          {warnings.length > 0 && (
+            <ul
+              style={{
+                marginTop: 10,
+                padding: "8px 12px 8px 28px",
+                border: "1.5px solid oklch(0.78 0.19 88 / 0.40)",
+                borderRadius: 3,
+                background: "oklch(0.78 0.19 88 / 0.06)",
+                fontSize: 10,
+                color: "var(--diagnose-toxic)",
+                lineHeight: 1.7,
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              {warnings.map((w, i) => (
+                <li key={i}>{w}</li>
+              ))}
+            </ul>
+          )}
+
+          {/* Footer row */}
+          <div
+            style={{
+              marginTop: 14,
+              paddingTop: 12,
+              borderTop: "1px solid var(--diagnose-border-soft)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+            }}
+          >
+            <p
+              style={{
+                flex: 1,
+                margin: 0,
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                color: "var(--diagnose-ink-faint)",
+                lineHeight: 1.6,
+              }}
+            >
+              Quote fetched live for a sample notional. The agent never executes — you sign at migration time.
+            </p>
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              disabled={!canMigrate}
+              style={{
+                padding: "7px 14px",
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: "var(--diagnose-cobalt)",
+                background: "oklch(0.985 0.012 300)",
+                border: "2px solid var(--diagnose-cobalt)",
+                borderRadius: 2,
+                boxShadow: "3px 3px 0 var(--diagnose-cobalt)",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+                transition: "box-shadow 80ms ease-out, transform 80ms ease-out",
+              }}
+              onMouseEnter={(e) => {
+                if (!canMigrate) return;
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = "1px 1px 0 var(--diagnose-cobalt)";
+                (e.currentTarget as HTMLButtonElement).style.transform = "translate(2px, 2px)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = "3px 3px 0 var(--diagnose-cobalt)";
+                (e.currentTarget as HTMLButtonElement).style.transform = "";
+              }}
+            >
+              Migrate →
+            </button>
+          </div>
+        </div>
+      </section>
 
       {open && (
         <MigrationModal
@@ -164,6 +306,6 @@ export function MigrationPanel({ preview, lpTokenId }: Props) {
           onClose={() => setOpen(false)}
         />
       )}
-    </section>
+    </>
   );
 }

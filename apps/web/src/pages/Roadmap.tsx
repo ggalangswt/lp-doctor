@@ -1,401 +1,401 @@
-import { useState, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { AppHeader } from "../components/AppHeader.js";
-import { Chip } from "../design/atoms.js";
+import { Cap } from "../design/atoms.js";
+import "../styles/landing.css";
 
-// /roadmap — public follow-ups beyond v0.11. Each item is an
-// accordion: a one-line claim collapsed, full reasoning + impacted
-// surfaces expanded. Items are ordered by leverage, not by ETA.
-// Adding a new item = appending to the ROADMAP array.
+/* ─── Inline primitives ─────────────────────────────────────────────── */
 
-interface RoadmapItem {
-  id: string;
-  title: string;
-  status: "planned" | "researching" | "scoped";
-  effortHours: string;
-  oneLine: string;
-  body: ReactNode;
-}
+type StickerVariant = "purple" | "magenta" | "cobalt" | "yellow";
 
-const STATUS_TONE: Record<RoadmapItem["status"], "cyan" | "violet" | "toxic"> = {
-  planned: "cyan",
-  researching: "violet",
-  scoped: "toxic",
-};
-
-const STATUS_LABEL: Record<RoadmapItem["status"], string> = {
-  planned: "PLANNED",
-  researching: "RESEARCHING",
-  scoped: "SCOPED",
-};
-
-const ROADMAP: RoadmapItem[] = [
-  {
-    id: "hosted-mcp",
-    title: "Hosted MCP at <YOUR_MCP_URL_OR_STATUS> (HTTP/SSE transport)",
-    status: "scoped",
-    effortHours: "~6–8 h",
-    oneLine:
-      "Today users clone the repo and run the MCP server locally as a STDIO subprocess. Ship a public HTTP/SSE-transport MCP under your chosen domain/path so they only need to drop a URL into Claude Desktop config — zero install, zero build.",
-    body: (
-      <>
-        <p>
-          The MCP SDK supports SSE-over-HTTP transport. Wrap the existing tool
-          handlers in an Express endpoint mounted at <code>/mcp</code> on the
-          same backend that already serves the REST API. The internal Caddy
-          adds a <code>handle /mcp/*</code> block alongside the existing{" "}
-          <code>/api/*</code> route. No new subdomain, no new TLS cert.
-        </p>
-        <h4>What changes for users</h4>
-        <ul>
-          <li>
-            <strong>From</strong>{" "}
-            <code>"command": "node", "args": ["/abs/path/dist/index.js"]</code>
-          </li>
-          <li>
-            <strong>To</strong> <code>"url": "&lt;YOUR_MCP_URL_OR_STATUS&gt;"</code>
-          </li>
-        </ul>
-        <p>
-          The local STDIO path stays available for users who want full control
-          (and who don't trust an external MCP). Licence gating + pricing
-          stay identical — gated tools still check <code>isLicensed</code>{" "}
-          on-chain regardless of transport.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "npm-package",
-    title: "Publish @lpdoctor/mcp-server on npm",
-    status: "planned",
-    effortHours: "~3 h",
-    oneLine:
-      "Cut a release of the MCP server as a globally-installable npm package so users can run lpdoctor-mcp from any shell without cloning the monorepo.",
-    body: (
-      <>
-        <p>
-          Extract <code>apps/mcp-server</code> into its own package.json, bundle the
-          runtime dependencies, register a <code>bin</code> entry. CI publishes
-          automatically on tags prefixed <code>mcp-v</code>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "v4-execute",
-    title: "Real V4 migration execution (not sign-only)",
-    status: "researching",
-    effortHours: "~12–15 h",
-    oneLine:
-      "Today the user signs the Permit2 bundle and the agent stops there. Wire an optional Universal Router execution path so a click-to-migrate completes end-to-end on chain — still custodial-free, still single-sig.",
-    body: (
-      <>
-        <p>
-          Custody stays user-side: the signed Permit2 PermitSingle authorises{" "}
-          <code>spender = Universal Router</code> for a one-time spend. The
-          agent submits the multicall (close V3 → swap → mint V4) on behalf of
-          the user without ever holding their tokens.
-        </p>
-        <h4>Why it's not in v0.11</h4>
-        <p>
-          Mainnet V4 has very thin liquidity outside USDC/WETH 0.05% — testing
-          a real migration end-to-end requires either (a) waiting for V4
-          adoption to reach a meaningful set of pairs, or (b) shipping on Base
-          where V4 + hooks have stronger early traction. Pairs with the chain
-          rollout above.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "x402-usdc",
-    title: "x402 USDC settlement for licence payments",
-    status: "scoped",
-    effortHours: "~4 h",
-    oneLine:
-      "Today mintLicense pays in OG. Add an HTTP-402 endpoint so callers can settle in USDC via x402 instead — currency-agnostic at the source-of-funds level.",
-    body: (
-      <>
-        <p>
-          The contract's royalty split logic is currency-agnostic — only the
-          settlement layer needs work. Wire the agent's MCP server to advertise
-          a <code>402 Payment Required</code> response when a caller hits a
-          gated tool, with x402 metadata pointing at a USDC payment endpoint
-          that mints the on-chain licence on receipt.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "drift-webhooks",
-    title: "Drift webhooks — notify when an LP exits range",
-    status: "researching",
-    effortHours: "~6 h",
-    oneLine:
-      "Subscribe to a wallet + position. The agent polls regime + range state every N minutes; when a position drifts past 85% of range or exits, fire a webhook to the user's Telegram / Discord / email.",
-    body: (
-      <>
-        <p>
-          Server-side BullMQ schedule per subscription, hits the same diagnose
-          pipeline that runs on demand today (just truncated — phase 1 + 4
-          only, no LLM call). Notification payload includes a one-line summary
-          and a deep link to <code>/diagnose/&lt;tokenId&gt;</code>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "inft-marketplace",
-    title: "iNFT transfer + agent strategy marketplace",
-    status: "researching",
-    effortHours: "~10 h",
-    oneLine:
-      "transferAgent already exists on the iNFT contract. Build a marketplace where reputable agents (high reputation + high migrationsTriggered) can be listed and bought — buyer takes ownership of the on-chain identity + memoryRoot history.",
-    body: (
-      <>
-        <p>
-          The buyer inherits the agent's full track record on chain — every
-          diagnose anchored, every migration recorded. Royalty split (80/20)
-          stays in effect on future <code>mintLicense</code> calls under the
-          new owner.
-        </p>
-        <p>
-          Listings + bids handled off-chain via signed orders settled in a
-          single atomic <code>transferAgent</code> + payment transaction.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "multi-chain",
-    title: "Multi-chain expansion across every Uniswap L1 / L2",
-    status: "scoped",
-    effortHours: "~10–12 h",
-    oneLine:
-      "v0.11 reads only Ethereum mainnet (chainId 1). Extend the data plane to every chain where Uniswap V3 or V4 is deployed — Arbitrum, Base, Optimism, Polygon, BNB Chain, Avalanche, Blast, Zora, Worldchain, Unichain, Soneium, Ink, Lens, Celo, zkSync, and Saga.",
-    body: (
-      <>
-        <p>
-          The Permit2 EIP-712 builder already accepts an arbitrary{" "}
-          <code>chainId</code>, so the migration leg is chain-portable today —
-          what is missing is the upstream data plane.
-        </p>
-        <h4>Layers to extend</h4>
-        <ul>
-          <li>
-            <strong>Subgraph registry.</strong> Replace the two hard-coded
-            mainnet subgraph IDs in{" "}
-            <code>apps/server/src/services/subgraph.ts</code> with a per-chain
-            map. Uniswap maintains public V3 + V4 subgraph IDs on The Graph
-            Network for every supported chain — Arbitrum, Base, Optimism,
-            Polygon, BNB, Avalanche, Blast, Zora, Worldchain, Unichain,
-            Soneium, Ink, Lens, Celo, zkSync, Saga. Catalogue once,
-            parameterise <code>buildV3Endpoint(chainId)</code> /{" "}
-            <code>buildV4Endpoint(chainId)</code>.
-          </li>
-          <li>
-            <strong>RPC + contract addresses.</strong> Per-chain RPC env vars
-            (<code>BASE_RPC</code>, <code>ARBITRUM_RPC</code>,{" "}
-            <code>UNICHAIN_RPC</code>, …) and a viem client factory{" "}
-            <code>getClient(chainId)</code>. Permit2 is deterministic
-            CREATE2 (<code>0x000000000022D473030F116dDEE9F6B43aC78BA3</code>{" "}
-            everywhere) but V4 PoolManager and V4 PositionManager differ per
-            chain — explicit mapping required.
-          </li>
-          <li>
-            <strong>Atlas chain selector.</strong> Dropdown beside the wallet
-            input in <code>/atlas</code>, persisted in the URL{" "}
-            <code>?chain=8453&address=0xabc</code> for permalinks. Auto-pick
-            from <code>useAccount()</code> when a wallet is connected.
-          </li>
-          <li>
-            <strong>AT-2 swap-replay corpus per chain.</strong> Phase 6
-            anchors the hook scoring on 1 000 mainnet swaps replayed
-            swap-by-swap with 0 bps drift vs on-chain state. Each new chain
-            requires re-anchoring this on its own RPC + subgraph and
-            re-validating the drift target — the riskiest piece of the
-            extension.
-          </li>
-        </ul>
-        <h4>Why it's not in v0.11</h4>
-        <p>
-          Multi-chain itself is straightforward plumbing (~5 h) but the AT-2
-          re-validation per chain (~5–7 h) is what we cut to ship the
-          Ethereum-only flow with verifiable 0 bps drift end-to-end. The
-          documented sequence is: catalog subgraph IDs → wire RPC factory →
-          add chain selector → re-run AT-2 against Base + Arbitrum + Unichain
-          first (largest TVL after mainnet) → ship.
-        </p>
-      </>
-    ),
-  },
-];
-
-interface AccordionProps {
-  item: RoadmapItem;
-  open: boolean;
-  onToggle: () => void;
-}
-
-function AccordionRow({ item, open, onToggle }: AccordionProps) {
+function StickerBadge({
+  children,
+  variant = "purple",
+  style,
+}: {
+  children: ReactNode;
+  variant?: StickerVariant;
+  style?: CSSProperties;
+}) {
   return (
-    <article
-      style={{
-        border: "1px solid var(--border)",
-        borderRadius: 12,
-        background: "var(--surface)",
-        overflow: "hidden",
-        marginBottom: 14,
-      }}
-    >
-      <button
-        onClick={onToggle}
-        aria-expanded={open}
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 18,
-          padding: "20px 22px",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          textAlign: "left",
-          color: "var(--text)",
-        }}
-      >
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 8,
-              flexWrap: "wrap",
-            }}
-          >
-            <Chip tone={STATUS_TONE[item.status]} mono>
-              {STATUS_LABEL[item.status]}
-            </Chip>
-            <Chip mono>{item.effortHours}</Chip>
-          </div>
-          <h3
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-display)",
-              fontSize: 20,
-              fontWeight: 500,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {item.title}
-          </h3>
-          <p
-            style={{
-              margin: "8px 0 0 0",
-              color: "var(--text-secondary)",
-              fontSize: 14,
-              lineHeight: 1.55,
-            }}
-          >
-            {item.oneLine}
-          </p>
-        </div>
-        <span
-          aria-hidden
-          style={{
-            flexShrink: 0,
-            fontFamily: "var(--font-mono)",
-            fontSize: 18,
-            color: "var(--text-tertiary)",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 180ms ease",
-            marginTop: 4,
-          }}
-        >
-          ⌄
-        </span>
-      </button>
-      {open && (
-        <div
-          style={{
-            borderTop: "1px solid var(--border)",
-            padding: "20px 22px 22px",
-            color: "var(--text-secondary)",
-            fontSize: 13.5,
-            lineHeight: 1.65,
-          }}
-        >
-          {item.body}
-        </div>
-      )}
-    </article>
+    <span className={`lp-sticker lp-sticker-${variant}`} style={style}>
+      {children}
+    </span>
   );
 }
 
-export function Roadmap() {
-  const [openId, setOpenId] = useState<string | null>(ROADMAP[0]?.id ?? null);
-
+function WindowPanel({
+  title,
+  children,
+  style,
+}: {
+  title: string;
+  children: ReactNode;
+  style?: CSSProperties;
+}) {
   return (
-    <div>
+    <div className="lp-window" style={style}>
+      <div className="lp-window-bar">
+        <div className="lp-window-dots">
+          <div className="lp-window-dot" style={{ background: "var(--lp-bleed)" }} />
+          <div className="lp-window-dot" style={{ background: "var(--lp-toxic)" }} />
+          <div className="lp-window-dot" style={{ background: "var(--lp-healthy)" }} />
+        </div>
+        <span className="lp-window-title">{title}</span>
+      </div>
+      <div className="lp-window-body">{children}</div>
+    </div>
+  );
+}
+
+function PixelArrow() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+      <path
+        d="M2.5 6.5h8M7 2.5l4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+      />
+    </svg>
+  );
+}
+
+/* ─── Data ──────────────────────────────────────────────────────────── */
+
+const PHASES = [
+  {
+    phase: "NOW",
+    version: "v0.1 · Galileo Testnet",
+    label: "SHIPPED",
+    labelVariant: "healthy" as const,
+    accent: "var(--lp-healthy)",
+    sticker: "yellow" as StickerVariant,
+    stickerText: "LIVE",
+    description: "Hackathon demo on 0G Galileo testnet. Core diagnostic pipeline running end-to-end with real chain data.",
+    items: [
+      { done: true,  text: "LP NFT resolution from Uniswap subgraph" },
+      { done: true,  text: "IL reconstruction from tick range + sqrtPriceX96" },
+      { done: true,  text: "Pool regime classification" },
+      { done: true,  text: "V4 hook discovery + swap replay (1k swaps)" },
+      { done: true,  text: "Migration preview with Permit2 bundle" },
+      { done: true,  text: "Verdict synthesis inside 0G Compute TEE" },
+      { done: true,  text: "Report upload to 0G Storage" },
+      { done: true,  text: "On-chain anchor tx on 0G Galileo" },
+      { done: true,  text: "ENS text record publication (Sepolia)" },
+      { done: true,  text: "ERC-7857 iNFT — memoryRoot + reputation + counter" },
+      { done: true,  text: "MCP server: 6 tools (3 gated, 3 free)" },
+      { done: true,  text: "Atlas wallet scanner + 6 demo wallets" },
+      { done: true,  text: "Five verification paths from one rootHash" },
+    ],
+  },
+  {
+    phase: "NEXT",
+    version: "v0.2 · Mainnet Launch",
+    label: "PLANNED",
+    labelVariant: "cobalt" as const,
+    accent: "var(--lp-cobalt)",
+    sticker: "cobalt" as StickerVariant,
+    stickerText: "Q3 2026",
+    description: "Mainnet deployment with execution capabilities. Real migrations, real fees, expanded hook coverage.",
+    items: [
+      { done: false, text: "Mainnet deployment on Ethereum + 0G" },
+      { done: false, text: "Real Permit2 migration execution (not preview-only)" },
+      { done: false, text: "Expanded V4 hook registry: 10+ hook families" },
+      { done: false, text: "Batch diagnosis: scan full wallet in one run" },
+      { done: false, text: "Range re-entry signals: alert when out-of-range positions can be rebalanced profitably" },
+      { done: false, text: "mintLicense revenue live: 0.1 OG / 24h with 80/20 split" },
+      { done: false, text: "0G Galileo mainnet iNFT upgrade" },
+      { done: false, text: "Diagnose history: per-wallet report timeline" },
+      { done: false, text: "IPFS pinning for all anchored reports" },
+    ],
+  },
+  {
+    phase: "FUTURE",
+    version: "v1.0 · Agent Economy",
+    label: "VISION",
+    labelVariant: "purple" as const,
+    accent: "var(--lp-purple)",
+    sticker: "magenta" as StickerVariant,
+    stickerText: "VISION",
+    description: "Multi-protocol diagnostics, agent marketplace, and DAO-grade reporting. LP Doctor as infrastructure, not just a tool.",
+    items: [
+      { done: false, text: "Multi-protocol: Aerodrome, Orca, Ambient Finance" },
+      { done: false, text: "Cross-chain: Arbitrum, Base, Optimism LP support" },
+      { done: false, text: "Agent marketplace: other agents calling LP Doctor via MCP" },
+      { done: false, text: "DAO reporting: batch reports for protocol treasuries" },
+      { done: false, text: "Report subscriptions: daily / weekly LP health digest" },
+      { done: false, text: "Reputation-gated reports: higher reputation = higher report trust tier" },
+      { done: false, text: "Custom hook scoring: protocol teams register their own hooks" },
+      { done: false, text: "On-chain voting: DAO can ratify migration proposals from LP Doctor reports" },
+    ],
+  },
+];
+
+type LabelVariant = "healthy" | "cobalt" | "purple";
+
+const LABEL_STYLE: Record<LabelVariant, CSSProperties> = {
+  healthy: {
+    color: "var(--lp-healthy)",
+    border: "1px solid var(--lp-healthy)",
+    background: "color-mix(in oklch, var(--lp-healthy) 10%, transparent)",
+  },
+  cobalt: {
+    color: "var(--lp-cobalt)",
+    border: "1px solid var(--lp-cobalt)",
+    background: "color-mix(in oklch, var(--lp-cobalt) 10%, transparent)",
+  },
+  purple: {
+    color: "var(--lp-purple)",
+    border: "1px solid var(--lp-purple)",
+    background: "color-mix(in oklch, var(--lp-purple) 10%, transparent)",
+  },
+};
+
+/* ─── Page ──────────────────────────────────────────────────────────── */
+
+export function Roadmap() {
+  return (
+    <div className="landing-theme" style={{ minHeight: "100vh" }}>
+      <div className="lp-grid-bg" />
+
       <AppHeader />
-      <main
+
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section
         style={{
-          maxWidth: 980,
+          position: "relative",
+          zIndex: 1,
+          padding: "64px 36px 56px",
+          maxWidth: 1280,
           margin: "0 auto",
-          padding: "48px 36px 80px",
         }}
       >
-        <div
-          style={{
-            marginBottom: 8,
-            fontSize: 11,
-            color: "var(--text-tertiary)",
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-          }}
-        >
-          Roadmap · post-submission
-        </div>
+        <Cap style={{ marginBottom: 12 }}>ROADMAP · THREE PHASES</Cap>
         <h1
           style={{
-            margin: 0,
+            margin: "0 0 20px",
             fontFamily: "var(--font-display)",
-            fontSize: 42,
-            fontWeight: 500,
-            letterSpacing: "-0.02em",
+            fontSize: "clamp(2.8rem, 6vw, 5.6rem)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "-0.01em",
+            lineHeight: 0.95,
+            color: "var(--lp-ink)",
           }}
         >
-          What ships next.
+          Now. Next.{" "}
+          <span style={{ color: "var(--lp-purple)" }}>Future.</span>
         </h1>
         <p
           style={{
-            marginTop: 12,
-            color: "var(--text-secondary)",
-            maxWidth: 720,
-            fontSize: 14,
+            maxWidth: "56ch",
+            margin: 0,
+            color: "var(--lp-ink-soft)",
+            fontSize: 15,
             lineHeight: 1.65,
           }}
         >
-          v1.0.3-submission is the audit-grade Ethereum-mainnet build shipped
-          to <code>&lt;HACKATHON_OR_SUBMISSION_CONTEXT&gt;</code>. The items below are scoped follow-ups that
-          extend reach without touching the verification primitives. Click any
-          row to expand the impacted layers and the rationale.
+          LP Doctor is hackathon-native, but not hackathon-shaped. Phase 1 ships the
+          full diagnostic pipeline on testnet. Phase 2 brings real execution on mainnet.
+          Phase 3 turns LP Doctor into infrastructure for the agent economy.
         </p>
-        <div style={{ marginTop: 32 }}>
-          {ROADMAP.map((item) => (
-            <AccordionRow
-              key={item.id}
-              item={item}
-              open={openId === item.id}
-              onToggle={() =>
-                setOpenId((prev) => (prev === item.id ? null : item.id))
-              }
-            />
-          ))}
+      </section>
+
+      {/* ── Phase timeline ────────────────────────────────────────────── */}
+      <section
+        style={{
+          position: "relative",
+          zIndex: 1,
+          padding: "0 36px 100px",
+          maxWidth: 1280,
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+        }}
+      >
+        {PHASES.map((phase, pi) => (
+          <div key={phase.phase} style={{ position: "relative" }}>
+            {/* Connector line */}
+            {pi < PHASES.length - 1 && (
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  left: 28,
+                  top: "100%",
+                  width: 2,
+                  height: 24,
+                  background: "var(--lp-border-soft)",
+                  zIndex: 0,
+                }}
+              />
+            )}
+
+            <WindowPanel title={`roadmap.phase · ${phase.version}`}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "minmax(220px, 0.6fr) 1fr",
+                  gap: 32,
+                  alignItems: "start",
+                }}
+                className="lp-roadmap-phase-grid"
+              >
+                {/* Left: phase identity */}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(3rem, 6vw, 5rem)",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        color: phase.accent,
+                        lineHeight: 1,
+                        letterSpacing: "-0.03em",
+                      }}
+                    >
+                      {phase.phase}
+                    </span>
+                    <StickerBadge variant={phase.sticker} style={{ transform: `rotate(${pi % 2 === 0 ? "-2deg" : "2deg"})` }}>
+                      {phase.stickerText}
+                    </StickerBadge>
+                  </div>
+
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      padding: "3px 8px",
+                      borderRadius: 2,
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      marginBottom: 14,
+                      ...LABEL_STYLE[phase.labelVariant],
+                    }}
+                  >
+                    {phase.label}
+                  </span>
+
+                  <p style={{ margin: 0, fontSize: 12, color: "var(--lp-ink-soft)", lineHeight: 1.65 }}>
+                    {phase.description}
+                  </p>
+                </div>
+
+                {/* Right: item list */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                  }}
+                >
+                  {phase.items.map((item) => (
+                    <div
+                      key={item.text}
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                        alignItems: "flex-start",
+                        padding: "7px 10px",
+                        border: "1.5px solid var(--lp-border-soft)",
+                        borderRadius: 2,
+                        background: item.done
+                          ? "color-mix(in oklch, var(--lp-healthy) 5%, var(--lp-base))"
+                          : "var(--lp-base)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          marginTop: 1,
+                          width: 14,
+                          height: 14,
+                          borderRadius: 1,
+                          border: item.done ? "none" : "1.5px solid var(--lp-border-mid)",
+                          background: item.done ? "var(--lp-healthy)" : "transparent",
+                          flexShrink: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 9,
+                          color: "oklch(0.15 0.042 288)",
+                          fontWeight: 800,
+                        }}
+                      >
+                        {item.done ? "✓" : ""}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 11,
+                          color: item.done ? "var(--lp-ink)" : "var(--lp-ink-faint)",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {item.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </WindowPanel>
+          </div>
+        ))}
+      </section>
+
+      {/* ── CTA ───────────────────────────────────────────────────────── */}
+      <section
+        style={{
+          background: "var(--lp-base-deep)",
+          borderTop: "2px solid var(--lp-border)",
+          padding: "72px 36px",
+          textAlign: "center",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <Cap style={{ marginBottom: 16 }}>PHASE 1 IS LIVE RIGHT NOW</Cap>
+        <h2
+          style={{
+            margin: "0 0 20px",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(1.8rem, 4vw, 3.4rem)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            color: "var(--lp-ink)",
+            lineHeight: 0.95,
+            letterSpacing: "-0.01em",
+          }}
+        >
+          Diagnose a real position.
+        </h2>
+        <p style={{ margin: "0 auto 32px", maxWidth: "42ch", fontSize: 14, color: "var(--lp-ink-soft)", lineHeight: 1.6 }}>
+          The full pipeline is running on 0G Galileo testnet. Paste a tokenId or pick
+          a demo wallet.
+        </p>
+        <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
+          <Link
+            to="/atlas"
+            className="lp-btn-primary"
+            style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            Open the Atlas <PixelArrow />
+          </Link>
+          <Link
+            to="/deck"
+            className="lp-btn-ghost"
+            style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            View the Deck <PixelArrow />
+          </Link>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
