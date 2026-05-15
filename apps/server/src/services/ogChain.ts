@@ -308,6 +308,7 @@ export class OgChainClient {
         transport: http(),
       });
       const agentAddr = contract as Hex;
+      const before = await this.readAgentState(publicClient, agentAddr, tokenId);
 
       // 1. updateMemoryRoot — points the iNFT's persistent memory at
       //    the latest report on 0G Storage.
@@ -317,12 +318,22 @@ export class OgChainClient {
         functionName: "updateMemoryRoot",
         args: [BigInt(tokenId), normalizeHex(rootHash)],
       });
-      await publicClient.waitForTransactionReceipt({
-        hash: updateMemoryTx,
-        timeout: 90_000,
-        pollingInterval: 2_000,
-        retryCount: 6,
-      });
+      try {
+        await publicClient.waitForTransactionReceipt({
+          hash: updateMemoryTx,
+          timeout: 90_000,
+          pollingInterval: 2_000,
+          retryCount: 6,
+        });
+      } catch (err) {
+        const postUpdate = await this.readAgentState(publicClient, agentAddr, tokenId);
+        if (postUpdate.memoryRoot !== normalizeHex(rootHash)) {
+          throw err;
+        }
+        logger.warn(
+          `0g-chain updateMemoryRoot receipt lookup failed, but memoryRoot already updated tokenId=${tokenId} tx=${updateMemoryTx}`,
+        );
+      }
 
       // 2. recordDiagnose — increments the on-chain reputation
       //    counter (one per anchored report).
@@ -332,41 +343,41 @@ export class OgChainClient {
         functionName: "recordDiagnose",
         args: [BigInt(tokenId)],
       });
-      await publicClient.waitForTransactionReceipt({
-        hash: recordDiagnoseTx,
-        timeout: 90_000,
-        pollingInterval: 2_000,
-        retryCount: 6,
-      });
+      try {
+        await publicClient.waitForTransactionReceipt({
+          hash: recordDiagnoseTx,
+          timeout: 90_000,
+          pollingInterval: 2_000,
+          retryCount: 6,
+        });
+      } catch (err) {
+        const postDiagnose = await this.readAgentState(
+          publicClient,
+          agentAddr,
+          tokenId,
+        );
+        if (postDiagnose.reputation <= before.reputation) {
+          throw err;
+        }
+        logger.warn(
+          `0g-chain recordDiagnose receipt lookup failed, but reputation already incremented tokenId=${tokenId} tx=${recordDiagnoseTx}`,
+        );
+      }
 
       // 3. Read back the post-state so the report payload (and the UI)
       //    can show the live memoryRoot + reputation counter.
-      const agent = (await publicClient.readContract({
-        address: agentAddr,
-        abi: LPDOCTOR_AGENT_ABI,
-        functionName: "agents",
-        args: [BigInt(tokenId)],
-      })) as readonly [
-        Hex,
-        Hex,
-        Hex,
-        bigint,
-        bigint,
-        bigint,
-        bigint,
-        string,
-      ];
+      const agent = await this.readAgentState(publicClient, agentAddr, tokenId);
 
       logger.info(
-        `0g-chain agent iNFT updated tokenId=${tokenId} memoryRoot=${agent[1]} reputation=${agent[5]} migrations=${agent[6]} updateTx=${updateMemoryTx} recordTx=${recordDiagnoseTx}`,
+        `0g-chain agent iNFT updated tokenId=${tokenId} memoryRoot=${agent.memoryRoot} reputation=${agent.reputation} migrations=${agent.migrationsTriggered} updateTx=${updateMemoryTx} recordTx=${recordDiagnoseTx}`,
       );
 
       return {
         tokenId,
         contract,
-        memoryRoot: agent[1],
-        reputation: Number(agent[5]),
-        migrationsTriggered: Number(agent[6]),
+        memoryRoot: agent.memoryRoot,
+        reputation: agent.reputation,
+        migrationsTriggered: agent.migrationsTriggered,
         updateMemoryTx,
         recordDiagnoseTx,
         stub: false,
@@ -497,6 +508,42 @@ export class OgChainClient {
         warnings,
       };
     }
+  }
+
+  private async readAgentState(
+    publicClient: ReturnType<typeof createPublicClient>,
+    agentAddr: Hex,
+    tokenId: number,
+  ): Promise<{
+    owner: Hex;
+    memoryRoot: Hex;
+    reputation: number;
+    migrationsTriggered: number;
+    metadataUri: string;
+  }> {
+    const agent = (await publicClient.readContract({
+      address: agentAddr,
+      abi: LPDOCTOR_AGENT_ABI,
+      functionName: "agents",
+      args: [BigInt(tokenId)],
+    })) as readonly [
+      Hex,
+      Hex,
+      Hex,
+      bigint,
+      bigint,
+      bigint,
+      bigint,
+      string,
+    ];
+
+    return {
+      owner: agent[0],
+      memoryRoot: agent[1],
+      reputation: Number(agent[5]),
+      migrationsTriggered: Number(agent[6]),
+      metadataUri: agent[7],
+    };
   }
 }
 
