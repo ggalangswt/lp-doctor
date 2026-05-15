@@ -48,6 +48,19 @@ const LPDOCTOR_REPORTS_ABI = [
     ],
     outputs: [],
   },
+  {
+    name: "reports",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "rootHash", type: "bytes32" }],
+    outputs: [
+      { name: "publisher", type: "address" },
+      { name: "timestamp", type: "uint64" },
+      { name: "tokenId", type: "uint256" },
+      { name: "storedRootHash", type: "bytes32" },
+      { name: "attestation", type: "bytes" },
+    ],
+  },
 ] as const;
 
 const LPDOCTOR_AGENT_ABI = [
@@ -142,21 +155,22 @@ export class OgChainClient {
       };
     }
 
-    try {
-      const account = privateKeyToAccount(
-        normalizeHex(config.OG_ANCHOR_PRIVATE_KEY),
-      );
-      const wallet = createWalletClient({
-        account,
-        chain: zeroGGalileo,
-        transport: http(),
-      });
-      const publicClient = createPublicClient({
-        chain: zeroGGalileo,
-        transport: http(),
-      });
+    const account = privateKeyToAccount(
+      normalizeHex(config.OG_ANCHOR_PRIVATE_KEY),
+    );
+    const wallet = createWalletClient({
+      account,
+      chain: zeroGGalileo,
+      transport: http(),
+    });
+    const publicClient = createPublicClient({
+      chain: zeroGGalileo,
+      transport: http(),
+    });
 
-      let txHash: Hex;
+    let txHash: Hex | undefined;
+
+    try {
 
       if (config.LPDOCTOR_REPORTS_CONTRACT) {
         // Preferred: call the registry contract.
@@ -201,6 +215,34 @@ export class OgChainClient {
         stub: false,
       };
     } catch (err) {
+      if (config.LPDOCTOR_REPORTS_CONTRACT && txHash) {
+        try {
+          const report = await publicClient.readContract({
+            address: config.LPDOCTOR_REPORTS_CONTRACT as Hex,
+            abi: LPDOCTOR_REPORTS_ABI,
+            functionName: "reports",
+            args: [normalizeHex(rootHash)],
+          });
+          if (report[0] !== "0x0000000000000000000000000000000000000000") {
+            logger.warn(
+              `0g-chain anchor receipt lookup failed, but report is present on-chain rootHash=${rootHash} tx=${txHash}`,
+            );
+            return {
+              txHash,
+              chainId: config.OG_CHAIN_ID,
+              explorerUrl: `${EXPLORER_BASE}/${txHash}`,
+              contract: config.LPDOCTOR_REPORTS_CONTRACT,
+              stub: false,
+            };
+          }
+        } catch (confirmErr) {
+          logger.warn(
+            `0g-chain post-error confirmation failed: ${
+              confirmErr instanceof Error ? confirmErr.message : String(confirmErr)
+            }`,
+          );
+        }
+      }
       const stubTx = stubTxHash(rootHash);
       logger.error(
         `0g-chain anchor failed, returning stub: ${
