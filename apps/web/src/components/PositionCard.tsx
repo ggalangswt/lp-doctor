@@ -21,6 +21,12 @@ const HEALTH_TONE: Record<"healthy" | "drift" | "bleeding", string> = {
   bleeding: "bleed",
 };
 
+const STATUS_CLASS: Record<"healthy" | "drift" | "bleeding", string> = {
+  healthy: "atlas-card--healthy",
+  drift: "atlas-card--drift",
+  bleeding: "atlas-card--bleeding",
+};
+
 const CTA_LABEL: Record<"healthy" | "drift" | "bleeding", string> = {
   healthy: "HEALTHY · HOLD",
   drift: "DRIFTING · REVIEW",
@@ -40,11 +46,21 @@ function feeTierLabel(tier: string): string {
 
 function formatLiquidity(liq: string): string {
   try {
-    const n = Number(BigInt(liq));
-    return fmt.num(n);
+    BigInt(liq);
+    if (liq.length > 12) {
+      const head = liq.slice(0, 4);
+      return `${head[0]}.${head.slice(1)}e${liq.length - 1}`;
+    }
+    return fmt.num(Number(liq));
   } catch {
     return liq;
   }
+}
+
+function rangeFill(status: "healthy" | "drift" | "bleeding"): string {
+  if (status === "healthy") return "68%";
+  if (status === "drift") return "38%";
+  return "100%";
 }
 
 export function PositionCard({ position }: Props) {
@@ -62,212 +78,109 @@ export function PositionCard({ position }: Props) {
   const totalDeposited = dep0 + dep1;
   const totalFees = fee0 + fee1;
 
-  const borderColor =
-    status === "bleeding"
-      ? "rgba(255, 94, 79, 0.35)"
-      : status === "drift"
-        ? "rgba(245, 210, 102, 0.25)"
-        : "var(--border)";
-
   return (
     <Link
       to={`/diagnose/${position.id}`}
-      style={{
-        display: "block",
-        position: "relative",
-        background: "var(--surface)",
-        border: `1px solid ${borderColor}`,
-        borderRadius: "var(--radius-lg)",
-        textDecoration: "none",
-        color: "inherit",
-        overflow: "hidden",
-        transition: "transform 160ms var(--ease-precise), border-color 200ms, box-shadow 200ms",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = `0 0 24px var(--${tone}-glow)`;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = "none";
-      }}
+      className={`atlas-card ${STATUS_CLASS[status]}`}
+      aria-label={`Diagnose ${pool.token0.symbol}/${pool.token1.symbol} position ${position.id}`}
     >
-      {status === "bleeding" && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(255,94,79,0.10) 50%, transparent 100%)",
-            backgroundSize: "200% 100%",
-            animation: "bleed-sweep 3.2s linear infinite",
-            pointerEvents: "none",
-          }}
-        />
-      )}
+      <div className="lp-window-bar">
+        <div className="lp-window-dots" aria-hidden>
+          <span className="lp-window-dot" style={{ background: "var(--lp-bleed)" }} />
+          <span className="lp-window-dot" style={{ background: "var(--lp-toxic)" }} />
+          <span className="lp-window-dot" style={{ background: "var(--lp-healthy)" }} />
+        </div>
+        <span className="lp-window-title">LP POSITION · TOKEN {position.id}</span>
+      </div>
 
-      <div
-        style={{
-          height: 2,
-          background:
-            status === "bleeding"
-              ? "linear-gradient(90deg, var(--bleed), transparent)"
-              : status === "drift"
-                ? "linear-gradient(90deg, var(--toxic), transparent)"
-                : "linear-gradient(90deg, var(--healthy), transparent)",
-        }}
-      />
-
-      <div style={{ padding: "20px 22px 18px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 18,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div className="atlas-card-body">
+        <div className="atlas-card-head">
+          <div className="atlas-pair-block">
             <TokenPair t0={pool.token0.symbol} t1={pool.token1.symbol} />
             <div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 16,
-                  fontWeight: 500,
-                  letterSpacing: "-0.01em",
-                }}
-              >
+              <div className="atlas-pool-name">
                 {pool.token0.symbol} / {pool.token1.symbol}
               </div>
-              <Mono
-                style={{
-                  display: "block",
-                  fontSize: 10,
-                  color: "var(--text-tertiary)",
-                  marginTop: 2,
-                }}
-              >
+              <span className="mono atlas-pool-sub">
                 tokenId {position.id} · {feeTierLabel(pool.feeTier)}
-              </Mono>
+              </span>
             </div>
           </div>
           <HealthBadge status={status} />
         </div>
 
-        <div style={{ marginBottom: 14 }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+        <div className="atlas-range-wrap">
+          <div className="atlas-range-meta">
             <Cap>RANGE</Cap>
-            <Mono style={{ fontSize: 11, color: "var(--text-secondary)" }}>
+            <span className={`mono ${status === "bleeding" ? "atlas-range-label atlas-range-label--out" : "atlas-range-label"}`}>
               {tickRange}
-            </Mono>
+            </span>
           </div>
-        </div>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "12px 18px",
-            paddingTop: 14,
-            borderTop: "1px solid var(--border-faint)",
-          }}
-        >
-          <div>
-            <Cap>DEPOSITED</Cap>
-            <Mono
-              style={{
-                display: "block",
-                fontSize: 14,
-                color: "var(--text)",
-                marginTop: 4,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {fmt.num(totalDeposited)}
-            </Mono>
-          </div>
-          <div>
-            <Cap>FEES</Cap>
-            <Mono
-              style={{
-                display: "block",
-                fontSize: 14,
-                color: totalFees > 0 ? "var(--healthy)" : "var(--text)",
-                marginTop: 4,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {fmt.num(totalFees)}
-            </Mono>
-          </div>
-          <div>
-            <Cap>LIQUIDITY</Cap>
-            <Mono
-              style={{
-                display: "block",
-                fontSize: 14,
-                color: "var(--text)",
-                marginTop: 4,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {formatLiquidity(position.liquidity)}
-            </Mono>
-          </div>
-          <div>
-            <Cap>FEE TIER</Cap>
-            <Mono
-              style={{
-                display: "block",
-                fontSize: 14,
-                color: "var(--text)",
-                marginTop: 4,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              {feeTierLabel(pool.feeTier)}
-            </Mono>
-          </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: 18,
-            paddingTop: 14,
-            borderTop: "1px solid var(--border-faint)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Cap style={{ color: `var(--${tone})` }}>{CTA_LABEL[status]}</Cap>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 12,
-              color: "var(--cyan)",
-            }}
+          <div
+            className={`atlas-range-track${
+              status === "bleeding" ? " atlas-range-track--out" : ""
+            }`}
+            aria-hidden
           >
+            <div
+              className={`atlas-range-fill atlas-range-fill--${status}`}
+              style={{ width: rangeFill(status) }}
+            />
+          </div>
+        </div>
+
+        <div className="atlas-card-stat-grid atlas-stat-divider">
+          <Metric label="DEPOSITED" value={fmt.num(totalDeposited)} />
+          <Metric
+            label="FEES"
+            value={fmt.num(totalFees)}
+            tone={totalFees > 0 ? "var(--lp-healthy)" : undefined}
+          />
+          <Metric label="LIQUIDITY" value={formatLiquidity(position.liquidity)} />
+          <Metric label="FEE TIER" value={feeTierLabel(pool.feeTier)} />
+        </div>
+
+        <div className="atlas-card-footer atlas-stat-divider">
+          <Cap style={{ color: `var(--lp-${tone})` }}>{CTA_LABEL[status]}</Cap>
+          <span className="atlas-diagnose-btn">
             Diagnose
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path
-                d="M2 5h6M5 2l3 3-3 3"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <PixelArrow />
           </span>
         </div>
       </div>
     </Link>
+  );
+}
+
+function Metric({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: string;
+}) {
+  return (
+    <div>
+      <Cap>{label}</Cap>
+      <span className="mono atlas-metric-value" style={tone ? { color: tone } : undefined}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function PixelArrow() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
+      <path
+        d="M2 5h6M5 2l3 3-3 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+      />
+    </svg>
   );
 }

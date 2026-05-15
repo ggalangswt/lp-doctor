@@ -1,0 +1,847 @@
+/* LP Doctor - Atlas Page Styles */
+/* Scope: .atlas-theme. Product-register Neo-Y2K scanner surface. */
+
+/* ── Base ────────────────────────────────────────────────────────── */
+.atlas-theme {
+  --lp-base:         oklch(0.97 0.018 300);
+  --lp-base-deep:    oklch(0.93 0.026 300);
+  --lp-ink:          oklch(0.15 0.042 288);
+  --lp-ink-soft:     oklch(0.28 0.04  288);
+  --lp-ink-faint:    oklch(0.50 0.035 288);
+  --lp-ink-ghost:    oklch(0.68 0.022 290);
+  --lp-purple:       oklch(0.50 0.26  296);
+  --lp-magenta:      oklch(0.60 0.27  348);
+  --lp-cobalt:       oklch(0.50 0.23  258);
+  --lp-yellow:       oklch(0.90 0.20   99);
+  --lp-bleed:        oklch(0.62 0.24   24);
+  --lp-healthy:      oklch(0.70 0.20  145);
+  --lp-toxic:        oklch(0.78 0.19   88);
+  --lp-border:       oklch(0.18 0.04  290);
+  --lp-border-soft:  oklch(0.18 0.04  290 / 0.12);
+  --lp-border-mid:   oklch(0.18 0.04  290 / 0.20);
+  --lp-shadow:       5px 5px 0  oklch(0.18 0.04 290);
+  --lp-shadow-sm:    3px 3px 0  oklch(0.18 0.04 290);
+  --lp-shadow-hover: 2px 2px 0  oklch(0.18 0.04 290);
+
+  --text:           var(--lp-ink);
+  --text-secondary: var(--lp-ink-soft);
+  --text-tertiary:  var(--lp-ink-faint);
+  --text-faint:     var(--lp-ink-ghost);
+  --surface:        oklch(0.94 0.022 300);
+  --surface-raised: oklch(0.96 0.018 300);
+  --border:         var(--lp-border-soft);
+  --border-strong:  var(--lp-border-mid);
+  --font-display:   'Barlow Condensed', 'Space Grotesk', system-ui, sans-serif;
+
+  min-height: 100vh;
+  background: var(--lp-base);
+  color: var(--lp-ink);
+  position: relative;
+  overflow-x: hidden;
+
+  --cyan: var(--lp-cobalt);
+  --cyan-glow: oklch(0.50 0.23 258 / 0.28);
+  --violet: var(--lp-purple);
+  --violet-glow: oklch(0.50 0.26 296 / 0.28);
+  --healthy: var(--lp-healthy);
+  --healthy-glow: oklch(0.70 0.20 145 / 0.28);
+  --toxic: var(--lp-toxic);
+  --toxic-glow: oklch(0.78 0.19 88 / 0.28);
+  --bleed: var(--lp-bleed);
+  --bleed-glow: oklch(0.62 0.24 24 / 0.28);
+}
+
+.atlas-theme .chip {
+  background: var(--lp-base-deep);
+  border-color: var(--lp-border-mid);
+  color: var(--lp-ink-faint);
+}
+
+.atlas-theme .chip-cyan {
+  color: var(--lp-purple);
+  border-color: oklch(0.50 0.26 296 / 0.26);
+  background: oklch(0.50 0.26 296 / 0.10);
+}
+
+.atlas-theme .cap {
+  color: var(--lp-ink-faint);
+}
+
+.atlas-theme .btn-primary {
+  background: var(--lp-yellow);
+  color: var(--lp-ink);
+  border: 2px solid var(--lp-border);
+  border-radius: 2px;
+  box-shadow: var(--lp-shadow);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.atlas-theme .btn-primary:hover {
+  box-shadow: var(--lp-shadow-hover);
+  transform: translate(2px, 2px);
+}
+
+.atlas-theme .btn-ghost {
+  background: transparent;
+  color: var(--lp-cobalt);
+  border: 2px solid var(--lp-cobalt);
+  border-radius: 2px;
+  box-shadow: var(--lp-shadow-sm);
+}
+
+.atlas-theme .btn-ghost:hover {
+  background: oklch(0.50 0.23 258 / 0.08);
+}
+
+.lp-window {
+  background: oklch(0.985 0.012 300);
+  border: 2px solid var(--lp-border);
+  border-radius: 3px;
+  box-shadow: var(--lp-shadow);
+  overflow: hidden;
+}
+
+.lp-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  background: var(--lp-base-deep);
+  border-bottom: 1px solid var(--lp-border-soft);
+  user-select: none;
+}
+
+.lp-window-dots {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.lp-window-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+}
+
+.lp-window-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--lp-ink-faint);
+  letter-spacing: 0.02em;
+}
+
+.lp-window-body {
+  padding: 14px 16px;
+}
+
+.atlas-grid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--lp-border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lp-border-soft) 1px, transparent 1px),
+    radial-gradient(circle at 12% 14%, oklch(0.50 0.26 296 / 0.12), transparent 30%),
+    radial-gradient(circle at 92% 18%, oklch(0.60 0.27 348 / 0.08), transparent 28%);
+  background-size: 44px 44px, 44px 44px, 100% 100%, 100% 100%;
+  opacity: 0.65;
+  mask-image: linear-gradient(to bottom, black 0%, black 65%, transparent 100%);
+  z-index: 0;
+}
+
+.atlas-theme > header,
+.atlas-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.atlas-shell {
+  width: min(1400px, calc(100% - 72px));
+  margin: 0 auto;
+  padding: 48px 0 120px;
+}
+
+.atlas-hero {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.95fr) minmax(420px, 1.05fr);
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 32px;
+}
+
+.atlas-title-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 8px;
+}
+
+.atlas-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.atlas-pixel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--lp-purple);
+  box-shadow: 0 0 0 2px oklch(0.50 0.26 296 / 0.16);
+  animation: pulse-dot 1.8s infinite;
+}
+
+.atlas-title {
+  margin: 0;
+  font-family: 'Barlow Condensed', var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 5.8rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--lp-ink);
+  text-wrap: balance;
+}
+
+.atlas-subtitle {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--lp-ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.atlas-context-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  color: var(--lp-ink-soft);
+  font-size: 13px;
+}
+
+.atlas-context-line > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.atlas-scan-window {
+  align-self: end;
+}
+
+.atlas-demo-section,
+.atlas-score-window,
+.atlas-state-panel,
+.atlas-results-head {
+  margin-top: 28px;
+}
+
+.atlas-section-head,
+.atlas-results-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.atlas-section-head h2,
+.atlas-results-head h2 {
+  margin: 5px 0 0;
+  font-family: 'Barlow Condensed', var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.atlas-section-note {
+  max-width: 42ch;
+  color: var(--lp-ink-ghost);
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+/* Light-surface overrides for inherited atom classes */
+.atlas-theme .cap {
+  color: var(--lp-ink-faint);
+}
+.atlas-theme .chip {
+  background:   var(--lp-base-deep);
+  border-color: var(--lp-border-mid);
+  color:        var(--lp-ink-faint);
+}
+
+/* ── Scan window body ────────────────────────────────────────────── */
+.atlas-scan-row {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+}
+
+.atlas-scan-prompt {
+  font-family:    var(--font-mono);
+  font-size:      14px;
+  font-weight:    700;
+  color:          var(--lp-purple);
+  flex-shrink:    0;
+  user-select:    none;
+  letter-spacing: -0.01em;
+}
+
+.atlas-scan-input {
+  flex:        1;
+  background:  transparent;
+  border:      none;
+  outline:     none;
+  font-family: var(--font-mono);
+  font-size:   13px;
+  color:       var(--lp-ink);
+  padding:     0;
+  min-width:   0;
+  caret-color: var(--lp-purple);
+}
+.atlas-scan-input::placeholder {
+  color: var(--lp-ink-ghost);
+}
+
+.atlas-scan-btn {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            5px;
+  padding:        9px 16px;
+  font-family:    var(--font-mono);
+  font-size:      11px;
+  font-weight:    700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background:     var(--lp-yellow);
+  color:          var(--lp-ink);
+  border:         2px solid var(--lp-border);
+  border-radius:  2px;
+  box-shadow:     var(--lp-shadow-sm);
+  cursor:         pointer;
+  flex-shrink:    0;
+  line-height:    1;
+  transition:     box-shadow 90ms ease-out, transform 90ms ease-out;
+}
+.atlas-scan-btn:hover:not(:disabled) {
+  box-shadow: var(--lp-shadow-hover);
+  transform:  translate(2px, 2px);
+}
+.atlas-scan-btn:active:not(:disabled) {
+  box-shadow: none;
+  transform:  translate(3px, 3px);
+}
+.atlas-scan-btn:disabled {
+  opacity:    0.45;
+  cursor:     not-allowed;
+  transform:  none;
+  box-shadow: var(--lp-shadow-sm);
+}
+.atlas-scan-btn:focus-visible {
+  outline:        2px solid var(--lp-purple);
+  outline-offset: 3px;
+}
+
+/* ── Arcade cartridge chips ──────────────────────────────────────── */
+.atlas-cartridge-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap:                   10px;
+}
+
+.atlas-cartridge {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+  padding:        11px 13px;
+  background:     oklch(0.985 0.012 300);
+  border:         2px solid var(--lp-border);
+  border-radius:  2px;
+  box-shadow:     var(--lp-shadow-sm);
+  cursor:         pointer;
+  text-align:     left;
+  font:           inherit;
+  color:          inherit;
+  transition:     box-shadow 90ms ease-out, transform 90ms ease-out,
+                  background 100ms, border-color 100ms;
+}
+.atlas-cartridge:hover:not(.atlas-cartridge--active) {
+  box-shadow: 4px 4px 0 var(--lp-border);
+  transform:  translate(-1px, -1px);
+}
+.atlas-cartridge--active {
+  box-shadow: inset 2px 2px 0 oklch(0.15 0.042 288 / 0.12);
+  border-width: 2px;
+}
+
+.atlas-cartridge-top {
+  display:     flex;
+  align-items: center;
+  gap:         7px;
+}
+.atlas-cartridge-dot {
+  width:        7px;
+  height:       7px;
+  border-radius: 1px;
+  flex-shrink:  0;
+}
+.atlas-cartridge-label {
+  font-family:    var(--font-mono);
+  font-size:      11px;
+  font-weight:    600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color:          var(--lp-ink);
+  line-height:    1.2;
+}
+.atlas-cartridge-hint {
+  font-family: var(--font-mono);
+  font-size:   10px;
+  color:       var(--lp-ink-ghost);
+  line-height: 1.4;
+  padding-left: 14px;
+}
+
+/* ── Scoreboard strip ────────────────────────────────────────────── */
+.atlas-score-strip {
+  display:               grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top:            2px solid var(--lp-border-soft);
+}
+
+/* Override AggStat internal border-right with lp-border version */
+.atlas-score-strip > div {
+  border-right: 2px solid var(--lp-border-soft) !important;
+  padding:      18px 20px !important;
+}
+.atlas-score-strip > div:last-child {
+  border-right: none !important;
+}
+
+/* Health-tinted cells: nth-child indexes match DEPOSITED/FEES/HEALTHY/DRIFTING/BLEEDING */
+.atlas-score-strip > div:nth-child(3) {
+  background: color-mix(in oklch, var(--lp-healthy) 7%, oklch(0.985 0.012 300));
+}
+.atlas-score-strip > div:nth-child(4) {
+  background: color-mix(in oklch, var(--lp-toxic) 9%, oklch(0.985 0.012 300));
+}
+.atlas-score-strip > div:nth-child(5) {
+  background: color-mix(in oklch, var(--lp-bleed) 8%, oklch(0.985 0.012 300));
+}
+
+/* Value digit: nth-child(2) within each AggStat cell (Cap is [1], value is [2], sub is [3]) */
+.atlas-score-strip > div > :nth-child(2) {
+  font-family:    'Barlow Condensed', var(--font-mono) !important;
+  font-size:      34px !important;
+  font-weight:    700  !important;
+  letter-spacing: -0.03em !important;
+  line-height:    1 !important;
+  display:        block !important;
+}
+
+/* Sub label */
+.atlas-score-strip > div > :nth-child(3) {
+  font-size: 10px !important;
+  color:     var(--lp-ink-ghost) !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* ── Position cards ──────────────────────────────────────────────── */
+.atlas-card {
+  display:        block;
+  position:       relative;
+  background:     oklch(0.985 0.012 300);
+  border:         2px solid var(--lp-border-soft);
+  border-radius:  4px;
+  box-shadow:     4px 4px 0 oklch(0.18 0.04 290 / 0.18);
+  text-decoration: none;
+  color:          inherit;
+  overflow:       hidden;
+  transition:     transform 90ms ease-out, box-shadow 90ms ease-out;
+}
+
+.atlas-card:focus-visible {
+  outline: 3px solid var(--lp-purple);
+  outline-offset: 4px;
+}
+.atlas-card:hover {
+  transform:  translate(2px, 2px);
+  box-shadow: 1px 1px 0 oklch(0.18 0.04 290 / 0.18);
+}
+
+/* Health-state borders */
+.atlas-card--bleeding {
+  border-color: var(--lp-bleed);
+  box-shadow:   4px 4px 0 oklch(0.62 0.24 24 / 0.30);
+}
+.atlas-card--bleeding:hover {
+  box-shadow: 1px 1px 0 oklch(0.62 0.24 24 / 0.30);
+}
+.atlas-card--drift {
+  border-color: var(--lp-toxic);
+  box-shadow:   4px 4px 0 oklch(0.78 0.19 88 / 0.30);
+}
+.atlas-card--drift:hover {
+  box-shadow: 1px 1px 0 oklch(0.78 0.19 88 / 0.30);
+}
+.atlas-card--healthy {
+  border-color: var(--lp-healthy);
+  box-shadow:   4px 4px 0 oklch(0.70 0.20 145 / 0.28);
+}
+.atlas-card--healthy:hover {
+  box-shadow: 1px 1px 0 oklch(0.70 0.20 145 / 0.28);
+}
+
+/* Card content atom overrides */
+.atlas-card .cap  { color: var(--lp-ink-ghost); }
+.atlas-card .mono { color: var(--lp-ink); }
+.atlas-card .mono[style*="var(--healthy)"],
+.atlas-card .mono[style*="var(--lp-healthy)"] { color: var(--lp-healthy) !important; }
+.atlas-card .mono[style*="var(--toxic)"],
+.atlas-card .mono[style*="var(--lp-toxic)"] { color: var(--lp-toxic) !important; }
+.atlas-card .mono[style*="var(--bleed)"],
+.atlas-card .mono[style*="var(--lp-bleed)"] { color: var(--lp-bleed) !important; }
+
+.atlas-card-body {
+  padding: 18px 20px 16px;
+}
+
+.atlas-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.atlas-pair-block {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Pool name (Barlow in card header) ───────────────────────────── */
+.atlas-pool-name {
+  font-family:    'Barlow Condensed', var(--font-display);
+  font-size:      17px;
+  font-weight:    700;
+  letter-spacing: -0.01em;
+  color:          var(--lp-ink);
+  line-height:    1.2;
+}
+.atlas-pool-sub {
+  font-family: var(--font-mono);
+  font-size:   10px;
+  color:       var(--lp-ink-ghost);
+  margin-top:  2px;
+  display:     block;
+}
+
+.atlas-card-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  padding-top: 14px;
+}
+
+.atlas-metric-value {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.atlas-card-footer {
+  margin-top: 16px;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ── Range visualization bar ─────────────────────────────────────── */
+.atlas-range-wrap {
+  margin: 12px 0 14px;
+}
+.atlas-range-track {
+  width:         100%;
+  height:        6px;
+  background:    oklch(0.90 0.016 295);
+  border-radius: 2px;
+  position:      relative;
+  overflow:      hidden;
+}
+.atlas-range-track--out {
+  background: color-mix(in oklch, var(--lp-bleed) 16%, oklch(0.90 0.016 295));
+}
+.atlas-range-fill {
+  height:        100%;
+  border-radius: 2px;
+  transition:    width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.atlas-range-fill--bleeding { background: var(--lp-bleed); }
+.atlas-range-fill--drift    { background: var(--lp-toxic); }
+.atlas-range-fill--healthy  { background: var(--lp-healthy); }
+
+.atlas-range-meta {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  margin-top:      4px;
+}
+.atlas-range-label {
+  font-family:    var(--font-mono);
+  font-size:      10px;
+  font-weight:    600;
+  color:          var(--lp-ink-faint);
+}
+.atlas-range-label--out {
+  color: var(--lp-bleed);
+}
+
+/* ── Diagnose pixel button ───────────────────────────────────────── */
+.atlas-diagnose-btn {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            5px;
+  padding:        6px 11px;
+  font-family:    var(--font-mono);
+  font-size:      10px;
+  font-weight:    700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color:          var(--lp-cobalt);
+  border:         2px solid var(--lp-cobalt);
+  border-radius:  2px;
+  background:     oklch(0.985 0.012 300);
+  box-shadow:     2px 2px 0 var(--lp-cobalt);
+  transition:     box-shadow 80ms ease-out, transform 80ms ease-out;
+}
+.atlas-card:hover .atlas-diagnose-btn {
+  box-shadow: 0 0 0 transparent;
+  transform:  translate(2px, 2px);
+}
+
+/* ── Health badge light-surface tones ────────────────────────────── */
+.atlas-card .mono[style*="color: var(--healthy)"],
+.atlas-card .mono[style*="color:var(--healthy)"] {
+  color: var(--lp-healthy) !important;
+}
+
+/* ── Card stat border ────────────────────────────────────────────── */
+.atlas-stat-divider {
+  border-top: 1px solid oklch(0.87 0.026 295);
+}
+
+/* ── Terminal output panel ───────────────────────────────────────── */
+.atlas-terminal-line {
+  font-family: var(--font-mono);
+  font-size:   13px;
+  color:       var(--lp-ink-soft);
+  line-height: 1.7;
+}
+.atlas-terminal-line--bleed { color: var(--lp-bleed); }
+.atlas-terminal-line--faint { color: var(--lp-ink-ghost); }
+.atlas-terminal-prompt      { color: var(--lp-purple); font-weight: 700; }
+
+.atlas-state-panel--error {
+  border-color: var(--lp-bleed);
+  box-shadow: 4px 4px 0 oklch(0.62 0.24 24 / 0.26);
+}
+
+.atlas-state-panel--empty {
+  border-color: var(--lp-cobalt);
+  box-shadow: 4px 4px 0 oklch(0.50 0.23 258 / 0.24);
+}
+
+.atlas-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.atlas-skeleton-grid span {
+  height: 78px;
+  border: 2px solid var(--lp-border-soft);
+  background:
+    linear-gradient(
+      90deg,
+      oklch(0.94 0.022 300),
+      oklch(0.985 0.012 300),
+      oklch(0.94 0.022 300)
+    );
+  background-size: 220% 100%;
+  animation: atlas-skeleton 1.2s linear infinite;
+}
+
+.atlas-position-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+@keyframes atlas-skeleton {
+  to { background-position: -220% 0; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .atlas-shell {
+    width: min(100% - 40px, 960px);
+    padding-top: 36px;
+  }
+
+  .atlas-hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .atlas-section-note {
+    text-align: left;
+  }
+
+  .atlas-score-strip {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .atlas-score-strip > div:nth-child(3) {
+    border-right: none !important;
+  }
+  .atlas-score-strip > div:nth-child(4),
+  .atlas-score-strip > div:nth-child(5) {
+    border-top: 2px solid var(--lp-border-soft);
+  }
+  .atlas-score-strip > div:nth-child(5) {
+    border-right: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .atlas-theme > header {
+    padding: 16px 14px !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .atlas-theme > header > a {
+    gap: 8px !important;
+    flex-shrink: 0;
+  }
+
+  .atlas-theme > header > a .chip {
+    display: none;
+  }
+
+  .atlas-theme > header nav {
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    min-width: 0;
+  }
+
+  .atlas-theme > header nav > span[title] {
+    display: none !important;
+  }
+
+  .atlas-theme > header .btn {
+    min-height: 44px;
+    padding: 10px 14px !important;
+    font-size: 11px !important;
+  }
+
+  .atlas-shell {
+    width: min(100% - 28px, 680px);
+    padding: 28px 0 80px;
+  }
+
+  .atlas-title {
+    font-size: clamp(2.5rem, 13vw, 4.2rem);
+  }
+
+  .atlas-scan-row {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .atlas-scan-input {
+    flex-basis: calc(100% - 36px);
+    min-height: 38px;
+  }
+
+  .atlas-scan-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .atlas-section-head,
+  .atlas-results-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .atlas-cartridge-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .atlas-score-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .atlas-score-strip > div:nth-child(even) {
+    border-right: none !important;
+  }
+  .atlas-score-strip > div:nth-child(n+3) {
+    border-top: 2px solid var(--lp-border-soft);
+  }
+  .atlas-score-strip > div:nth-child(5) {
+    grid-column: 1 / -1;
+    border-right: none !important;
+  }
+  .atlas-score-strip > div > :nth-child(2) {
+    font-size: 26px !important;
+  }
+
+  .atlas-position-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-card-head,
+  .atlas-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .atlas-skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .atlas-cartridge-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .atlas-card,
+  .atlas-cartridge,
+  .atlas-scan-btn,
+  .atlas-diagnose-btn { transition: none; }
+  .atlas-range-fill   { transition: none; }
+}
