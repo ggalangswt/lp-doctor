@@ -40,15 +40,9 @@ export type Config = z.infer<typeof schema>;
 
 const env = {
   ...process.env,
-  LPDOCTOR_REPORTS_CONTRACT:
-    process.env.LPDOCTOR_REPORTS_CONTRACT ??
-    process.env.LPLENS_REPORTS_CONTRACT,
-  LPDOCTOR_AGENT_CONTRACT:
-    process.env.LPDOCTOR_AGENT_CONTRACT ??
-    process.env.LPLENS_AGENT_CONTRACT,
-  LPDOCTOR_AGENT_TOKEN_ID:
-    process.env.LPDOCTOR_AGENT_TOKEN_ID ??
-    process.env.LPLENS_AGENT_TOKEN_ID,
+  LPDOCTOR_REPORTS_CONTRACT: process.env.LPDOCTOR_REPORTS_CONTRACT,
+  LPDOCTOR_AGENT_CONTRACT: process.env.LPDOCTOR_AGENT_CONTRACT,
+  LPDOCTOR_AGENT_TOKEN_ID: process.env.LPDOCTOR_AGENT_TOKEN_ID,
 };
 
 export const config: Config = schema.parse(env);

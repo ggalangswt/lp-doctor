@@ -53,14 +53,9 @@ export class OnchainClient {
 
   constructor(cfg?: Partial<OnchainConfig>) {
     this.cfg = {
-      contract:
-        (
-          cfg?.contract ??
-          process.env.LPDOCTOR_AGENT_CONTRACT ??
-          process.env.LPLENS_AGENT_CONTRACT
-        ) as
-          | Address
-          | undefined,
+      contract: (cfg?.contract ?? process.env.LPDOCTOR_AGENT_CONTRACT) as
+        | Address
+        | undefined,
       rpcUrl: cfg?.rpcUrl ?? process.env.OG_NEWTON_RPC ?? DEFAULT_RPC,
       chainId: cfg?.chainId ?? DEFAULT_CHAIN_ID,
     };
