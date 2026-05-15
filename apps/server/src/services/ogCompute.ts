@@ -34,6 +34,7 @@ export interface VerdictResult {
   providerAddress?: string;
   stub: boolean;
   latencyMs: number;
+  failureReason?: string;
 }
 
 const SYSTEM_PROMPT =
@@ -163,12 +164,13 @@ export class OgComputeClient {
   async synthesizeVerdict(reportJson: string): Promise<VerdictResult> {
     const t0 = Date.now();
     if (!this.isReady()) {
-      const md = stubVerdict();
+      const md = stubVerdict("OG_COMPUTE_PRIVATE_KEY not configured");
       return {
         markdown: md,
         model: "stub-deterministic",
         stub: true,
         latencyMs: Date.now() - t0,
+        failureReason: "OG_COMPUTE_PRIVATE_KEY not configured",
       };
     }
 
@@ -220,26 +222,30 @@ export class OgComputeClient {
         latencyMs: Date.now() - t0,
       };
     } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
       logger.error(
         `0g-compute synthesizeVerdict failed, returning stub: ${
-          err instanceof Error ? err.message : String(err)
+          reason
         }`,
       );
       return {
-        markdown: stubVerdict(),
+        markdown: stubVerdict(reason),
         model: "stub-fallback",
         stub: true,
         latencyMs: Date.now() - t0,
+        failureReason: reason,
       };
     }
   }
 }
 
-function stubVerdict(): string {
+function stubVerdict(reason?: string): string {
   return [
-    "Verdict synthesis skipped — 0G Compute broker not configured.",
+    "Verdict synthesis fell back to a deterministic stub.",
     "The diagnose stream above contains the full per-phase narrative.",
-    "Configure `OG_COMPUTE_PRIVATE_KEY` on the server to enable TEE-attested verdict synthesis.",
+    reason
+      ? `0G Compute reason: ${reason}.`
+      : "Configure `OG_COMPUTE_PRIVATE_KEY` on the server to enable TEE-attested verdict synthesis.",
   ].join(" ");
 }
 
