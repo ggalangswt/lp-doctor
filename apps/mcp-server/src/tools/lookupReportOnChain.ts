@@ -54,9 +54,7 @@ export interface LookupReportOnChainResult {
 const DEFAULT_CHAIN_ID = 16602;
 const DEFAULT_RPC = "https://evmrpc-testnet.0g.ai";
 const DEFAULT_REPORTS =
-  process.env.LPDOCTOR_REPORTS_CONTRACT ??
-  process.env.LPLENS_REPORTS_CONTRACT ??
-  "";
+  process.env.LPDOCTOR_REPORTS_CONTRACT ?? "";
 
 export async function lookupReportOnChain(
   input: LookupReportOnChainInput,

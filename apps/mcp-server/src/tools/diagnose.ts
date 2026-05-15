@@ -16,9 +16,7 @@ import { z } from "zod";
 import { onchain } from "../services/onchain.js";
 
 const DEFAULT_BASE_URL =
-  process.env.LPDOCTOR_API_URL ??
-  process.env.LPLENS_API_URL ??
-  "https://lpdoctor.xyz";
+  process.env.LPDOCTOR_API_URL ?? "https://lpdoctor.xyz";
 
 export const diagnoseInputSchema = z.object({
   tokenId: z.string().min(1),
@@ -71,13 +69,9 @@ export interface DiagnoseSummary {
 }
 
 const DEFAULT_AGENT_TOKEN_ID =
-  process.env.LPDOCTOR_AGENT_TOKEN_ID ??
-  process.env.LPLENS_AGENT_TOKEN_ID ??
-  "1";
+  process.env.LPDOCTOR_AGENT_TOKEN_ID ?? "1";
 const SUGGESTED_PRICE_WEI =
-  process.env.LPDOCTOR_LICENSE_PRICE_WEI ??
-  process.env.LPLENS_LICENSE_PRICE_WEI ??
-  "100000000000000000"; // 0.1 OG
+  process.env.LPDOCTOR_LICENSE_PRICE_WEI ?? "100000000000000000"; // 0.1 OG
 const SUGGESTED_EXPIRY_SECONDS = 24 * 60 * 60; // 24 h
 
 const MINT_LICENSE_ABI =

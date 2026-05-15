@@ -7,9 +7,7 @@
 import { z } from "zod";
 
 const DEFAULT_BASE_URL =
-  process.env.LPDOCTOR_API_URL ??
-  process.env.LPLENS_API_URL ??
-  "https://lpdoctor.xyz";
+  process.env.LPDOCTOR_API_URL ?? "https://lpdoctor.xyz";
 
 const PERMIT2_ADDRESS =
   "0x000000000022D473030F116dDEE9F6B43aC78BA3" as const;

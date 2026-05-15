@@ -7,9 +7,7 @@
 import { z } from "zod";
 
 const DEFAULT_BASE_URL =
-  process.env.LPDOCTOR_API_URL ??
-  process.env.LPLENS_API_URL ??
-  "https://lpdoctor.xyz";
+  process.env.LPDOCTOR_API_URL ?? "https://lpdoctor.xyz";
 
 export const preflightInputSchema = z.object({
   tokenId: z.string().min(1),
