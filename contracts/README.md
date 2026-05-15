@@ -51,6 +51,5 @@ the project root `.env` as `LPDOCTOR_REPORTS_CONTRACT`,
 - The live Galileo RPC `https://evmrpc-testnet.0g.ai` returned
   `eth_chainId = 0x40da` on May 15, 2026, i.e. `16602`. If you see
   `16601` in older guides, prefer the RPC truth.
-- `viem` is fine for read paths but `ethers` v6 still needs the
-  `EnsPlugin` zero-resolver hack on 0G Chain — the `Deploy.s.sol`
-  script avoids that path by using Forge's native cheatcodes.
+- `viem` is fine for read paths, but for contract deployment we still
+  prefer Foundry's native cheatcodes over ad-hoc runtime RPC plumbing.

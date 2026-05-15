@@ -31,11 +31,6 @@ import {
   lookupReportToolDefinition,
 } from "./tools/lookupReport.js";
 import {
-  resolveEnsRecord,
-  resolveEnsRecordInputSchema,
-  resolveEnsRecordToolDefinition,
-} from "./tools/resolveEnsRecord.js";
-import {
   lookupReportOnChain,
   lookupReportOnChainInputSchema,
   lookupReportOnChainToolDefinition,
@@ -61,7 +56,6 @@ async function main() {
       preflightToolDefinition,
       migrateToolDefinition,
       lookupReportToolDefinition,
-      resolveEnsRecordToolDefinition,
       lookupReportOnChainToolDefinition,
     ],
   }));
@@ -91,11 +85,6 @@ async function main() {
       case "lpdoctor.lookupReport": {
         const parsed = lookupReportInputSchema.parse(args ?? {});
         const result = await lookupReport(parsed);
-        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-      }
-      case "lpdoctor.resolveEnsRecord": {
-        const parsed = resolveEnsRecordInputSchema.parse(args ?? {});
-        const result = await resolveEnsRecord(parsed);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       }
       case "lpdoctor.lookupReportOnChain": {

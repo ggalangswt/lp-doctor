@@ -1,5 +1,5 @@
 // @lpdoctor/agent — orchestrates the diagnostic pipeline (phases 1, 3,
-// 4, 5, 6, 7, 10, 8, 9, 11 — phase 10 runs before 8 so the broker
+// 4, 5, 6, 7, 10, 8, 9 — phase 10 runs before 8 so the broker
 // attestation is embedded in the report payload that 8 uploads).
 
 export type { DiagnosticEvent } from "@lpdoctor/core";
@@ -72,11 +72,6 @@ export type {
   Phase10Output,
   VerdictPayload,
 } from "./phases/10-verdict/types.js";
-export type {
-  EnsPublication,
-  EnsRecord,
-  Phase11Output,
-} from "./phases/11-ens/types.js";
 export {
   runPhase1,
   runPhase3,
@@ -87,10 +82,8 @@ export {
   runPhase8,
   runPhase9,
   runPhase10,
-  runPhase11,
   type AgentDeps,
   type Emit,
-  type EnsPublisher,
   type Phase3Output,
   type PoolHourFetcher,
   type AgentMemoryUpdater,

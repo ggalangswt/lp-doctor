@@ -1,7 +1,7 @@
 // lpdoctor.preflight — runs the migration preview pipeline (Uniswap
 // Trading API quote + close→swap→mint plan) for a given LP position
-// and returns the structured preview without TEE / 0G storage / ENS
-// publish. Use this from a calling agent that wants to surface a
+// and returns the structured preview without TEE / 0G storage / chain
+// writes. Use this from a calling agent that wants to surface a
 // migration option to a user before committing to a full diagnostic.
 
 import { z } from "zod";

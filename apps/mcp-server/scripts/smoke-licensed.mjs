@@ -57,7 +57,6 @@ async function main() {
     "lpdoctor.preflight",
     "lpdoctor.migrate",
     "lpdoctor.lookupReport",
-    "lpdoctor.resolveEnsRecord",
     "lpdoctor.lookupReportOnChain",
   ];
   const got = tools.tools.map((t) => t.name).sort();

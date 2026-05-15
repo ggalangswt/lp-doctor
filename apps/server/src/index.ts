@@ -5,7 +5,6 @@ import { buildHealthResponse } from "./health.js";
 import { logger } from "./logger.js";
 import { diagnoseHandler } from "./routes/diagnose.js";
 import { migrateRecordedHandler } from "./routes/migrate.js";
-import { ensWriter } from "./services/ensWriter.js";
 import { ogChain } from "./services/ogChain.js";
 import { ogCompute } from "./services/ogCompute.js";
 import { ogStorage } from "./services/ogStorage.js";
@@ -38,7 +37,6 @@ function readHealth() {
     storageReady: ogStorage.isReady(),
     anchorReady: ogChain.isReady(),
     computeReady: ogCompute.isReady(),
-    ensReady: ensWriter.isReady(),
   });
 }
 
@@ -141,7 +139,6 @@ const server = app.listen(config.PORT, () => {
       `storage=${health.adapters.storage}`,
       `anchor=${health.adapters.anchor}`,
       `compute=${health.adapters.compute}`,
-      `ens=${health.adapters.ens}`,
     ].join(" "),
   );
 });

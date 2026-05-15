@@ -10,9 +10,7 @@ import {
   runPhase8,
   runPhase9,
   runPhase10,
-  runPhase11,
   type AgentMemoryUpdater,
-  type EnsPublisher,
   type Quoter,
   type QuoteSummary,
   type ReportAnchorer,
@@ -26,7 +24,6 @@ import { tradingApi } from "../services/tradingApi.js";
 import { ogStorage } from "../services/ogStorage.js";
 import { ogChain } from "../services/ogChain.js";
 import { ogCompute } from "../services/ogCompute.js";
-import { ensWriter } from "../services/ensWriter.js";
 import { reportCache } from "../services/reportCache.js";
 
 export async function diagnoseHandler(
@@ -133,18 +130,6 @@ export async function diagnoseHandler(
       };
     };
 
-    const publishEns: EnsPublisher = async (args) => {
-      const result = await ensWriter.publish(args);
-      return {
-        parentName: result.parentName,
-        subnameLabel: result.subnameLabel,
-        records: result.records,
-        resolverAddress: result.resolverAddress,
-        network: result.network,
-        stub: result.stub,
-      };
-    };
-
     const deps = {
       fetchV3Position: (id: string) => subgraph.getV3PositionById(id),
       fetchPoolHourDatas: (poolId: string, from: number) =>
@@ -156,7 +141,6 @@ export async function diagnoseHandler(
       anchorReport,
       updateAgentMemory,
       synthesizeVerdict,
-      publishEns,
     };
 
     const position = await runPhase1(tokenId, deps, (event) => sse.emit(event));
@@ -199,11 +183,9 @@ export async function diagnoseHandler(
 
     // Cache the report as soon as phase 8 completes so the
     // /api/report/:rootHash endpoint resolves immediately, even if the
-    // user clicks "view report" before phase 9 (anchor) and phase 11
-    // (ENS) finish. Anchor metadata is filled in by a second put() once
-    // phase 9 returns. Without this two-step write, /report/:hash 404s
-    // for the ~60 s window between report.uploaded and the end of ENS
-    // publication — the bug we hit on the live VPS.
+    // user clicks "view report" before phase 9 (anchor) finishes.
+    // Anchor metadata is filled in by a second put() once phase 9
+    // returns.
     if (storage) {
       const provenance = storage.provenance.value;
       reportCache.put({
@@ -230,13 +212,6 @@ export async function diagnoseHandler(
         payload: storage.report.value,
       });
     }
-
-    await runPhase11(
-      position,
-      { storage, anchor, verdict },
-      deps,
-      (event) => sse.emit(event),
-    );
   } catch (err) {
     logger.error(
       `diagnose stream errored for ${tokenId}: ${

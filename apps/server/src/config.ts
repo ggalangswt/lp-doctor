@@ -6,9 +6,6 @@ const emptyToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
 const optionalUrl = emptyToUndefined(z.string().url().optional());
 const defaultedString = (fallback: string) =>
   emptyToUndefined(z.string().default(fallback));
-const ensNetworkSchema = emptyToUndefined(
-  z.enum(["mainnet", "sepolia"]).default("sepolia"),
-);
 
 const schema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
@@ -33,15 +30,7 @@ const schema = z.object({
   LPDOCTOR_AGENT_CONTRACT: z.string().optional(),
   LPDOCTOR_AGENT_TOKEN_ID: z.coerce.number().int().nonnegative().default(0),
 
-  ENS_PARENT_NAME: defaultedString("lpdoctor-demo.eth"),
-  ENS_PARENT_PRIVATE_KEY: emptyToUndefined(z.string().optional()),
-  ENS_RESOLVER_ADDRESS: defaultedString(
-    "0x8FADE66B79cC9f707aB26799354482EB93a5B7dD",
-  ),
-  ENS_NETWORK: ensNetworkSchema,
-
   MAINNET_RPC: defaultedString("https://eth.llamarpc.com").pipe(z.string().url()),
-  SEPOLIA_RPC: defaultedString("https://rpc.sepolia.org").pipe(z.string().url()),
 
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_EMBEDDING_MODEL: z.string().default("text-embedding-3-small"),

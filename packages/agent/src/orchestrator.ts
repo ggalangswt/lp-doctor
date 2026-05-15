@@ -52,11 +52,6 @@ import type {
   Phase10Output,
   VerdictPayload,
 } from "./phases/10-verdict/types.js";
-import type {
-  EnsPublication,
-  EnsRecord,
-  Phase11Output,
-} from "./phases/11-ens/types.js";
 
 export type Emit = (event: DiagnosticEvent) => void;
 
@@ -98,22 +93,6 @@ export type VerdictSynthesizer = (
   reportJson: string,
 ) => Promise<Omit<VerdictPayload, "generatedAt">>;
 
-export type EnsPublisher = (args: {
-  tokenId: string;
-  rootHash: string;
-  storageUrl: string;
-  anchorTxHash?: string;
-  chainId?: number;
-  verdictExcerpt?: string;
-}) => Promise<{
-  parentName: string;
-  subnameLabel: string;
-  records: EnsRecord[];
-  resolverAddress: string;
-  network: "mainnet" | "sepolia";
-  stub: boolean;
-}>;
-
 export interface AgentDeps {
   fetchV3Position: V3PositionFetcher;
   fetchPoolHourDatas?: PoolHourFetcher;
@@ -123,7 +102,6 @@ export interface AgentDeps {
   anchorReport?: ReportAnchorer;
   updateAgentMemory?: AgentMemoryUpdater;
   synthesizeVerdict?: VerdictSynthesizer;
-  publishEns?: EnsPublisher;
 }
 
 export interface Phase3Output {
@@ -811,85 +789,5 @@ export async function runPhase10(
       payload.stub || validation.flagged > 0
         ? emulated(payload, verdictWarnings)
         : estimated(payload, 0.7, `0g-compute-${payload.model}`),
-  };
-}
-
-export async function runPhase11(
-  position: Phase1Output,
-  outputs: {
-    storage: Phase8Output | null;
-    anchor: Phase9Output | null;
-    verdict: Phase10Output | null;
-  },
-  deps: AgentDeps,
-  emit: Emit,
-): Promise<Phase11Output | null> {
-  if (!deps.publishEns) {
-    emit({
-      type: "narrative",
-      text: "Skipping ENS publish — no ENS publisher configured.",
-    });
-    return null;
-  }
-  if (!outputs.storage) {
-    emit({
-      type: "narrative",
-      text: "Skipping ENS publish — no storage rootHash to anchor.",
-    });
-    return null;
-  }
-
-  const t0 = Date.now();
-  emit({ type: "phase.start", phase: 11, label: "ens identity publish" });
-  emit({
-    type: "tool.call",
-    tool: "publishEnsRecords",
-    input: { tokenId: position.tokenId },
-  });
-
-  const provenance = outputs.storage.provenance.value;
-  const anchor = outputs.anchor?.anchor.value;
-  const verdict = outputs.verdict?.verdict.value;
-
-  const result = await deps.publishEns({
-    tokenId: position.tokenId,
-    rootHash: provenance.rootHash,
-    storageUrl: provenance.storageUrl,
-    anchorTxHash: anchor?.txHash,
-    chainId: anchor?.chainId,
-    verdictExcerpt: verdict?.markdown,
-  });
-
-  const fullName = `${result.subnameLabel}.${result.parentName}`;
-  const resolverUrl =
-    result.network === "mainnet"
-      ? `https://app.ens.domains/${result.parentName}`
-      : `https://sepolia.app.ens.domains/${result.parentName}`;
-  const publication: EnsPublication = {
-    ...result,
-    fullName,
-    resolverUrl,
-    publishedAt: new Date().toISOString(),
-  };
-
-  emit({
-    type: "tool.result",
-    tool: "publishEnsRecords",
-    output: publication,
-    latencyMs: Date.now() - t0,
-  });
-
-  emit({
-    type: "narrative",
-    text: result.stub
-      ? `ENS publish skipped — would have written ${result.records.length} text records under ${result.parentName}.`
-      : `ENS records published — ${result.records.length} keys live on ${result.network} under ${result.parentName}.`,
-  });
-  emit({ type: "phase.end", phase: 11, durationMs: Date.now() - t0 });
-
-  return {
-    ens: result.stub
-      ? emulated(publication, ["ENS records prepared as stub — set ENS_PARENT_PRIVATE_KEY to publish"])
-      : verified(publication, `ens-${result.network}`),
   };
 }

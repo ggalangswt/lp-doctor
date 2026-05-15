@@ -22,7 +22,6 @@ export interface HealthInputs {
   storageReady: boolean;
   anchorReady: boolean;
   computeReady: boolean;
-  ensReady: boolean;
 }
 
 export function buildHealthResponse(input: HealthInputs) {
@@ -32,7 +31,6 @@ export function buildHealthResponse(input: HealthInputs) {
     input.storageReady &&
     input.anchorReady &&
     input.computeReady &&
-    input.ensReady &&
     input.reportsContractConfigured &&
     input.agentContractConfigured &&
     input.agentTokenId > 0
@@ -74,7 +72,6 @@ export function buildHealthResponse(input: HealthInputs) {
       storage: input.storageReady ? "configured" : "stub",
       anchor: input.anchorReady ? "configured" : "stub",
       compute: input.computeReady ? "configured" : "stub",
-      ens: input.ensReady ? "configured" : "stub",
     },
   };
 }

@@ -20,7 +20,6 @@ describe("buildHealthResponse", () => {
       storageReady: false,
       anchorReady: false,
       computeReady: false,
-      ensReady: false,
     });
 
     expect(health.status).toBe("ok");
@@ -49,7 +48,6 @@ describe("buildHealthResponse", () => {
       storageReady: false,
       anchorReady: false,
       computeReady: false,
-      ensReady: false,
     });
 
     expect(health.status).toBe("degraded");

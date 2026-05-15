@@ -2,8 +2,7 @@
 // Uniswap LP position. Wraps the server's SSE stream and accumulates
 // every event into a structured summary the calling agent can reason
 // over: position, IL breakdown, regime, candidate hooks, migration
-// preview, report rootHash, anchor txHash, ENS subname, and verdict
-// markdown.
+// preview, report rootHash, anchor txHash, and verdict markdown.
 //
 // When `caller` is supplied, the tool checks LPDoctorAgent.isLicensed
 // before streaming. Unlicensed callers get a `paymentRequired`
@@ -63,7 +62,6 @@ export interface DiagnoseSummary {
   provenance?: { rootHash: string; storageUrl: string; stub: boolean };
   anchor?: { txHash: string; chainId: number; stub: boolean };
   verdict?: { markdown: string; model: string; stub: boolean };
-  ens?: { fullName: string; resolverUrl: string; recordCount: number; stub: boolean };
   errors: string[];
   durationMs: number;
 }
@@ -195,14 +193,6 @@ function applyEvent(s: DiagnoseSummary, ev: Event): void {
           : undefined,
         warnings: (out["warnings"] as string[]) ?? [],
       };
-    } else if (tool === "publishEnsRecords" && out) {
-      const records = (out["records"] as unknown[]) ?? [];
-      s.ens = {
-        fullName: String(out["fullName"] ?? ""),
-        resolverUrl: String(out["resolverUrl"] ?? ""),
-        recordCount: records.length,
-        stub: Boolean(out["stub"]),
-      };
     }
   } else if (ev.type === "report.uploaded") {
     const rootHash = String(ev["rootHash"] ?? "");
@@ -256,7 +246,7 @@ async function checkLicense(args: {
 export const diagnoseToolDefinition = {
   name: "lpdoctor.diagnose",
   description:
-    "Run the full LPDoctor diagnostic on a Uniswap V3 LP position. Streams SSE from the server, returns a structured summary of position, IL, regime, hooks, migration plan, signed report, on-chain anchor, ENS publish, and TEE verdict. When `caller` is set, requires a non-expired license on the LPDoctorAgent iNFT — otherwise returns paymentRequired info.",
+    "Run the full LPDoctor diagnostic on a Uniswap V3 LP position. Streams SSE from the server, returns a structured summary of position, IL, regime, hooks, migration plan, signed report, on-chain anchor, and TEE verdict. When `caller` is set, requires a non-expired license on the LPDoctorAgent iNFT — otherwise returns paymentRequired info.",
   inputSchema: {
     type: "object",
     properties: {
