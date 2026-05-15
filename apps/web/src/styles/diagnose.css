@@ -190,7 +190,12 @@
 .diagnose-phase-window,
 .diagnose-rail-window,
 .diagnose-panel-list > section {
-  background: var(--diagnose-surface);
+  background:
+    linear-gradient(
+      180deg,
+      oklch(0.995 0.006 300 / 0.96),
+      oklch(0.972 0.014 300 / 0.98)
+    );
   border: 2px solid var(--diagnose-border);
   border-radius: 3px;
   box-shadow: var(--diagnose-shadow);
@@ -396,6 +401,23 @@
 
 .diagnose-panel-list > section {
   padding: 18px;
+}
+
+.diagnose-panel-list > section {
+  position: relative;
+}
+
+.diagnose-panel-list > section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      oklch(1 0 0 / 0.12),
+      transparent 26%
+    );
+  pointer-events: none;
 }
 
 .diagnose-panel-list > section:hover,
