@@ -1017,7 +1017,7 @@ function INftCard() {
       <dl style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-secondary)" }}>
         <INftRow label="AGENT iNFT" value="0x938f3B7841b3faCbBE967F90B548d991e9882c6C" labelColor={COLOR_AMBER} />
         <INftRow label="REPORTS" value="0x3b733eC427eeA5C379Bbd0CF50Dc0b931C5E00d3" labelColor={COLOR_GREEN} />
-        <INftRow label="CHAIN" value="0G Galileo · chainId 16602 · tokenId 1" labelColor={COLOR_CYAN} />
+        <INftRow label="CHAIN" value="0G network · on-chain agent · tokenId 1" labelColor={COLOR_CYAN} />
         <INftRow label="OWNER" value="0x95eEe5d9d8d7D734EB29613E7Fd8e2875349b344" labelColor={COLOR_VIOLET} />
       </dl>
     </div>
@@ -1152,7 +1152,7 @@ function Slide11Architecture() {
     <SlideShell
       index={11}
       marker="10 · ARCHITECTURE"
-      caption="Foundry + Solidity 0.8.24 contracts on 0G Galileo testnet (chainId 16602) with agent memory updates anchored on-chain."
+      caption="Foundry + Solidity 0.8.24 contracts with agent memory updates anchored on-chain."
     >
       <div style={{ padding: "32px 36px 0 36px" }}>
         <Eyebrow>ARCHITECTURE</Eyebrow>
@@ -1484,7 +1484,7 @@ function Slide14Try() {
         <Eyebrow>LIVE DEMO + CODE</Eyebrow>
         <Title size={56}>Try it. Read it. Fork it.</Title>
         <Subtitle>
-          Six demo wallets, one live agent, one signed report per click. Open repo on public testnet —
+          Six demo wallets, one live agent, one signed report per click. Open repo with live backend proof —
           bring your own wallet if you prefer.
         </Subtitle>
       </div>

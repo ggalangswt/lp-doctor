@@ -5,8 +5,8 @@ function shortAddr(addr: string): string {
 }
 
 const CHAIN_NAME: Record<number, string> = {
-  1: "mainnet",
-  11155111: "sepolia",
+  1: "wallet",
+  11155111: "wallet",
 };
 
 export function ConnectButton() {
@@ -36,7 +36,7 @@ export function ConnectButton() {
         />
         {shortAddr(address)}
         <span style={{ color: "var(--text-tertiary)", fontSize: 10, marginLeft: 4 }}>
-          {CHAIN_NAME[chainId] ?? `chain ${chainId}`}
+          {CHAIN_NAME[chainId] ?? "wallet"}
         </span>
       </button>
     );

@@ -3,7 +3,7 @@ import { useAgentLiveState } from "../hooks/useAgentLiveState.js";
 
 // /agent — live profile page for the LPDoctor iNFT.
 // Pulls agents(tokenId) + protocolTreasury + protocolFeeBps from
-// LPDoctorAgent on 0G Galileo every 30 s and renders the on-chain truth.
+// LPDoctorAgent every 30 s and renders the on-chain truth.
 // No fabricated stats: every number rendered here traces back to a
 // chain read the visitor can verify with `cast call`.
 
@@ -103,7 +103,7 @@ export function Agent() {
           <Stat
             label="Last update"
             value={data ? fmtTimestamp(data.lastUpdatedAt) : "—"}
-            sub="block.timestamp on 0G Galileo"
+            sub="latest on-chain update"
             tone="amber"
           />
         </section>
@@ -209,7 +209,7 @@ export function Agent() {
             Verify the live state yourself
           </h2>
           <p style={{ marginTop: 12, fontSize: 13, color: "var(--text-secondary)", maxWidth: 760, lineHeight: 1.6 }}>
-            No LP Doctor server in the trust path. Run <code>cast call</code> against 0G Galileo:
+            No LP Doctor server in the trust path. Run <code>cast call</code> against the configured 0G RPC:
           </p>
           <pre
             style={{
@@ -227,7 +227,7 @@ export function Agent() {
 {`cast call ${data?.contract ?? "<LPDoctorAgent>"} \\
   "agents(uint256)(address,bytes32,bytes32,uint64,uint64,uint64,uint64,string)" \\
   ${data?.tokenId ?? "1"} \\
-  --rpc-url https://evmrpc-testnet.0g.ai
+  --rpc-url <YOUR_0G_RPC>
 
 # Returns: owner, memoryRoot, codeImageHash, mintedAt, lastUpdatedAt,
 #          reputation, migrationsTriggered, metadataUri`}

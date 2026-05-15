@@ -113,7 +113,7 @@ const ROADMAP: RoadmapItem[] = [
     status: "scoped",
     effortHours: "~4 h",
     oneLine:
-      "Today mintLicense pays in OG (the 0G Galileo native token). Add an HTTP-402 endpoint so callers can settle in USDC via x402 instead — currency-agnostic at the source-of-funds level.",
+      "Today mintLicense pays in OG. Add an HTTP-402 endpoint so callers can settle in USDC via x402 instead — currency-agnostic at the source-of-funds level.",
     body: (
       <>
         <p>
@@ -172,7 +172,7 @@ const ROADMAP: RoadmapItem[] = [
     status: "scoped",
     effortHours: "~10–12 h",
     oneLine:
-      "v0.11 reads only Ethereum mainnet (chainId 1). Extend the data plane to every chain where Uniswap V3 or V4 is deployed — Arbitrum, Base, Optimism, Polygon, BNB Chain, Avalanche, Blast, Zora, Worldchain, Unichain, Soneium, Ink, Lens, Celo, zkSync, Saga, and the testnets.",
+      "v0.11 reads only Ethereum mainnet (chainId 1). Extend the data plane to every chain where Uniswap V3 or V4 is deployed — Arbitrum, Base, Optimism, Polygon, BNB Chain, Avalanche, Blast, Zora, Worldchain, Unichain, Soneium, Ink, Lens, Celo, zkSync, and Saga.",
     body: (
       <>
         <p>

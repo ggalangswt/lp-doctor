@@ -181,7 +181,7 @@ export function Landing() {
                     variant="purple"
                     style={{ transform: "rotate(-2deg)", display: "inline-flex" }}
                   >
-                    0G APAC HACKATHON 2026 · TESTNET
+                    0G APAC HACKATHON 2026 · MAINNET PATH
                   </StickerBadge>
                 </div>
               </div>
@@ -276,7 +276,7 @@ export function Landing() {
           <ScoreCard
             value="1 000"
             label="swaps replayed"
-            sub="0 bps drift vs mainnet"
+            sub="0 bps drift vs pool history"
           />
           <ScoreCard
             value="5"
@@ -426,7 +426,7 @@ export function Landing() {
                 The iNFT, in real time.
               </h3>
               <p style={{ margin: 0, color: "var(--lp-ink-soft)", fontSize: 12, lineHeight: 1.5, textWrap: "pretty" }}>
-                LP&nbsp;Doctor/01 — ERC-7857 on 0G&nbsp;Galileo. Live memoryRoot, reputation counter,
+                LP&nbsp;Doctor/01 — ERC-7857 with live memoryRoot, reputation counter,
                 migrationsTriggered, license terms — all read direct from chain every 30&nbsp;s.
               </p>
               <div style={{ marginTop: 16 }}>
@@ -453,7 +453,7 @@ export function Landing() {
                 Hire LP Doctor from any agent.
               </h3>
               <p style={{ margin: 0, color: "var(--lp-ink-soft)", fontSize: 12, lineHeight: 1.5, textWrap: "pretty" }}>
-                MCP server, 6 tools. Three free verifiers, three gated by mintLicense
+                MCP server, 5 tools. Two free verifiers, three gated by mintLicense
                 (0.1&nbsp;OG&nbsp;/&nbsp;24&nbsp;h, 80/20 royalty split). cast-send snippets included.
               </p>
               <div style={{ marginTop: 16 }}>
@@ -861,7 +861,7 @@ export function Landing() {
               <CompRow cells={["V4 hook scoring vs your pool", "—", "—", "—", "✓ replay 1 000 swaps · 0 bps drift"]} />
               <CompRow cells={["Permit2 sign-once migration", "—", "—", "—", "✓ EIP-712 typed data ready"]} />
               <CompRow cells={["Signed verdict, on-chain anchored", "—", "—", "—", "✓ 5 verification paths"]} />
-              <CompRow cells={["Callable by other agents", "—", "—", "—", "✓ MCP server, 6 tools"]} />
+              <CompRow cells={["Callable by other agents", "—", "—", "—", "✓ MCP server, 5 tools"]} />
             </div>
           </div>
         </div>
@@ -970,7 +970,7 @@ export function Landing() {
               Open the Atlas <PixelArrow />
             </button>
             <StickerBadge variant="magenta" style={{ transform: "rotate(-3deg)" }}>
-              GALILEO TESTNET
+              MAINNET PATH
             </StickerBadge>
           </div>
         </div>
@@ -1006,11 +1006,11 @@ export function Landing() {
               { name: "0G Compute",       sub: "TEE · broker-attested",             v: "purple"  as StickerVariant, rot: -3 },
               { name: "0G Storage",       sub: "merkle rootHash anchored",           v: "cobalt"  as StickerVariant, rot: 2  },
               { name: "0G Chain",         sub: "LPDoctorReports + iNFT registry",   v: "purple"  as StickerVariant, rot: -1 },
-              { name: "Uniswap V3 / V4",  sub: "mainnet · sepolia",                 v: "outline" as StickerVariant, rot: 3  },
+              { name: "Uniswap V3 / V4",  sub: "live pools · permit2",              v: "outline" as StickerVariant, rot: 3  },
               { name: "Permit2",          sub: "EIP-712 signed bundle",             v: "magenta" as StickerVariant, rot: -2 },
               { name: "Agent Memory",     sub: "persistent report cursor",          v: "outline" as StickerVariant, rot: 4  },
               { name: "ERC-7857",         sub: "iNFT agent identity",               v: "cobalt"  as StickerVariant, rot: -4 },
-              { name: "MCP",              sub: "6 tools · agent-callable",          v: "yellow"  as StickerVariant, rot: 2  },
+              { name: "MCP",              sub: "5 tools · agent-callable",          v: "yellow"  as StickerVariant, rot: 2  },
             ].map((t) => (
               <div
                 key={t.name}
@@ -1070,7 +1070,7 @@ export function Landing() {
                 color: "oklch(0.97 0.015 300 / 0.5)",
               }}
             >
-              GALILEO TESTNET
+              MAINNET PATH
             </span>
             <StickerBadge
               variant="yellow"
