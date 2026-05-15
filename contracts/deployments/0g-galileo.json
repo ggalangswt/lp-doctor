@@ -1,0 +1,20 @@
+{
+  "network": "0g-galileo",
+  "chainId": 16602,
+  "rpcUrl": "https://evmrpc-testnet.0g.ai",
+  "deployer": "0x351675d772326d4700ff289bf15F45d5CBE5aa3c",
+  "contracts": {
+    "LPDoctorReports": {
+      "address": "0x9803BE5349EeDF7C28aC1914b743757ce043b7cC",
+      "deployTx": "0x51d14f12279bb04765025ebfaa3d8b2879c7dd4c24880e8009d4a50b77431493"
+    },
+    "LPDoctorAgent": {
+      "address": "0xe8701E0C2cdb6708d98343572E63CFe7118A62C8",
+      "deployTx": "0x6d1928f98091f71506ef84f71b82544d8082084a061b22a94bd633cedc13863e",
+      "mintTx": "0x4e991b8591d82b14f745ed93f91274a0e1957e80c42de3f0fd468260e4e4d193",
+      "tokenId": 1,
+      "metadataUri": "og://lpdoctor-agent-v1.0.0",
+      "codeImageHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  }
+}
