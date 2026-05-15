@@ -9,20 +9,7 @@ import {
   E2E_MOCK_ACCOUNT,
   PERMIT2_ADDRESS,
 } from "../lib/walletConfig.js";
-
-const DEFAULT_API_BASE_URL = "https://lp-doctor-production.up.railway.app";
-
-function resolveApiBaseUrl(): string {
-  const raw =
-    (import.meta.env.VITE_LPDOCTOR_API_URL as string | undefined) ??
-    DEFAULT_API_BASE_URL;
-  if (!raw.trim() || raw.includes("localhost:3001")) {
-    return DEFAULT_API_BASE_URL;
-  }
-  return raw.replace(/\/+$/, "");
-}
-
-const API_BASE_URL = resolveApiBaseUrl();
+import { API_BASE_URL } from "../lib/api.js";
 
 // Builds the EIP-712 PermitSingle for Uniswap's Permit2 contract and
 // asks the connected wallet to sign it. The signature is what the

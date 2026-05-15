@@ -1,6 +1,21 @@
-// Typed fetch wrapper for the LPDoctor server. The vite dev server proxies
-// /api and /health to the configured backend base URL — see
-// apps/web/vite.config.ts.
+// Typed fetch wrapper for the LPDoctor server. In local dev, Vite also proxies
+// /api and /health to the configured backend base URL. In production we must
+// hit the deployed backend directly.
+
+const DEFAULT_API_BASE_URL = "https://lp-doctor-production.up.railway.app";
+
+export function resolveApiBaseUrl(): string {
+  const raw =
+    (import.meta.env.VITE_LPDOCTOR_API_URL as string | undefined) ??
+    (import.meta.env.VITE_API_URL as string | undefined) ??
+    DEFAULT_API_BASE_URL;
+  if (!raw.trim() || raw.includes("localhost:3001")) {
+    return DEFAULT_API_BASE_URL;
+  }
+  return raw.replace(/\/+$/, "");
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
 
 export interface V3PositionRaw {
   id: string;
@@ -40,13 +55,13 @@ export interface HealthResponse {
 export async function fetchPositions(
   address: string,
 ): Promise<PositionsResponse> {
-  const r = await fetch(`/api/positions/${address}`);
+  const r = await fetch(`${API_BASE_URL}/api/positions/${address}`);
   if (!r.ok) throw new Error(`positions ${r.status}`);
   return r.json();
 }
 
 export async function fetchHealth(): Promise<HealthResponse> {
-  const r = await fetch("/health");
+  const r = await fetch(`${API_BASE_URL}/health`);
   if (!r.ok) throw new Error(`health ${r.status}`);
   return r.json();
 }

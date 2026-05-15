@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../lib/api.js";
 
 export interface PublicReport {
   rootHash: string;
@@ -60,7 +61,7 @@ export function useReport(rootHash: string | null) {
     setStatus("loading");
     setError(null);
 
-    fetch(`/api/report/${rootHash}`, { signal: ctrl.signal })
+    fetch(`${API_BASE_URL}/api/report/${rootHash}`, { signal: ctrl.signal })
       .then(async (res) => {
         if (res.status === 404) {
           setStatus("error");

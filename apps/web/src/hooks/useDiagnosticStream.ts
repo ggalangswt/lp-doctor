@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { DiagnosticEvent } from "@lpdoctor/core";
+import { API_BASE_URL } from "../lib/api.js";
 
 export type StreamStatus = "idle" | "open" | "closed" | "error";
 
@@ -15,8 +16,8 @@ function isSuccessfulTerminal(events: DiagnosticEvent[]): boolean {
   );
 }
 
-// Subscribes to /api/diagnose/:tokenId via EventSource and accumulates the
-// typed DiagnosticEvent stream. The hook auto-closes on unmount.
+// Subscribes to the backend diagnose SSE endpoint and accumulates the typed
+// DiagnosticEvent stream. The hook auto-closes on unmount.
 export function useDiagnosticStream(tokenId: string | null): State {
   const [state, setState] = useState<State>({ events: [], status: "idle" });
   const eventsRef = useRef<DiagnosticEvent[]>([]);
@@ -30,7 +31,7 @@ export function useDiagnosticStream(tokenId: string | null): State {
       return;
     }
 
-    const url = `/api/diagnose/${tokenId}`;
+    const url = `${API_BASE_URL}/api/diagnose/${tokenId}`;
     const es = new EventSource(url);
     setState({ events: [], status: "open" });
     eventsRef.current = [];
