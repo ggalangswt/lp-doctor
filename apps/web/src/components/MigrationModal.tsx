@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "./ConnectButton.js";
 import { usePermit2Migration } from "../hooks/usePermit2Migration.js";
@@ -105,7 +106,7 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
     }
   };
 
-  return (
+  const modal = (
     <div
       onClick={onClose}
       style={{
@@ -374,4 +375,6 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }
