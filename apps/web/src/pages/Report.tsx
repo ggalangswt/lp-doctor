@@ -1,15 +1,20 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { AppHeader } from "../components/AppHeader.js";
 import { LabelBadge } from "../components/LabelBadge.js";
 import {
   useReport,
   type AssembledReportPayload,
   type PublicReport,
 } from "../hooks/useReport.js";
+import "../styles/report.css";
+
+type ReportLabel = "VERIFIED" | "COMPUTED" | "ESTIMATED" | "EMULATED" | "LABELED";
 
 function shortHash(hash: string, head = 10, tail = 6): string {
   if (hash.length <= head + tail + 1) return hash;
-  return `${hash.slice(0, head)}…${hash.slice(-tail)}`;
+  return `${hash.slice(0, head)}...${hash.slice(-tail)}`;
 }
 
 function formatNumber(n: number, digits = 4): string {
@@ -23,37 +28,93 @@ function chainExplorerUrl(chainId: number, txHash: string): string | null {
   return null;
 }
 
+function isFullyVerified(report: PublicReport): boolean {
+  return (
+    !report.storageStub &&
+    report.anchorTxHash !== undefined &&
+    report.anchorStub === false
+  );
+}
+
+function statusCopy(report: PublicReport): string {
+  if (isFullyVerified(report)) return "Storage and chain anchor verified";
+  if (report.storageStub) return "Storage emitted deterministic stub";
+  if (report.anchorStub) return "Storage verified, chain anchor stubbed";
+  if (!report.anchorTxHash) return "Storage verified, chain anchor pending";
+  return "Provenance partially verified";
+}
+
 interface RowProps {
   k: string;
   v: ReactNode;
+  tone?: "default" | "success" | "warning" | "danger";
 }
 
-function Row({ k, v }: RowProps) {
+function Row({ k, v, tone = "default" }: RowProps) {
   return (
-    <div className="flex items-start gap-3 py-1 text-xs font-mono">
-      <span className="text-slate-500 w-32 shrink-0">{k}</span>
-      <span className="text-slate-200 min-w-0 flex-1 break-all">{v}</span>
+    <div className={`report-row report-row-${tone}`}>
+      <span className="report-row-key">{k}</span>
+      <span className="report-row-value">{v}</span>
+    </div>
+  );
+}
+
+function WindowBar({ title }: { title: string }) {
+  return (
+    <div className="report-window-bar">
+      <span className="report-window-dot report-window-dot-red" />
+      <span className="report-window-dot report-window-dot-yellow" />
+      <span className="report-window-dot report-window-dot-green" />
+      <span className="report-window-title">{title}</span>
     </div>
   );
 }
 
 interface SectionProps {
   title: string;
-  label: "VERIFIED" | "COMPUTED" | "ESTIMATED" | "EMULATED" | "LABELED";
+  label: ReportLabel;
   children: ReactNode;
 }
 
 function Section({ title, label, children }: SectionProps) {
   return (
-    <section className="p-5 rounded-lg border border-slate-700 bg-slate-900/50">
-      <header className="flex items-center justify-between gap-2 pb-3 border-b border-slate-800">
-        <h2 className="text-xs uppercase tracking-wider text-slate-500">
-          {title}
-        </h2>
+    <section className="report-section">
+      <WindowBar title={title.toUpperCase()} />
+      <header className="report-section-heading">
+        <h2>{title}</h2>
         <LabelBadge label={label} />
       </header>
-      <div className="mt-3">{children}</div>
+      <div className="report-section-body">{children}</div>
     </section>
+  );
+}
+
+function CopyButton({ value, label = "copy" }: { value: string; label?: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1400);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <button type="button" className="report-copy-button" onClick={onCopy}>
+      {copied ? "copied" : label}
+    </button>
+  );
+}
+
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a className="report-link" href={href} target="_blank" rel="noreferrer">
+      {children}
+      <span aria-hidden>↗</span>
+    </a>
   );
 }
 
@@ -62,60 +123,60 @@ interface ProvenanceProps {
 }
 
 function ProvenanceSection({ report }: ProvenanceProps) {
-  const fullyVerified =
-    !report.storageStub && report.anchorTxHash !== undefined && report.anchorStub === false;
+  const fullyVerified = isFullyVerified(report);
   const anchorLink =
     report.anchorTxHash && report.anchorChainId
       ? chainExplorerUrl(report.anchorChainId, report.anchorTxHash)
       : null;
 
   return (
-    <Section
-      title="provenance"
-      label={fullyVerified ? "VERIFIED" : "EMULATED"}
-    >
-      <Row k="rootHash" v={shortHash(report.rootHash)} />
+    <Section title="Provenance Receipt" label={fullyVerified ? "VERIFIED" : "EMULATED"}>
+      <div className="report-root-receipt">
+        <span>rootHash</span>
+        <strong title={report.rootHash}>{report.rootHash}</strong>
+        <CopyButton value={report.rootHash} />
+      </div>
+
       <Row
         k="storage"
         v={
-          report.storageUrl.startsWith("http") ? (
-            <a
-              href={report.storageUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-cyan-300 hover:text-cyan-200"
-            >
-              {report.storageUrl}
-            </a>
-          ) : (
-            report.storageUrl
-          )
+          <span className="report-inline-action">
+            {report.storageUrl.startsWith("http") ? (
+              <ExternalLink href={report.storageUrl}>{report.storageUrl}</ExternalLink>
+            ) : (
+              <span>{report.storageUrl}</span>
+            )}
+            <CopyButton value={report.storageUrl} />
+          </span>
         }
+        tone={report.storageStub ? "warning" : "success"}
       />
-      {report.anchorTxHash && report.anchorChainId !== undefined && (
+
+      {report.anchorTxHash ? (
         <Row
           k="anchor tx"
           v={
-            anchorLink && report.anchorStub === false ? (
-              <a
-                href={anchorLink}
-                target="_blank"
-                rel="noreferrer"
-                className="text-emerald-300 hover:text-emerald-200"
-                title={report.anchorTxHash}
-              >
-                {shortHash(report.anchorTxHash)}
-              </a>
-            ) : (
-              shortHash(report.anchorTxHash)
-            )
+            <span className="report-inline-action">
+              {anchorLink && report.anchorStub === false ? (
+                <ExternalLink href={anchorLink}>{shortHash(report.anchorTxHash)}</ExternalLink>
+              ) : (
+                <span title={report.anchorTxHash}>{shortHash(report.anchorTxHash)}</span>
+              )}
+              <CopyButton value={report.anchorTxHash} />
+            </span>
           }
+          tone={report.anchorStub ? "warning" : "success"}
         />
+      ) : (
+        <Row k="anchor tx" v="not anchored yet" tone="warning" />
       )}
-      {report.anchorChainId !== undefined && (
-        <Row k="chain id" v={String(report.anchorChainId)} />
-      )}
+
+      <Row
+        k="chain id"
+        v={report.anchorChainId !== undefined ? String(report.anchorChainId) : "n/a"}
+      />
       <Row k="cached at" v={report.cachedAt} />
+      <Row k="status" v={statusCopy(report)} tone={fullyVerified ? "success" : "warning"} />
     </Section>
   );
 }
@@ -128,7 +189,7 @@ interface PayloadSectionsProps {
 function PayloadSections({ payload, token1Symbol }: PayloadSectionsProps) {
   return (
     <>
-      <Section title="position" label="VERIFIED">
+      <Section title="Position" label="VERIFIED">
         <Row k="tokenId" v={payload.position.tokenId} />
         <Row k="version" v={`v${payload.position.version}`} />
         <Row k="pair" v={payload.position.pair} />
@@ -137,18 +198,44 @@ function PayloadSections({ payload, token1Symbol }: PayloadSectionsProps) {
         <Row k="generated at" v={payload.generatedAt} />
       </Section>
 
-      {payload.il && (
-        <Section title="impermanent loss" label="COMPUTED">
+      {payload.attestation && (
+        <Section title="TEE Attestation" label={payload.attestation.stub ? "EMULATED" : "VERIFIED"}>
+          <Row k="type" v={payload.attestation.type} />
+          <Row k="provider" v={shortHash(payload.attestation.provider, 8, 6)} />
+          <Row k="model" v={payload.attestation.model} />
+          <Row k="generated at" v={payload.attestation.generatedAt} />
+          <Row
+            k="status"
+            v={payload.attestation.stub ? "broker call stubbed" : "broker signature present"}
+            tone={payload.attestation.stub ? "warning" : "success"}
+          />
+        </Section>
+      )}
+
+      {payload.il ? (
+        <Section title="Impermanent Loss" label="COMPUTED">
           <Row k="hodl value" v={`${formatNumber(payload.il.hodlValueT1)} ${token1Symbol}`} />
           <Row k="lp value" v={`${formatNumber(payload.il.lpValueT1)} ${token1Symbol}`} />
-          <Row k="fees value" v={`${formatNumber(payload.il.feesValueT1)} ${token1Symbol}`} />
-          <Row k="il (t1)" v={`${formatNumber(payload.il.ilT1)} ${token1Symbol}`} />
-          <Row k="il %" v={`${formatNumber(payload.il.ilPct * 100, 2)}%`} />
+          <Row k="fees value" v={`${formatNumber(payload.il.feesValueT1)} ${token1Symbol}`} tone="success" />
+          <Row
+            k="il (t1)"
+            v={`${formatNumber(payload.il.ilT1)} ${token1Symbol}`}
+            tone={payload.il.ilT1 > 0 ? "danger" : "success"}
+          />
+          <Row
+            k="il %"
+            v={`${formatNumber(payload.il.ilPct * 100, 2)}%`}
+            tone={payload.il.ilPct > 0 ? "danger" : "success"}
+          />
+        </Section>
+      ) : (
+        <Section title="Impermanent Loss" label="EMULATED">
+          <Row k="status" v="not included in this report" tone="warning" />
         </Section>
       )}
 
       {payload.regime && (
-        <Section title="regime" label="ESTIMATED">
+        <Section title="Regime" label="ESTIMATED">
           <Row k="top label" v={payload.regime.topLabel} />
           <Row k="confidence" v={`${formatNumber(payload.regime.confidence * 100, 1)}%`} />
           <Row k="narrative" v={payload.regime.narrative} />
@@ -156,7 +243,7 @@ function PayloadSections({ payload, token1Symbol }: PayloadSectionsProps) {
       )}
 
       {payload.hooks && (
-        <Section title="v4 hooks" label="LABELED">
+        <Section title="V4 Hooks" label="LABELED">
           <Row k="pair" v={payload.hooks.pair} />
           <Row k="top family" v={payload.hooks.topFamily.toLowerCase().replace(/_/g, "-")} />
           <Row k="candidate count" v={String(payload.hooks.candidateCount)} />
@@ -164,7 +251,7 @@ function PayloadSections({ payload, token1Symbol }: PayloadSectionsProps) {
       )}
 
       {payload.migration && (
-        <Section title="migration plan" label="EMULATED">
+        <Section title="Migration Plan" label="EMULATED">
           <Row
             k="target hook"
             v={
@@ -189,21 +276,140 @@ function PayloadSections({ payload, token1Symbol }: PayloadSectionsProps) {
                 : "n/a"
             }
           />
-          {payload.migration.warnings.length > 0 && (
+          {payload.migration.warnings.length > 0 ? (
             <Row
               k="warnings"
               v={
-                <ul className="list-disc pl-4 space-y-0.5 text-orange-300/80">
+                <ul className="report-warning-list">
                   {payload.migration.warnings.map((w, i) => (
                     <li key={i}>{w}</li>
                   ))}
                 </ul>
               }
+              tone="warning"
             />
+          ) : (
+            <Row k="warnings" v="none" />
           )}
         </Section>
       )}
     </>
+  );
+}
+
+function VerificationRail({ report }: { report: PublicReport }) {
+  const anchorLink =
+    report.anchorTxHash && report.anchorChainId
+      ? chainExplorerUrl(report.anchorChainId, report.anchorTxHash)
+      : null;
+  const fullyVerified = isFullyVerified(report);
+
+  return (
+    <aside className="report-rail" aria-label="Report verification actions">
+      <section className="report-rail-window">
+        <WindowBar title="VERIFY" />
+        <div className="report-rail-body">
+          <div className={`report-seal ${fullyVerified ? "report-seal-verified" : "report-seal-partial"}`}>
+            <span>{fullyVerified ? "VERIFIED" : "PARTIAL"}</span>
+            <strong>{fullyVerified ? "proof path complete" : "review provenance"}</strong>
+          </div>
+          <CopyButton value={report.rootHash} label="copy rootHash" />
+          {report.storageUrl.startsWith("http") && (
+            <ExternalLink href={report.storageUrl}>open storage</ExternalLink>
+          )}
+          {anchorLink && report.anchorStub === false && (
+            <ExternalLink href={anchorLink}>open chain tx</ExternalLink>
+          )}
+          <Link className="report-internal-link" to="/atlas">
+            back to Atlas
+          </Link>
+        </div>
+      </section>
+
+      <section className="report-rail-window">
+        <WindowBar title="SUMMARY" />
+        <div className="report-rail-body report-summary-list">
+          <Row k="pair" v={report.payload.position.pair} />
+          <Row k="tokenId" v={report.payload.position.tokenId} />
+          <Row k="schema" v={`v${report.payload.schemaVersion}`} />
+          <Row k="agent" v={`${report.payload.agent.name}@${report.payload.agent.version}`} />
+        </div>
+      </section>
+    </aside>
+  );
+}
+
+function LoadingReport({ rootHash }: { rootHash: string }) {
+  return (
+    <div className="report-theme">
+      <div className="report-grid-bg" aria-hidden />
+      <AppHeader />
+      <main className="report-shell">
+        <ReportMasthead rootHash={rootHash} status="loading report from cache" />
+        <section className="report-loading-window" aria-live="polite">
+          <WindowBar title="FETCH REPORT" />
+          <div className="report-skeleton-stack">
+            <span />
+            <span />
+            <span />
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function ErrorReport({ rootHash, error }: { rootHash: string; error: string | null }) {
+  return (
+    <div className="report-theme">
+      <div className="report-grid-bg" aria-hidden />
+      <AppHeader />
+      <main className="report-shell">
+        <ReportMasthead rootHash={rootHash} status="report unavailable" />
+        <section className="report-error-window" role="alert">
+          <WindowBar title="REPORT LOOKUP FAILED" />
+          <p>
+            <span>&gt;</span> {error ?? "Report lookup failed."} This cache entry
+            appears only after a Diagnose run reaches report upload.
+          </p>
+          <Link className="report-internal-link" to="/atlas">
+            back to Atlas
+          </Link>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function ReportMasthead({
+  rootHash,
+  report,
+  status,
+}: {
+  rootHash: string;
+  report?: PublicReport;
+  status: string;
+}) {
+  return (
+    <header className="report-masthead">
+      <div>
+        <div className="report-kicker">
+          <span className="report-pixel-dot" aria-hidden />
+          <span>PUBLIC PROOF ARTIFACT</span>
+        </div>
+        <h1>LP Doctor Report</h1>
+        <p>
+          {report
+            ? `${report.payload.position.pair} position ${report.payload.position.tokenId}.`
+            : "Forwardable diagnostic report by rootHash."}
+        </p>
+      </div>
+      <div className="report-hash-plate">
+        <span>rootHash</span>
+        <strong title={rootHash}>{rootHash}</strong>
+        <small>{status}</small>
+      </div>
+    </header>
   );
 }
 
@@ -212,43 +418,38 @@ export function Report() {
   const { status, report, error } = useReport(rootHash ?? null);
 
   if (!rootHash) {
-    return (
-      <div className="min-h-screen p-8">
-        <p className="text-rose-400">Missing rootHash in URL.</p>
-      </div>
-    );
+    return <ErrorReport rootHash="missing" error="Missing rootHash in URL." />;
   }
 
-  const token1Symbol = report?.payload.position.pair.split("/")?.[1] ?? "T1";
+  if (status === "loading" || status === "idle") {
+    return <LoadingReport rootHash={rootHash} />;
+  }
+
+  if (status === "error" || !report) {
+    return <ErrorReport rootHash={rootHash} error={error} />;
+  }
+
+  const token1Symbol = report.payload.position.pair.split("/")?.[1] ?? "T1";
 
   return (
-    <div className="min-h-screen p-8">
-      <header className="max-w-4xl mx-auto">
-        <Link
-          to="/"
-          className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
-        >
-          ← back to atlas
-        </Link>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Report</h1>
-        <p className="mt-1 text-slate-400 font-mono text-xs break-all">
-          rootHash {rootHash}
-        </p>
-      </header>
+    <div className="report-theme">
+      <div className="report-grid-bg" aria-hidden />
+      <AppHeader />
 
-      <main className="max-w-4xl mx-auto mt-8 space-y-6">
-        {status === "loading" && (
-          <p className="text-slate-500 text-sm">loading report…</p>
-        )}
-        {status === "error" && (
-          <p className="text-rose-400 text-sm">{error}</p>
-        )}
-        {status === "ready" && report && (
-          <>
+      <main className="report-shell">
+        <ReportMasthead
+          rootHash={rootHash}
+          report={report}
+          status={statusCopy(report)}
+        />
+
+        <div className="report-layout">
+          <article className="report-document" aria-label="Report contents">
             <ProvenanceSection report={report} />
             <PayloadSections payload={report.payload} token1Symbol={token1Symbol} />
-          </>
-        )}
+          </article>
+          <VerificationRail report={report} />
+        </div>
       </main>
     </div>
   );

@@ -21,6 +21,15 @@ export interface AssembledReportPayload {
     pair: string;
     owner: string;
   };
+  attestation?: {
+    type: "0g-compute-broker-signature";
+    provider: string;
+    model: string;
+    requestSignatureHash?: string;
+    brokerLedgerTx?: string;
+    generatedAt: string;
+    stub: boolean;
+  };
   il?: {
     hodlValueT1: number;
     lpValueT1: number;
