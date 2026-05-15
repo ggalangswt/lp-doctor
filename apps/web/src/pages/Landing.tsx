@@ -1,22 +1,41 @@
+import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppHeader } from "../components/AppHeader.js";
-import { HeroFilm } from "../components/HeroFilm.js";
-import { Cap, Dot, Mono } from "../design/atoms.js";
+import { Cap, Mono } from "../design/atoms.js";
+import "../styles/landing.css";
+
+/* ── Live-stream phases shown in the hero window ──────────────────── */
+const HERO_STREAM: { n: string; name: string; label: string }[] = [
+  { n: "01", name: "position.resolve",      label: "VERIFIED" },
+  { n: "03", name: "il.reconstruct",        label: "COMPUTED" },
+  { n: "04", name: "regime.classify",       label: "ESTIMATED" },
+  { n: "05", name: "hooks.discover",        label: "LABELED" },
+  { n: "06", name: "hook.replay (1k swaps)", label: "COMPUTED" },
+];
+
+/* ── All 10 phases shown in the HOW section ───────────────────────── */
+const ALL_PHASES: { n: string; name: string; label: string }[] = [
+  { n: "01", name: "position.resolve",           label: "VERIFIED"  },
+  { n: "03", name: "il.reconstruct",             label: "COMPUTED"  },
+  { n: "04", name: "regime.classify",            label: "ESTIMATED" },
+  { n: "05", name: "hooks.discover",             label: "LABELED"   },
+  { n: "06", name: "hook.replay (1k swaps)",     label: "COMPUTED"  },
+  { n: "07", name: "migration.preview",          label: "COMPUTED"  },
+  { n: "10", name: "verdict.synthesize (TEE)",   label: "ESTIMATED" },
+  { n: "08", name: "report.upload (0G)",         label: "VERIFIED"  },
+  { n: "09", name: "anchor.0g-chain + iNFT update", label: "VERIFIED" },
+  { n: "11", name: "ens.publish (Sepolia)",      label: "VERIFIED"  },
+];
 
 export function Landing() {
   const nav = useNavigate();
+
   return (
-    <div>
-      {/* ─── 1 · Hero — slide-01 reference, left-aligned ──────────────── */}
-      <section
-        style={{
-          position: "relative",
-          minHeight: "92vh",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <HeroFilm />
+    <div className="landing-theme" style={{ minHeight: "100vh" }}>
+
+      {/* ── 1 · Hero ─────────────────────────────────────────────────── */}
+      <section style={{ position: "relative", minHeight: "96vh", display: "flex", flexDirection: "column" }}>
+        <div className="lp-grid-bg" />
         <AppHeader />
         <div
           style={{
@@ -25,249 +44,462 @@ export function Landing() {
             flex: 1,
             display: "flex",
             alignItems: "center",
-            padding: "0 36px",
+            padding: "40px 36px 60px",
           }}
         >
-          <div style={{ maxWidth: 1200, width: "100%", margin: "0 auto" }}>
+          <div style={{ maxWidth: 1280, width: "100%", margin: "0 auto" }}>
             <div
+              className="lp-hero-grid"
               style={{
                 display: "flex",
+                gap: 56,
                 alignItems: "center",
-                gap: 10,
-                marginBottom: 28,
-                opacity: 0.9,
               }}
             >
-              <Dot color="cyan" pulse />
-              <Cap style={{ color: "var(--cyan)" }}>
-                ENCLAVE · LIVE · 0G COMPUTE TEE
-              </Cap>
-              <Mono color="text-tertiary" style={{ fontSize: 11 }}>
-                broker-verifiable attestation
-              </Mono>
+              {/* Left column — typography stack */}
+              <div
+                style={{
+                  flex: "1 1 55%",
+                  maxWidth: 680,
+                  animation: "lp-fadein 0.5s cubic-bezier(0.22,1,0.36,1) both",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 24,
+                  }}
+                >
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: 7,
+                      height: 7,
+                      borderRadius: 1,
+                      background: "var(--lp-cobalt)",
+                      animation: "pulse-dot 1.6s infinite",
+                      boxShadow: "0 0 8px var(--lp-cobalt)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: "0.09em",
+                      textTransform: "uppercase",
+                      color: "var(--lp-cobalt)",
+                    }}
+                  >
+                    ENCLAVE · LIVE · 0G COMPUTE TEE
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      color: "var(--lp-ink-ghost)",
+                    }}
+                  >
+                    broker-verifiable attestation
+                  </span>
+                </div>
+
+                <h1
+                  style={{
+                    margin: 0,
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(3rem, 8.5vw, 7.5rem)",
+                    lineHeight: 0.96,
+                    fontWeight: 700,
+                    letterSpacing: "-0.01em",
+                    textTransform: "uppercase",
+                    color: "var(--lp-ink)",
+                    textWrap: "balance",
+                  }}
+                >
+                  See why your LP position is{" "}
+                  <span style={{ color: "var(--lp-bleed)" }}>bleeding</span>.
+                  <br />
+                  <span style={{ color: "var(--lp-ink-faint)" }}>In </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      color: "var(--lp-yellow)",
+                      background: "var(--lp-ink)",
+                      padding: "0 6px 2px",
+                      borderRadius: 2,
+                      fontSize: "0.88em",
+                    }}
+                  >
+                    30
+                  </span>
+                  <span style={{ color: "var(--lp-ink-faint)" }}> seconds.</span>
+                </h1>
+
+                <p
+                  style={{
+                    marginTop: 28,
+                    maxWidth: 580,
+                    fontSize: 16,
+                    lineHeight: 1.6,
+                    color: "var(--lp-ink-soft)",
+                    textWrap: "pretty",
+                  }}
+                >
+                  LP Doctor is an autonomous agent on 0G that reads your Uniswap
+                  V3 and V4 positions, decomposes your impermanent loss from the
+                  tick range, replays every V4 hook against the last 1&nbsp;000
+                  swaps swap-by-swap, and migrates you in a single Permit2
+                  signature.
+                </p>
+
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    marginTop: 36,
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                  }}
+                >
+                  <button className="lp-btn-primary" onClick={() => nav("/atlas")}>
+                    Connect wallet <PixelArrow />
+                  </button>
+                  <button
+                    className="lp-btn-ghost"
+                    onClick={() => nav("/diagnose/605311")}
+                  >
+                    <PlayIcon />
+                    Watch a live diagnose
+                  </button>
+                </div>
+
+                <div style={{ marginTop: 24 }}>
+                  <StickerBadge
+                    variant="purple"
+                    style={{ transform: "rotate(-2deg)", display: "inline-flex" }}
+                  >
+                    0G APAC HACKATHON 2026 · TESTNET
+                  </StickerBadge>
+                </div>
+              </div>
+
+              {/* Right column — visual composition */}
+              <div
+                className="lp-hero-right"
+                style={{
+                  flex: "0 0 40%",
+                  maxWidth: 500,
+                  position: "relative",
+                  minHeight: 480,
+                  alignSelf: "stretch",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <HeroComposition nav={nav} />
+              </div>
             </div>
-            <h1
-              style={{
-                margin: 0,
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(40px, 6.2vw, 86px)",
-                lineHeight: 1.02,
-                fontWeight: 500,
-                letterSpacing: "-0.035em",
-                maxWidth: 1000,
-                color: "var(--text)",
-                textWrap: "balance",
-              }}
-            >
-              See why your LP position is{" "}
-              <span style={{ color: "var(--bleed)" }}>bleeding</span>.
-              <br />
-              <span style={{ color: "var(--text-secondary)" }}>In</span>{" "}
-              <Mono color="cyan" style={{ fontSize: "0.82em" }}>
-                30
-              </Mono>{" "}
-              <span style={{ color: "var(--text-secondary)" }}>seconds.</span>
-            </h1>
-            <p
-              style={{
-                marginTop: 28,
-                maxWidth: 640,
-                fontSize: 17,
-                lineHeight: 1.55,
-                color: "var(--text-secondary)",
-                textWrap: "pretty",
-              }}
-            >
-              LP Doctor is an autonomous agent on 0G that reads your Uniswap V3
-              and V4 positions, decomposes your impermanent loss from the
-              tick range, replays every V4 hook against the last 1 000 swaps
-              swap-by-swap, and migrates you in a single Permit2 signature.
-            </p>
+
+            {/* Mobile-only: single streaming window below CTAs */}
             <div
-              style={{
-                display: "flex",
-                gap: 12,
-                marginTop: 36,
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
+              className="lp-hero-stream-mobile"
+              style={{ display: "none", marginTop: 40 }}
             >
-              <button
-                className="btn btn-primary"
-                onClick={() => nav("/atlas")}
-                style={{ padding: "14px 22px", fontSize: 14 }}
-              >
-                Connect wallet
-                <Arrow />
-              </button>
-              <button
-                className="btn btn-ghost"
-                onClick={() => nav("/diagnose/605311")}
-                style={{ padding: "14px 22px", fontSize: 14 }}
-              >
-                <PlayIcon />
-                Watch a live diagnose
-              </button>
+              <LiveStreamWindow small />
             </div>
           </div>
         </div>
+
+        {/* Scroll cue */}
         <div
           style={{
             position: "relative",
             zIndex: 2,
             display: "flex",
             justifyContent: "center",
-            padding: "0 36px 28px",
+            paddingBottom: 28,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--text-tertiary)", fontSize: 11 }}>
-            <div style={{ width: 40, height: 1, background: "var(--border-strong)" }} />
-            <Cap>Scroll · how it works</Cap>
-            <div style={{ width: 40, height: 1, background: "var(--border-strong)" }} />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 2 · Stats row ────────────────────────────────────────────── */}
-      <section style={{ padding: "56px 36px", borderBottom: "1px solid var(--border)" }}>
-        <div
-          style={{
-            maxWidth: 920,
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 32,
-          }}
-        >
-          <Stat value="1 000" label="swaps replayed" sub="0 bps drift vs mainnet" />
-          <Stat value="5" label="verification paths" sub="no LP Doctor server in trust" />
-          <Stat value="0" label="keys in custody" sub="user signs, agent never executes" />
-        </div>
-      </section>
-
-      {/* ─── 2b · Powered-by strip ────────────────────────────────────── */}
-      <section style={{ padding: "44px 36px", borderBottom: "1px solid var(--border)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
-          <span
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: "0.3em",
-              color: "var(--text-tertiary)",
-            }}
-          >
-            Built on
-          </span>
           <div
             style={{
               display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              alignItems: "flex-start",
-              gap: 40,
-              rowGap: 16,
+              alignItems: "center",
+              gap: 12,
+              color: "var(--lp-ink-ghost)",
+              fontSize: 10,
             }}
           >
-            <Partner name="0G Labs" sub="AI-native L1 — TEE compute, storage, chain" />
-            <Partner name="Uniswap Foundation" sub="V3+V4 subgraphs, Trading API, Permit2" />
-            <Partner name="ENS Labs" sub="agent identity & output index" />
-            <Partner name="ERC-7857" sub="iNFT standard for embedded intelligence" />
-            <Partner name="MCP" sub="@modelcontextprotocol/sdk — agent-callable tools" />
-            <Partner name="ETHGlobal" sub="Open Agents 2026" />
+            <div
+              style={{
+                width: 36,
+                height: 1,
+                background: "var(--lp-border-mid)",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+              }}
+            >
+              Scroll · how it works
+            </span>
+            <div
+              style={{
+                width: 36,
+                height: 1,
+                background: "var(--lp-border-mid)",
+              }}
+            />
           </div>
         </div>
       </section>
 
-      {/* ─── 3 · Three products grid (clickable) ──────────────────────── */}
-      <section style={{ padding: "100px 36px", maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <Cap style={{ color: "var(--cyan)" }}>THREE SURFACES, ONE AGENT</Cap>
-          <h2
-            style={{
-              margin: "12px 0 16px",
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(32px, 4vw, 48px)",
-              fontWeight: 500,
-              letterSpacing: "-0.025em",
-              textWrap: "balance",
-            }}
-          >
-            Browse positions. Diagnose live. Hire the agent.
-          </h2>
-          <p
-            style={{
-              margin: "0 auto",
-              maxWidth: 680,
-              color: "var(--text-secondary)",
-              fontSize: 14,
-              lineHeight: 1.6,
-            }}
-          >
-            Each surface routes to the same on-chain agent — same iNFT, same
-            verifiable reports, same MCP server.
-          </p>
-        </div>
+      {/* ── 2 · Stats scoreboard ─────────────────────────────────────── */}
+      <section
+        style={{
+          borderTop: "2px solid var(--lp-border)",
+          borderBottom: "2px solid var(--lp-border)",
+        }}
+      >
         <div
+          className="lp-stats-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 20,
+            gridTemplateColumns: "repeat(3, 1fr)",
           }}
         >
-          <ProductCard
-            badge="ATLAS"
-            title="See every LP at a glance."
-            desc="Paste any wallet — V3 + V4 positions classified live by the agent. Six curated demo wallets pin the green / amber / red / portfolio narratives."
-            cta="Open Atlas →"
-            onClick={() => nav("/atlas")}
+          <ScoreCard
+            value="1 000"
+            label="swaps replayed"
+            sub="0 bps drift vs mainnet"
           />
-          <ProductCard
-            badge="AGENT"
-            title="The iNFT, in real time."
-            desc="LP Doctor/01 — ERC-7857 on 0G Galileo. Live memoryRoot, reputation counter, migrationsTriggered, license terms — all read direct from chain every 30 s."
-            cta="Open /agent →"
-            onClick={() => nav("/agent")}
+          <ScoreCard
+            value="5"
+            label="verification paths"
+            sub="no LP Doctor server in trust"
+            bordered
           />
-          <ProductCard
-            badge="DEVELOPERS"
-            title="Hire LP Doctor from any agent."
-            desc="MCP server, 6 tools. Three free verifiers, three gated by mintLicense (0.1 OG / 24 h, 80/20 royalty split). cast-send snippets included."
-            cta="Open /developers →"
-            onClick={() => nav("/developers")}
+          <ScoreCard
+            value="0"
+            label="keys in custody"
+            sub="user signs, agent never executes"
           />
         </div>
       </section>
 
-      {/* ─── 4 · How the agent works — 2-col text + visual ────────────── */}
+      {/* ── 2b · Powered-by marquee ───────────────────────────────────── */}
       <section
         style={{
-          padding: "100px 36px",
-          background: "rgba(15, 22, 40, 0.5)",
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
+          borderBottom: "2px solid var(--lp-border)",
+          background: "var(--lp-base-deep)",
+          padding: "18px 0",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
-            maxWidth: 1200,
+            display: "flex",
+            alignItems: "center",
+            gap: 0,
+          }}
+        >
+          <div
+            style={{
+              flexShrink: 0,
+              padding: "0 28px 0 36px",
+              borderRight: "2px solid var(--lp-border-mid)",
+              marginRight: 0,
+            }}
+          >
+            <StickerBadge variant="outline">Built on</StickerBadge>
+          </div>
+          <div className="lp-marquee-wrap" style={{ flex: 1 }}>
+            <div className="lp-marquee-track">
+              {[
+                { name: "0G Labs",              sub: "AI-native L1 — TEE compute, storage, chain" },
+                { name: "Uniswap Foundation",   sub: "V3+V4 subgraphs, Trading API, Permit2" },
+                { name: "ENS Labs",             sub: "agent identity & output index" },
+                { name: "ERC-7857",             sub: "iNFT standard for embedded intelligence" },
+                { name: "MCP",                  sub: "@modelcontextprotocol/sdk — agent-callable tools" },
+                { name: "0G APAC Hackathon 2026", sub: "Open Agents track" },
+                { name: "0G Labs",              sub: "AI-native L1 — TEE compute, storage, chain" },
+                { name: "Uniswap Foundation",   sub: "V3+V4 subgraphs, Trading API, Permit2" },
+                { name: "ENS Labs",             sub: "agent identity & output index" },
+                { name: "ERC-7857",             sub: "iNFT standard for embedded intelligence" },
+                { name: "MCP",                  sub: "@modelcontextprotocol/sdk — agent-callable tools" },
+                { name: "0G APAC Hackathon 2026", sub: "Open Agents track" },
+              ].map((p, i) => (
+                <MarqueeItem key={i} name={p.name} sub={p.sub} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3 · Three product windows ─────────────────────────────────── */}
+      <section style={{ padding: "100px 36px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <div style={{ marginBottom: 56 }}>
+            <Cap>THREE SURFACES, ONE AGENT</Cap>
+            <h2
+              style={{
+                margin: "10px 0 14px",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2.2rem, 5vw, 4rem)",
+                fontWeight: 700,
+                letterSpacing: "-0.01em",
+                textTransform: "uppercase",
+                lineHeight: 1.0,
+                textWrap: "balance",
+                color: "var(--lp-ink)",
+              }}
+            >
+              Browse positions. Diagnose live. Hire the agent.
+            </h2>
+            <p style={{ margin: 0, maxWidth: 640, color: "var(--lp-ink-soft)", fontSize: 14, lineHeight: 1.6 }}>
+              Each surface routes to the same on-chain agent — same iNFT, same
+              verifiable reports, same MCP server.
+            </p>
+          </div>
+
+          <div
+            className="lp-products-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.55fr 1fr 1fr",
+              gap: 20,
+              alignItems: "start",
+            }}
+          >
+            <WindowPanel
+              title="atlas.exe"
+              onClick={() => nav("/atlas")}
+              style={{ height: "100%" }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 16, height: "100%" }}>
+                <StickerBadge variant="purple">ATLAS</StickerBadge>
+                <h3
+                  style={{
+                    margin: 0,
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "-0.01em",
+                    color: "var(--lp-ink)",
+                    lineHeight: 1.1,
+                  }}
+                >
+                  See every LP at a glance.
+                </h3>
+                <p style={{ margin: 0, color: "var(--lp-ink-soft)", fontSize: 13, lineHeight: 1.55, textWrap: "pretty" }}>
+                  Paste any wallet — V3&nbsp;+&nbsp;V4 positions classified live by the
+                  agent. Six curated demo wallets pin the green&nbsp;/&nbsp;amber&nbsp;/&nbsp;red&nbsp;/&nbsp;portfolio narratives.
+                </p>
+                <div style={{ marginTop: "auto", paddingTop: 16 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lp-cobalt)", display: "flex", alignItems: "center", gap: 6 }}>
+                    Open Atlas <PixelArrow />
+                  </span>
+                </div>
+              </div>
+            </WindowPanel>
+
+            <WindowPanel title="agent.exe" onClick={() => nav("/agent")}>
+              <StickerBadge variant="magenta" style={{ marginBottom: 14 }}>AGENT</StickerBadge>
+              <h3
+                style={{
+                  margin: "0 0 10px",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.01em",
+                  color: "var(--lp-ink)",
+                  lineHeight: 1.1,
+                }}
+              >
+                The iNFT, in real time.
+              </h3>
+              <p style={{ margin: 0, color: "var(--lp-ink-soft)", fontSize: 12, lineHeight: 1.5, textWrap: "pretty" }}>
+                LP&nbsp;Doctor/01 — ERC-7857 on 0G&nbsp;Galileo. Live memoryRoot, reputation counter,
+                migrationsTriggered, license terms — all read direct from chain every 30&nbsp;s.
+              </p>
+              <div style={{ marginTop: 16 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lp-cobalt)", display: "flex", alignItems: "center", gap: 6 }}>
+                  Open /agent <PixelArrow />
+                </span>
+              </div>
+            </WindowPanel>
+
+            <WindowPanel title="developers.exe" onClick={() => nav("/developers")}>
+              <StickerBadge variant="cobalt" style={{ marginBottom: 14 }}>DEVELOPERS</StickerBadge>
+              <h3
+                style={{
+                  margin: "0 0 10px",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.01em",
+                  color: "var(--lp-ink)",
+                  lineHeight: 1.1,
+                }}
+              >
+                Hire LP Doctor from any agent.
+              </h3>
+              <p style={{ margin: 0, color: "var(--lp-ink-soft)", fontSize: 12, lineHeight: 1.5, textWrap: "pretty" }}>
+                MCP server, 6 tools. Three free verifiers, three gated by mintLicense
+                (0.1&nbsp;OG&nbsp;/&nbsp;24&nbsp;h, 80/20 royalty split). cast-send snippets included.
+              </p>
+              <div style={{ marginTop: 16 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lp-cobalt)", display: "flex", alignItems: "center", gap: 6 }}>
+                  Open /developers <PixelArrow />
+                </span>
+              </div>
+            </WindowPanel>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4 · How the agent works — phase stream ───────────────────── */}
+      <section
+        style={{
+          padding: "100px 36px",
+          background: "var(--lp-base-deep)",
+          borderTop: "2px solid var(--lp-border)",
+          borderBottom: "2px solid var(--lp-border)",
+        }}
+      >
+        <div
+          className="lp-how-grid"
+          style={{
+            maxWidth: 1280,
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "minmax(280px, 1fr) minmax(320px, 1.4fr)",
-            gap: 56,
+            gridTemplateColumns: "minmax(260px, 1fr) minmax(340px, 1.5fr)",
+            gap: 60,
             alignItems: "center",
           }}
         >
           <div>
-            <Cap style={{ color: "var(--cyan)" }}>HOW IT WORKS</Cap>
+            <Cap>HOW IT WORKS</Cap>
             <h2
               style={{
-                margin: "12px 0 16px",
+                margin: "10px 0 16px",
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(28px, 3.4vw, 40px)",
-                fontWeight: 500,
-                letterSpacing: "-0.025em",
+                fontSize: "clamp(2rem, 4.5vw, 3.6rem)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.0,
                 textWrap: "balance",
+                color: "var(--lp-ink)",
               }}
             >
               Ten phases. Streamed live over SSE.
@@ -275,716 +507,1098 @@ export function Landing() {
             <p
               style={{
                 margin: 0,
-                color: "var(--text-secondary)",
+                color: "var(--lp-ink-soft)",
                 fontSize: 14,
                 lineHeight: 1.65,
+                maxWidth: "55ch",
               }}
             >
-              No spinner, no black box. Every phase emits a typed event the
-              user watches in real time — position resolution, IL math, regime
+              No spinner, no black box. Every phase emits a typed event the user
+              watches in real time — position resolution, IL math, regime
               classification, hook discovery, swap-by-swap replay, migration
               preview, TEE verdict synthesis with hallucination guard, 0G
               Storage upload, on-chain anchor, ENS publish.
             </p>
           </div>
+
+          <WindowPanel title="diagnose.stream">
+            <ScrollPhasePanel phases={ALL_PHASES} />
+          </WindowPanel>
+        </div>
+      </section>
+
+      {/* ── 5 · Five-path verification ────────────────────────────────── */}
+      <section style={{ padding: "100px 36px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <Cap>VERIFICATION MATRIX</Cap>
+            <h2
+              style={{
+                margin: "10px 0 16px",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2rem, 4.5vw, 3.6rem)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.0,
+                textWrap: "balance",
+                color: "var(--lp-ink)",
+              }}
+            >
+              Five paths, one rootHash, no LP Doctor server in the trust.
+            </h2>
+            <p
+              style={{
+                margin: "0 auto",
+                maxWidth: 640,
+                color: "var(--lp-ink-soft)",
+                fontSize: 14,
+                lineHeight: 1.6,
+              }}
+            >
+              Same hash, five independent surfaces. The AT-4 hallucination guard
+              fires <em>before</em> anchoring, so unsupported model claims never
+              reach any of them.
+            </p>
+          </div>
+
+          {/* rootHash hub */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 20px",
+                border: "2px solid var(--lp-border)",
+                borderRadius: 2,
+                background: "var(--lp-ink)",
+                boxShadow: "var(--lp-shadow)",
+              }}
+            >
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--lp-yellow)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                rootHash
+              </span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--lp-ink-ghost)" }}>
+                0x7ac4f6e2…b812
+              </span>
+            </div>
+          </div>
+
+          {/* connector line */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 0 }}>
+            <div style={{ width: 1, height: 28, background: "var(--lp-border-mid)" }} />
+          </div>
+
+          <VerificationPaths />
+        </div>
+      </section>
+
+      {/* ── 6 · Agent economy ─────────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "100px 36px",
+          background: "var(--lp-base-deep)",
+          borderTop: "2px solid var(--lp-border)",
+          borderBottom: "2px solid var(--lp-border)",
+        }}
+      >
+        <div
+          className="lp-agent-grid"
+          style={{
+            maxWidth: 1280,
+            margin: "0 auto",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 60,
+            alignItems: "center",
+          }}
+        >
+          {/* Left: big display quote */}
+          <div>
+            <Cap style={{ marginBottom: 20 }}>AGENT ECONOMY</Cap>
+            <blockquote
+              style={{
+                margin: 0,
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2rem, 5vw, 4rem)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.0,
+                color: "var(--lp-ink)",
+              }}
+            >
+              The intelligence is in the cursor{" "}
+              <span style={{ color: "var(--lp-purple)" }}>— and the cursor is rentable.</span>
+            </blockquote>
+            <p
+              style={{
+                marginTop: 24,
+                color: "var(--lp-ink-soft)",
+                fontSize: 14,
+                lineHeight: 1.65,
+                maxWidth: "52ch",
+              }}
+            >
+              Three counters that move on chain per agent action, plus a
+              licensing primitive that splits revenue automatically.
+            </p>
+          </div>
+
+          {/* Right: sticker collage over a window */}
+          <div style={{ position: "relative" }}>
+            <WindowPanel title="agent.economy">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 14,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                }}
+              >
+                {[
+                  { tag: "01", title: "mintLicense — 80/20 royalty", desc: "Pay 0.1 OG for a 24 h license to invoke gated MCP tools. Owner gets 80%, treasury 20%, automatic split." },
+                  { tag: "02", title: "memoryRoot evolves per run",  desc: "Each diagnose updates agents(1).memoryRoot to the new 0G Storage blob." },
+                  { tag: "03", title: "reputation + migrationsTriggered", desc: "Two on-chain counters move per run. recordMigration bumps when user signs." },
+                  { tag: "04", title: "6 MCP tools — 3 gated, 3 free", desc: "diagnose / preflight / migrate gated. lookupReport / lookupReportOnChain / resolveEnsRecord public." },
+                ].map((c) => (
+                  <div
+                    key={c.tag}
+                    style={{
+                      padding: 14,
+                      border: "1px solid var(--lp-border-soft)",
+                      borderRadius: 2,
+                      background: "var(--lp-base-deep)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <span style={{ color: "var(--lp-purple)", fontSize: 9, fontWeight: 700, letterSpacing: "0.05em" }}>{c.tag}</span>
+                    <span style={{ color: "var(--lp-ink)", fontSize: 11, fontWeight: 600, lineHeight: 1.25, fontFamily: "var(--font-sans)" }}>{c.title}</span>
+                    <span style={{ color: "var(--lp-ink-faint)", fontSize: 11, lineHeight: 1.45, fontFamily: "var(--font-sans)" }}>{c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </WindowPanel>
+            {/* Floating stickers on the window */}
+            <StickerBadge
+              variant="yellow"
+              style={{ position: "absolute", top: -12, right: -8, transform: "rotate(3deg)", zIndex: 3 }}
+            >
+              0.1 OG / 24 H
+            </StickerBadge>
+            <StickerBadge
+              variant="magenta"
+              style={{ position: "absolute", bottom: -12, left: -8, transform: "rotate(-2deg)", zIndex: 3 }}
+            >
+              80/20 ROYALTY
+            </StickerBadge>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7 · Method · 3 phases ────────────────────────────────────── */}
+      <section style={{ padding: "100px 36px", position: "relative", overflow: "hidden" }}>
+        <div className="lp-grid-bg" style={{ opacity: 0.5 }} />
+        <div style={{ maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <Cap>METHOD · 3 PHASES</Cap>
+            <h2
+              style={{
+                margin: "10px 0 14px",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2rem, 4.5vw, 3.6rem)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.0,
+                textWrap: "balance",
+                color: "var(--lp-ink)",
+              }}
+            >
+              A lens, not a dashboard.
+            </h2>
+            <p
+              style={{
+                margin: "0 auto",
+                maxWidth: 560,
+                color: "var(--lp-ink-soft)",
+                fontSize: 14,
+                lineHeight: 1.6,
+              }}
+            >
+              Every position ships with a signed, reproducible diagnosis. You
+              keep the verdict; your keys never leave your wallet.
+            </p>
+          </div>
+
           <div
+            className="lp-method-grid"
             style={{
-              padding: 24,
-              borderRadius: 12,
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              fontFamily: "var(--font-mono)",
-              fontSize: 11,
-              lineHeight: 1.9,
-              color: "var(--text-secondary)",
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 20,
+              alignItems: "start",
             }}
           >
             {[
-              ["01", "position.resolve", "VERIFIED"],
-              ["03", "il.reconstruct", "COMPUTED"],
-              ["04", "regime.classify", "ESTIMATED"],
-              ["05", "hooks.discover", "LABELED"],
-              ["06", "hook.replay (1k swaps)", "COMPUTED"],
-              ["07", "migration.preview", "COMPUTED"],
-              ["10", "verdict.synthesize (TEE)", "ESTIMATED"],
-              ["08", "report.upload (0G)", "VERIFIED"],
-              ["09", "anchor.0g-chain + iNFT update", "VERIFIED"],
-              ["11", "ens.publish (Sepolia)", "VERIFIED"],
-            ].map(([n, name, label]) => (
-              <PhaseRow key={String(n) + name} n={n!} name={name!} label={label!} />
+              {
+                n: "01",
+                label: "DIAGNOSE",
+                title: "Read the position with a microscope.",
+                desc: "The agent pulls your tokenId, decodes the tick range, and reconstructs IL from the current sqrtPriceX96 against the deposit price (Uniswap whitepaper closed-form). Output: a decomposed loss attribution.",
+              },
+              {
+                n: "02",
+                label: "SIMULATE",
+                title: "Score every V4 hook, in a sealed enclave.",
+                desc: "Candidate hooks are replayed against the exact swap stream your pool experienced. Counterfactual P&L, fee capture, and LVR are measured.",
+              },
+              {
+                n: "03",
+                label: "MIGRATE",
+                title: "One signature. Three on-chain moves.",
+                desc: "Close V3 → swap → mint V4, bundled through Permit2. Report signed inside the TEE, pinned to 0G Storage, anchored on 0G Chain for audit.",
+              },
+            ].map((c, i) => (
+              <WindowPanel key={c.n} title={`phase.${c.n}.${c.label.toLowerCase()}`}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "clamp(2rem, 4vw, 3rem)",
+                        fontWeight: 700,
+                        color: ["var(--lp-purple)", "var(--lp-magenta)", "var(--lp-cobalt)"][i],
+                        lineHeight: 1,
+                        letterSpacing: "-0.04em",
+                      }}
+                    >
+                      {c.n}
+                    </span>
+                    <StickerBadge
+                      variant={["purple", "magenta", "cobalt"][i] as StickerVariant}
+                    >
+                      {c.label}
+                    </StickerBadge>
+                  </div>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontFamily: "var(--font-display)",
+                      fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "-0.01em",
+                      lineHeight: 1.1,
+                      color: "var(--lp-ink)",
+                    }}
+                  >
+                    {c.title}
+                  </h3>
+                  <p style={{ margin: 0, color: "var(--lp-ink-soft)", fontSize: 13, lineHeight: 1.55, textWrap: "pretty" }}>
+                    {c.desc}
+                  </p>
+                </div>
+              </WindowPanel>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── 5 · Five-path verification deep-dive ─────────────────────── */}
-      <section style={{ padding: "100px 36px", maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
-        <Cap style={{ color: "var(--cyan)" }}>VERIFICATION MATRIX</Cap>
-        <h2
-          style={{
-            margin: "12px 0 16px",
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px, 4vw, 48px)",
-            fontWeight: 500,
-            letterSpacing: "-0.025em",
-            textWrap: "balance",
-          }}
-        >
-          Five paths, one rootHash, no LP Doctor server in the trust.
-        </h2>
-        <p
-          style={{
-            margin: "0 auto 56px",
-            maxWidth: 720,
-            color: "var(--text-secondary)",
-            fontSize: 14,
-            lineHeight: 1.6,
-          }}
-        >
-          Same hash, five independent surfaces. The AT-4 hallucination guard
-          fires <em>before</em> anchoring, so unsupported model claims never
-          reach any of them.
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: 16,
-            textAlign: "left",
-          }}
-        >
-          <PathCard n="A" name="LP Doctor REST" sub="GET /api/report/<rootHash>" />
-          <PathCard n="B" name="0G Chain registry" sub="LPDoctorReports.reports(rootHash)" />
-          <PathCard n="C" name="iNFT memoryRoot" sub="agents(1).memoryRoot" />
-          <PathCard n="D" name="ENS text record" sub="lpdoctor.<tokenId>.rootHash" />
-          <PathCard n="E" name="0G Storage merkle" sub="root re-derived from blob" />
-        </div>
-      </section>
-
-      {/* ─── 6 · Agent economy capabilities ───────────────────────────── */}
+      {/* ── 8 · Competitive positioning ───────────────────────────────── */}
       <section
         style={{
           padding: "100px 36px",
-          background: "rgba(15, 22, 40, 0.5)",
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
+          background: "var(--lp-base-deep)",
+          borderTop: "2px solid var(--lp-border)",
+          borderBottom: "2px solid var(--lp-border)",
         }}
       >
-        <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
-          <Cap style={{ color: "var(--cyan)" }}>AGENT ECONOMY</Cap>
-          <h2
-            style={{
-              margin: "12px 0 16px",
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(32px, 4vw, 48px)",
-              fontWeight: 500,
-              letterSpacing: "-0.025em",
-              textWrap: "balance",
-            }}
-          >
-            The intelligence is in the cursor — and the cursor is rentable.
-          </h2>
-          <p
-            style={{
-              margin: "0 auto 56px",
-              maxWidth: 720,
-              color: "var(--text-secondary)",
-              fontSize: 14,
-              lineHeight: 1.6,
-            }}
-          >
-            Three counters that move on chain per agent action, plus a
-            licensing primitive that splits revenue automatically.
-          </p>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: 20,
-              textAlign: "left",
-            }}
-          >
-            <CapabilityCard
-              tag="01"
-              title="mintLicense — 80/20 royalty"
-              desc="Pay 0.1 OG for a 24 h license to invoke the agent's gated MCP tools. Owner gets 80 %, treasury 20 %, automatic split."
-            />
-            <CapabilityCard
-              tag="02"
-              title="memoryRoot evolves per run"
-              desc="Each diagnose updates agents(1).memoryRoot to the new 0G Storage blob — cast call agents(1) always returns the latest report's hash."
-            />
-            <CapabilityCard
-              tag="03"
-              title="reputation + migrationsTriggered"
-              desc="Two on-chain counters move per run. recordDiagnose bumps reputation. recordMigration bumps migrationsTriggered when the user signs."
-            />
-            <CapabilityCard
-              tag="04"
-              title="6 MCP tools — 3 gated, 3 free"
-              desc="diagnose / preflight / migrate require a license. lookupReport / lookupReportOnChain / resolveEnsRecord stay public — verification is a public good."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 7 · Method · 3 phases (technical recap) ──────────────────── */}
-      <section style={{ padding: "100px 36px", maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
-        <Cap style={{ color: "var(--cyan)" }}>METHOD · 3 PHASES</Cap>
-        <h2
-          style={{
-            margin: "12px 0 16px",
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(32px, 4vw, 48px)",
-            fontWeight: 500,
-            letterSpacing: "-0.025em",
-            textWrap: "balance",
-          }}
-        >
-          A lens, not a dashboard.
-        </h2>
-        <p
-          style={{
-            margin: "0 auto 56px",
-            maxWidth: 640,
-            color: "var(--text-secondary)",
-            fontSize: 14,
-            lineHeight: 1.6,
-          }}
-        >
-          Every position ships with a signed, reproducible diagnosis. You keep
-          the verdict; your keys never leave your wallet.
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 20,
-            textAlign: "left",
-          }}
-        >
-          <HowCard
-            n="01"
-            label="DIAGNOSE"
-            title="Read the position with a microscope."
-            desc="The agent pulls your tokenId, decodes the tick range, and reconstructs IL from the current sqrtPriceX96 against the deposit price (Uniswap whitepaper closed-form). Output: a decomposed loss attribution."
-          />
-          <HowCard
-            n="02"
-            label="SIMULATE"
-            title="Score every V4 hook, in a sealed enclave."
-            desc="Candidate hooks are replayed against the exact swap stream your pool experienced. Counterfactual P&L, fee capture, and LVR are measured."
-          />
-          <HowCard
-            n="03"
-            label="MIGRATE"
-            title="One signature. Three on-chain moves."
-            desc="Close V3 → swap → mint V4, bundled through Permit2. Report signed inside the TEE, pinned to 0G Storage, anchored on 0G Chain for audit."
-          />
-        </div>
-      </section>
-
-      {/* ─── 8 · Competitive positioning ──────────────────────────────── */}
-      <section
-        style={{
-          padding: "100px 36px",
-          background: "rgba(15, 22, 40, 0.5)",
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <Cap style={{ color: "var(--cyan)" }}>THE GAP WE FILL</Cap>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <div style={{ marginBottom: 48 }}>
+            <Cap>THE GAP WE FILL</Cap>
             <h2
               style={{
-                margin: "12px 0 16px",
+                margin: "10px 0",
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(32px, 4vw, 48px)",
-                fontWeight: 500,
-                letterSpacing: "-0.025em",
+                fontSize: "clamp(2rem, 4.5vw, 3.6rem)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.0,
                 textWrap: "balance",
+                color: "var(--lp-ink)",
               }}
             >
               Adjacent tools show the loss — none explain it.
             </h2>
           </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1.2fr repeat(4, 1fr)",
-              border: "1px solid var(--border)",
-              borderRadius: 10,
-              overflow: "hidden",
-              fontSize: 13,
-            }}
-          >
-            <CompCellHead>Capability</CompCellHead>
-            <CompCellHead>Revert Finance</CompCellHead>
-            <CompCellHead>Uniswap Info</CompCellHead>
-            <CompCellHead>Etherscan</CompCellHead>
-            <CompCellHead accent>LP Doctor</CompCellHead>
-            <CompRow
-              cells={[
-                "Position-level IL breakdown",
-                "per-position IL + APR",
-                "—",
-                "—",
-                "✓ COMPUTED + decomposed",
-              ]}
-            />
-            <CompRow
-              cells={[
-                "V4 hook scoring vs your pool",
-                "—",
-                "—",
-                "—",
-                "✓ replay 1 000 swaps · 0 bps drift",
-              ]}
-            />
-            <CompRow
-              cells={[
-                "Permit2 sign-once migration",
-                "—",
-                "—",
-                "—",
-                "✓ EIP-712 typed data ready",
-              ]}
-            />
-            <CompRow
-              cells={[
-                "Signed verdict, on-chain anchored",
-                "—",
-                "—",
-                "—",
-                "✓ 5 verification paths",
-              ]}
-            />
-            <CompRow
-              cells={[
-                "Callable by other agents",
-                "—",
-                "—",
-                "—",
-                "✓ MCP server, 6 tools",
-              ]}
-            />
+
+          <div className="lp-comp-wrap">
+            <div
+              className="lp-comp-table"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr repeat(4, 1fr)",
+                border: "2px solid var(--lp-border)",
+                fontSize: 12,
+              }}
+            >
+              <CompHead>Capability</CompHead>
+              <CompHead>Revert Finance</CompHead>
+              <CompHead>Uniswap Info</CompHead>
+              <CompHead>Etherscan</CompHead>
+              <CompHead accent>LP Doctor</CompHead>
+              <CompRow cells={["Position-level IL breakdown", "per-position IL + APR", "—", "—", "✓ COMPUTED + decomposed"]} />
+              <CompRow cells={["V4 hook scoring vs your pool", "—", "—", "—", "✓ replay 1 000 swaps · 0 bps drift"]} />
+              <CompRow cells={["Permit2 sign-once migration", "—", "—", "—", "✓ EIP-712 typed data ready"]} />
+              <CompRow cells={["Signed verdict, on-chain anchored", "—", "—", "—", "✓ 5 verification paths"]} />
+              <CompRow cells={["Callable by other agents", "—", "—", "—", "✓ MCP server, 6 tools"]} />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ─── 8b · Five anchor lines ───────────────────────────────────── */}
-      <section style={{ padding: "100px 36px", maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <Cap style={{ color: "var(--cyan)" }}>FIVE ANCHORS</Cap>
+      {/* ── 8b · Five anchors — numbered manifesto ────────────────────── */}
+      <section style={{ padding: "100px 36px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ marginBottom: 60 }}>
+            <Cap>FIVE ANCHORS</Cap>
+            <h2
+              style={{
+                margin: "10px 0 14px",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2rem, 4.5vw, 3.6rem)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.0,
+                textWrap: "balance",
+                color: "var(--lp-ink)",
+              }}
+            >
+              Five design choices that hold the project up.
+            </h2>
+            <p style={{ margin: 0, maxWidth: 640, color: "var(--lp-ink-soft)", fontSize: 14, lineHeight: 1.6 }}>
+              Each one is a deliberate constraint that's verifiable in the code or
+              on chain. Take any one away and the trust story collapses.
+            </p>
+          </div>
+
+          <div>
+            {[
+              {
+                tag: "01 · DIAGNOSTIC, NOT AUTO-DEPLOY",
+                body: "LP Doctor does not deploy your capital. It diagnoses why your LP is bleeding, signs the report inside a TEE, and proposes a V4 migration only if the simulation backtests positively. The agent never executes — the user keeps custody.",
+              },
+              {
+                tag: "02 · HONESTY LAYER",
+                body: "Every numeric output carries one of five labels: VERIFIED, COMPUTED, ESTIMATED, EMULATED, LABELED. If the agent did not backtest a hook against the pool's real swaps, it says so. The hallucination guard fires before anchoring — unsupported claims never reach any of the five verification surfaces.",
+              },
+              {
+                tag: "03 · V4 HOOK REPLAY, NOT HEURISTIC",
+                body: "We do not guess if a V4 hook will help your pool. We replay the pool's last 1 000 mainnet swaps through the candidate hook via SwapMath.computeSwapStep and show the counterfactual IL — at 0 bps drift vs on-chain post-swap state.",
+              },
+              {
+                tag: "04 · SIGNED REPORT, NOT A SCREENSHOT",
+                body: "The verdict is a blob signed by a 0G Compute TEE-attested provider, pinned on 0G Storage, anchored on 0G Chain. Forwardable to a DAO. Verifiable offline by anyone with the rootHash and the registry address — no LP Doctor server in the trust path.",
+              },
+              {
+                tag: "05 · ENS DOES REAL WORK",
+                body: "The agent's ENS name resolves its on-chain memory cursor. Five text records per diagnose key the rootHash, storageUrl, anchorTx, chainId, and verdict — indexed by Uniswap position tokenId. ENS becomes the queryable memory of the agent economy here. Not a vanity name.",
+              },
+            ].map((a) => (
+              <AnchorEntry key={a.tag} tag={a.tag} body={a.body} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 9 · Closing CTA slab ──────────────────────────────────────── */}
+      <section
+        style={{
+          padding: "100px 36px",
+          background: "var(--lp-base-deeper)",
+          borderTop: "2px solid var(--lp-border)",
+          borderBottom: "2px solid var(--lp-border)",
+          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div className="lp-grid-bg" style={{ opacity: 0.4 }} />
+        <div style={{ maxWidth: 860, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <h2
             style={{
-              margin: "12px 0 16px",
+              margin: 0,
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(32px, 4vw, 48px)",
-              fontWeight: 500,
-              letterSpacing: "-0.025em",
+              fontSize: "clamp(2.4rem, 7vw, 6rem)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "-0.01em",
+              lineHeight: 0.98,
               textWrap: "balance",
+              color: "var(--lp-ink)",
             }}
           >
-            Five design choices that hold the project up.
+            Six demo wallets.{" "}
+            <span style={{ color: "var(--lp-purple)" }}>One live agent.</span>{" "}
+            One signed report per click.
           </h2>
           <p
             style={{
-              margin: "0 auto",
-              maxWidth: 720,
-              color: "var(--text-secondary)",
+              margin: "24px auto 36px",
+              maxWidth: 520,
+              color: "var(--lp-ink-soft)",
               fontSize: 14,
               lineHeight: 1.6,
             }}
           >
-            Each one is a deliberate constraint that's verifiable in the code or
-            on chain. Take any one away and the trust story collapses.
+            Bring your own wallet, or pick a curated demo. The pipeline runs
+            end-to-end on real chain data — no mocks, no canned responses.
           </p>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <AnchorLine
-            tag="01 · DIAGNOSTIC, NOT AUTO-DEPLOY"
-            body="LP Doctor does not deploy your capital. It diagnoses why your LP is bleeding, signs the report inside a TEE, and proposes a V4 migration only if the simulation backtests positively. The agent never executes — the user keeps custody."
-          />
-          <AnchorLine
-            tag="02 · HONESTY LAYER"
-            body="Every numeric output carries one of five labels: VERIFIED, COMPUTED, ESTIMATED, EMULATED, LABELED. If the agent did not backtest a hook against the pool's real swaps, it says so. The hallucination guard fires before anchoring — unsupported claims never reach any of the five verification surfaces."
-          />
-          <AnchorLine
-            tag="03 · V4 HOOK REPLAY, NOT HEURISTIC"
-            body="We do not guess if a V4 hook will help your pool. We replay the pool's last 1 000 mainnet swaps through the candidate hook via SwapMath.computeSwapStep and show the counterfactual IL — at 0 bps drift vs on-chain post-swap state."
-          />
-          <AnchorLine
-            tag="04 · SIGNED REPORT, NOT A SCREENSHOT"
-            body="The verdict is a blob signed by a 0G Compute TEE-attested provider, pinned on 0G Storage, anchored on 0G Chain. Forwardable to a DAO. Verifiable offline by anyone with the rootHash and the registry address — no LP Doctor server in the trust path."
-          />
-          <AnchorLine
-            tag="05 · ENS DOES REAL WORK"
-            body="The agent's ENS name resolves its on-chain memory cursor. Five text records per diagnose key the rootHash, storageUrl, anchorTx, chainId, and verdict — indexed by Uniswap position tokenId. ENS becomes the queryable memory of the agent economy here. Not a vanity name."
-          />
-        </div>
-      </section>
-
-      {/* ─── 9 · Closing CTA ──────────────────────────────────────────── */}
-      <section style={{ padding: "100px 36px", maxWidth: 920, margin: "0 auto", textAlign: "center" }}>
-        <h2
-          style={{
-            margin: 0,
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(28px, 3.5vw, 40px)",
-            fontWeight: 500,
-            letterSpacing: "-0.025em",
-            textWrap: "balance",
-          }}
-        >
-          Six demo wallets. One live agent. One signed report per click.
-        </h2>
-        <p
-          style={{
-            margin: "20px auto 32px",
-            maxWidth: 560,
-            color: "var(--text-secondary)",
-            fontSize: 14,
-            lineHeight: 1.6,
-          }}
-        >
-          Bring your own wallet, or pick a curated demo. The pipeline runs
-          end-to-end on real chain data — no mocks, no canned responses.
-        </p>
-        <button
-          className="btn btn-primary"
-          onClick={() => nav("/atlas")}
-          style={{ padding: "14px 28px", fontSize: 14 }}
-        >
-          Open the Atlas
-          <Arrow />
-        </button>
-      </section>
-
-      {/* ─── 10 · Instrument stack (tech proof footer) ────────────────── */}
-      <section
-        style={{
-          padding: "60px 36px",
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
-          background: "rgba(15, 22, 40, 0.5)",
-        }}
-      >
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24, alignItems: "center", textAlign: "center" }}>
-          <Cap style={{ color: "var(--text-tertiary)" }}>INSTRUMENT STACK</Cap>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: 24,
-              width: "100%",
-            }}
-          >
-            <TrustItem name="0G Compute" sub="TEE · broker-attested" />
-            <TrustItem name="0G Storage" sub="merkle rootHash anchored" />
-            <TrustItem name="0G Chain" sub="LPDoctorReports + iNFT registry" />
-            <TrustItem name="Uniswap V3 / V4" sub="mainnet · sepolia" />
-            <TrustItem name="Permit2" sub="EIP-712 signed bundle" />
-            <TrustItem name="ENS" sub="pending ENS setup" />
-            <TrustItem name="ERC-7857" sub="iNFT agent identity" />
-            <TrustItem name="MCP" sub="6 tools · agent-callable" />
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <button className="lp-btn-primary" onClick={() => nav("/atlas")}>
+              Open the Atlas <PixelArrow />
+            </button>
+            <StickerBadge variant="magenta" style={{ transform: "rotate(-3deg)" }}>
+              GALILEO TESTNET
+            </StickerBadge>
           </div>
         </div>
       </section>
 
-      {/* ─── 11 · Footer ───────────────────────────────────────────────── */}
-      <footer style={{ padding: "32px 36px", borderTop: "1px solid var(--border)" }}>
+      {/* ── 10 · Instrument stack — sticker wall ──────────────────────── */}
+      <section
+        style={{
+          padding: "72px 36px",
+          borderBottom: "2px solid var(--lp-border)",
+        }}
+      >
         <div
           style={{
-            maxWidth: 1200,
+            maxWidth: 1280,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 28,
+            alignItems: "center",
+          }}
+        >
+          <Cap>INSTRUMENT STACK</Cap>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 14,
+            }}
+          >
+            {[
+              { name: "0G Compute",       sub: "TEE · broker-attested",             v: "purple"  as StickerVariant, rot: -3 },
+              { name: "0G Storage",       sub: "merkle rootHash anchored",           v: "cobalt"  as StickerVariant, rot: 2  },
+              { name: "0G Chain",         sub: "LPDoctorReports + iNFT registry",   v: "purple"  as StickerVariant, rot: -1 },
+              { name: "Uniswap V3 / V4",  sub: "mainnet · sepolia",                 v: "outline" as StickerVariant, rot: 3  },
+              { name: "Permit2",          sub: "EIP-712 signed bundle",             v: "magenta" as StickerVariant, rot: -2 },
+              { name: "ENS",              sub: "pending ENS setup",                 v: "outline" as StickerVariant, rot: 4  },
+              { name: "ERC-7857",         sub: "iNFT agent identity",               v: "cobalt"  as StickerVariant, rot: -4 },
+              { name: "MCP",              sub: "6 tools · agent-callable",          v: "yellow"  as StickerVariant, rot: 2  },
+            ].map((t) => (
+              <div
+                key={t.name}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 4,
+                  transform: `rotate(${t.rot}deg)`,
+                }}
+              >
+                <StickerBadge variant={t.v} style={{ fontSize: 10, padding: "6px 12px" }}>
+                  {t.name}
+                </StickerBadge>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 8,
+                    color: "var(--lp-ink-ghost)",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  {t.sub}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 11 · Footer — browser status bar ──────────────────────────── */}
+      <footer
+        style={{
+          padding: "18px 36px",
+          background: "var(--lp-ink)",
+          borderTop: "2px solid var(--lp-border)",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1280,
             margin: "0 auto",
             display: "flex",
             justifyContent: "space-between",
-            color: "var(--text-tertiary)",
-            fontSize: 11,
+            alignItems: "center",
             flexWrap: "wrap",
             gap: 12,
           }}
         >
-          <Mono color="text-tertiary">GALILEO TESTNET</Mono>
-          <span>© 2026 LP Doctor</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                letterSpacing: "0.10em",
+                textTransform: "uppercase",
+                color: "oklch(0.97 0.015 300 / 0.5)",
+              }}
+            >
+              GALILEO TESTNET
+            </span>
+            <StickerBadge
+              variant="yellow"
+              style={{ transform: "rotate(-2deg)", fontSize: 8 }}
+            >
+              0G APAC HACKATHON 2026
+            </StickerBadge>
+          </div>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              color: "oklch(0.97 0.015 300 / 0.35)",
+            }}
+          >
+            © 2026 LP Doctor
+          </span>
         </div>
       </footer>
     </div>
   );
 }
 
-/* ─── small atoms (kept inline so Landing stays self-contained) ───── */
+/* ══════════════════════════════════════════════════════════════════════
+   Inline section components
+══════════════════════════════════════════════════════════════════════ */
 
-function Arrow() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M5.5 4.5L9.5 7L5.5 9.5V4.5Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-interface StatProps {
-  value: string;
-  label: string;
-  sub: string;
-}
-function Stat({ value, label, sub }: StatProps) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
-      <span style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 500, color: "var(--cyan)", letterSpacing: "-0.02em" }}>
-        {value}
-      </span>
-      <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-secondary)" }}>
-        {label}
-      </span>
-      <Mono color="text-tertiary" style={{ fontSize: 10 }}>
-        {sub}
-      </Mono>
-    </div>
-  );
-}
-
-interface PartnerProps {
-  name: string;
-  sub: string;
-}
-function Partner({ name, sub }: PartnerProps) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-      <span style={{ fontFamily: "var(--font-display)", fontSize: 14, fontWeight: 600, color: "var(--text)", letterSpacing: "-0.01em" }}>
-        {name}
-      </span>
-      <Mono color="text-tertiary" style={{ fontSize: 9 }}>
-        {sub}
-      </Mono>
-    </div>
-  );
-}
-
-interface ProductCardProps {
-  badge: string;
-  title: string;
-  desc: string;
-  cta: string;
-  onClick: () => void;
-}
-function ProductCard({ badge, title, desc, cta, onClick }: ProductCardProps) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        textAlign: "left",
-        padding: 28,
-        borderRadius: 12,
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        cursor: "pointer",
-        transition: "border-color 160ms, transform 160ms",
-        font: "inherit",
-        color: "inherit",
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "var(--cyan)";
-        e.currentTarget.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "var(--border)";
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
-    >
-      <Cap style={{ color: "var(--cyan)" }}>{badge}</Cap>
-      <h3 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 500, letterSpacing: "-0.02em" }}>
-        {title}
-      </h3>
-      <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.55, textWrap: "pretty" }}>
-        {desc}
-      </p>
-      <span style={{ marginTop: "auto", color: "var(--cyan)", fontSize: 12, fontFamily: "var(--font-mono)" }}>
-        {cta}
-      </span>
-    </button>
-  );
-}
-
-interface PhaseRowProps {
-  n: string;
-  name: string;
-  label: string;
-}
-const PHASE_LABEL_TONE: Record<string, string> = {
-  VERIFIED: "var(--healthy)",
-  COMPUTED: "var(--cyan)",
-  ESTIMATED: "var(--toxic)",
-  EMULATED: "var(--bleed)",
-  LABELED: "var(--violet, #b48cff)",
-};
-function PhaseRow({ n, name, label }: PhaseRowProps) {
-  return (
-    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-      <span style={{ color: "var(--text-tertiary)" }}>{n}</span>
-      <span style={{ flex: 1, color: "var(--text)" }}>{name}</span>
-      <span style={{ fontSize: 9, color: PHASE_LABEL_TONE[label] ?? "var(--text-tertiary)" }}>{label}</span>
-    </div>
-  );
-}
-
-interface PathCardProps {
-  n: string;
-  name: string;
-  sub: string;
-}
-function PathCard({ n, name, sub }: PathCardProps) {
-  return (
-    <div
-      style={{
-        padding: 20,
-        borderRadius: 10,
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-      }}
-    >
-      <span style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--cyan)", letterSpacing: "-0.02em" }}>
-        {n}
-      </span>
-      <span style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--text)" }}>{name}</span>
-      <Mono color="text-tertiary" style={{ fontSize: 10 }}>
-        {sub}
-      </Mono>
-    </div>
-  );
-}
-
-interface AnchorLineProps {
-  tag: string;
-  body: string;
-}
-function AnchorLine({ tag, body }: AnchorLineProps) {
+/* ── Hero right-column composition ───────────────────────────────── */
+function HeroComposition({ nav }: { nav: (path: string) => void }) {
   return (
     <div
       style={{
         position: "relative",
-        padding: "26px 32px",
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderLeft: "4px solid var(--cyan)",
-        borderRadius: 10,
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
+        width: "100%",
+        height: "100%",
+        minHeight: 480,
       }}
     >
-      <Cap style={{ color: "var(--cyan)", fontSize: 11 }}>{tag}</Cap>
-      <p
-        style={{
-          margin: 0,
-          color: "var(--text)",
-          fontSize: 15,
-          lineHeight: 1.6,
-          textWrap: "pretty",
-        }}
-      >
-        {body}
-      </p>
-    </div>
-  );
-}
+      {/* Wireframe grid in this zone */}
+      <div
+        className="lp-grid-bg"
+        style={{ borderRadius: 3, border: "1px solid var(--lp-border-soft)" }}
+      />
 
-interface CapabilityCardProps {
-  tag: string;
-  title: string;
-  desc: string;
-}
-function CapabilityCard({ tag, title, desc }: CapabilityCardProps) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        padding: 28,
-        borderRadius: 12,
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-        overflow: "hidden",
-      }}
-    >
+      {/* Panel B: verdict.rootHash — upper-right, static, behind */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
+          top: 20,
           right: 0,
-          height: 1,
-          background:
-            "linear-gradient(90deg, transparent, var(--cyan), transparent)",
-          opacity: 0.3,
-        }}
-      />
-      <Mono color="text-tertiary" style={{ fontSize: 11 }}>
-        {tag}
-      </Mono>
-      <h3
-        style={{
-          margin: 0,
-          fontFamily: "var(--font-display)",
-          fontSize: 18,
-          fontWeight: 500,
-          letterSpacing: "-0.015em",
+          width: 190,
+          zIndex: 1,
+          animation: "lp-fadein 0.6s 0.25s cubic-bezier(0.22,1,0.36,1) both",
         }}
       >
-        {title}
-      </h3>
-      <p
+        <WindowPanel title="report.0x7ac…b812" style={{ transform: "rotate(1deg)" }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, lineHeight: 1.7 }}>
+            <div
+              style={{
+                color: "var(--lp-cobalt)",
+                wordBreak: "break-all",
+                marginBottom: 8,
+                fontSize: 8,
+              }}
+            >
+              0x7ac4f6e2d8c1a4f2…b812
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span className="lp-tone-verified" style={{ fontWeight: 700, fontSize: 9 }}>
+                VERIFIED
+              </span>
+              <span style={{ color: "var(--lp-ink-ghost)" }}>· 5 paths</span>
+            </div>
+          </div>
+        </WindowPanel>
+      </div>
+
+      {/* Panel A: diagnose.live — center, streaming, front */}
+      <div
         style={{
-          margin: 0,
-          color: "var(--text-secondary)",
-          fontSize: 13,
-          lineHeight: 1.55,
+          position: "absolute",
+          top: 80,
+          left: 16,
+          right: 40,
+          zIndex: 2,
+          animation: "lp-fadein 0.6s 0.1s cubic-bezier(0.22,1,0.36,1) both",
         }}
       >
-        {desc}
-      </p>
+        <LiveStreamWindow />
+      </div>
+
+      {/* Stickers */}
+      <StickerBadge
+        variant="magenta"
+        style={{
+          position: "absolute",
+          bottom: 110,
+          left: 8,
+          zIndex: 3,
+          transform: "rotate(-3deg)",
+          animation: "lp-fadein 0.5s 0.4s cubic-bezier(0.22,1,0.36,1) both",
+        }}
+      >
+        SIGNED · 0G COMPUTE
+      </StickerBadge>
+      <StickerBadge
+        variant="cobalt"
+        style={{
+          position: "absolute",
+          bottom: 68,
+          right: 16,
+          zIndex: 3,
+          transform: "rotate(2deg)",
+          animation: "lp-fadein 0.5s 0.5s cubic-bezier(0.22,1,0.36,1) both",
+        }}
+      >
+        5 VERIFY PATHS
+      </StickerBadge>
+      <StickerBadge
+        variant="purple"
+        style={{
+          position: "absolute",
+          top: 8,
+          left: 24,
+          zIndex: 3,
+          transform: "rotate(4deg)",
+          animation: "lp-fadein 0.5s 0.35s cubic-bezier(0.22,1,0.36,1) both",
+        }}
+      >
+        iNFT MEMORY ROOT
+      </StickerBadge>
+
+      {/* Pixel cursor motif */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 140,
+          right: 60,
+          zIndex: 3,
+          animation: "lp-fadein 0.5s 0.55s cubic-bezier(0.22,1,0.36,1) both",
+        }}
+      >
+        <PixelCursorMotif />
+      </div>
     </div>
   );
 }
 
-function CompCellHead({ children, accent }: { children: React.ReactNode; accent?: boolean }) {
+/* ── Live streaming window (hero + mobile) ───────────────────────── */
+function LiveStreamWindow({ small }: { small?: boolean }) {
+  const [count, setCount] = useState(1);
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    if (count >= HERO_STREAM.length) {
+      const t = setTimeout(() => { setCount(1); setKey((k) => k + 1); }, 2800);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setCount((c) => c + 1), 1200);
+    return () => clearTimeout(t);
+  }, [count]);
+
+  return (
+    <WindowPanel
+      title="diagnose.live"
+      style={{ transform: "rotate(-1.5deg)" }}
+    >
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: small ? 10 : 11,
+          lineHeight: 1.6,
+          minHeight: small ? 90 : 136,
+        }}
+      >
+        <div
+          style={{
+            color: "var(--lp-ink-ghost)",
+            marginBottom: 10,
+            fontSize: 9,
+            letterSpacing: "0.03em",
+          }}
+        >
+          tokenId 605311 · streaming
+        </div>
+        {HERO_STREAM.slice(0, count).map((p, i) => (
+          <LpPhaseRow
+            key={`${key}-${i}`}
+            n={p.n}
+            name={p.name}
+            label={p.label}
+            animated={i === count - 1}
+          />
+        ))}
+        {count < HERO_STREAM.length && <span className="lp-caret" />}
+      </div>
+    </WindowPanel>
+  );
+}
+
+/* ── Phase stream panel (section 4, scroll-triggered) ─────────────── */
+function ScrollPhasePanel({ phases }: { phases: typeof ALL_PHASES }) {
+  const [count, setCount] = useState(0);
+  const [key, setKey] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCount(1);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (count === 0) return;
+    if (count >= phases.length) {
+      const t = setTimeout(() => { setCount(1); setKey((k) => k + 1); }, 2400);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setCount((c) => c + 1), 480);
+    return () => clearTimeout(t);
+  }, [count, phases.length]);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: 11,
+        lineHeight: 1.9,
+        minHeight: 240,
+      }}
+    >
+      <div style={{ color: "var(--lp-ink-ghost)", marginBottom: 12, fontSize: 9, letterSpacing: "0.03em" }}>
+        tokenId · streaming SSE ·{" "}
+        <span className="lp-tone-computed">live</span>
+        <span className="lp-caret" />
+      </div>
+      {phases.slice(0, count).map((p, i) => (
+        <LpPhaseRow
+          key={`${key}-${i}`}
+          n={p.n}
+          name={p.name}
+          label={p.label}
+          animated={i === count - 1}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Verification path cards ──────────────────────────────────────── */
+function VerificationPaths() {
+  const paths = [
+    { n: "A", name: "LP Doctor REST",    sub: "GET /api/report/<rootHash>",          color: "var(--lp-purple)"  },
+    { n: "B", name: "0G Chain registry", sub: "LPDoctorReports.reports(rootHash)",   color: "var(--lp-cobalt)"  },
+    { n: "C", name: "iNFT memoryRoot",   sub: "agents(1).memoryRoot",                color: "var(--lp-cobalt)"  },
+    { n: "D", name: "ENS text record",   sub: "lpdoctor.<tokenId>.rootHash",         color: "var(--lp-magenta)" },
+    { n: "E", name: "0G Storage merkle", sub: "root re-derived from blob",           color: "var(--lp-cobalt)"  },
+  ];
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.2 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(5, 1fr)",
+        gap: 12,
+      }}
+    >
+      {paths.map((p, i) => (
+        <div
+          key={p.n}
+          className={`lp-reveal${visible ? " lp-visible" : ""}`}
+          style={{
+            transitionDelay: visible ? `${i * 80}ms` : "0ms",
+          }}
+        >
+          <div
+            className="lp-window"
+            style={{ border: `2px solid ${p.color}`, boxShadow: `3px 3px 0 ${p.color}` }}
+          >
+            <div
+              style={{
+                padding: "8px 12px",
+                background: p.color,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "oklch(0.97 0.015 300)",
+                }}
+              >
+                {p.n}
+              </span>
+            </div>
+            <div style={{ padding: "12px 12px" }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--lp-ink)",
+                  marginBottom: 8,
+                  lineHeight: 1.25,
+                }}
+              >
+                {p.name}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 9,
+                  color: "var(--lp-ink-faint)",
+                  lineHeight: 1.5,
+                  wordBreak: "break-all",
+                }}
+              >
+                {p.sub}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Score card (stats section) ───────────────────────────────────── */
+function ScoreCard({ value, label, sub, bordered }: { value: string; label: string; sub: string; bordered?: boolean }) {
   return (
     <div
       style={{
-        padding: "14px 16px",
-        background: accent ? "rgba(255, 176, 32, 0.08)" : "var(--surface-raised)",
-        color: accent ? "var(--cyan)" : "var(--text-tertiary)",
-        fontSize: 11,
+        padding: "36px 28px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 8,
+        background: "var(--lp-base)",
+        borderLeft: bordered ? "2px solid var(--lp-border)" : undefined,
+        borderRight: bordered ? "2px solid var(--lp-border)" : undefined,
+      }}
+    >
+      <span className="lp-score-digit">{value}</span>
+      <span
+        style={{
+          fontSize: 10,
+          fontWeight: 700,
+          textTransform: "uppercase",
+          letterSpacing: "0.12em",
+          color: "var(--lp-ink-faint)",
+        }}
+      >
+        {label}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 9,
+          color: "var(--lp-ink-ghost)",
+          letterSpacing: "0.02em",
+          textAlign: "center",
+        }}
+      >
+        {sub}
+      </span>
+    </div>
+  );
+}
+
+/* ── Marquee item ─────────────────────────────────────────────────── */
+function MarqueeItem({ name, sub }: { name: string; sub: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        padding: "0 36px",
+        borderRight: "1px solid var(--lp-border-soft)",
+        gap: 2,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 13,
+          fontWeight: 600,
+          color: "var(--lp-ink)",
+          letterSpacing: "-0.01em",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {name}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 8,
+          color: "var(--lp-ink-ghost)",
+          letterSpacing: "0.02em",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {sub}
+      </span>
+    </div>
+  );
+}
+
+/* ── Five-anchor manifesto entry (no side stripe, no card bg) ─────── */
+function AnchorEntry({ tag, body }: { tag: string; body: string }) {
+  const [num, ...rest] = tag.split(" · ");
+  const label = rest.join(" · ");
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`lp-reveal${visible ? " lp-visible" : ""}`}
+      style={{
+        padding: "36px 0",
+        borderTop: "1px solid var(--lp-border-mid)",
+        display: "grid",
+        gridTemplateColumns: "72px 1fr",
+        gap: 36,
+        alignItems: "start",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+          fontWeight: 700,
+          color: "var(--lp-purple-light)",
+          letterSpacing: "-0.05em",
+          lineHeight: 1,
+          paddingTop: 4,
+        }}
+      >
+        {num}
+      </span>
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(1rem, 2.2vw, 1.4rem)",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.005em",
+            color: "var(--lp-ink)",
+            lineHeight: 1.1,
+            marginBottom: 16,
+          }}
+        >
+          {label}
+        </div>
+        <p
+          style={{
+            margin: 0,
+            color: "var(--lp-ink-soft)",
+            fontSize: 15,
+            lineHeight: 1.7,
+            maxWidth: "72ch",
+            textWrap: "pretty",
+          }}
+        >
+          {body}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ── Competitive table cells ──────────────────────────────────────── */
+function CompHead({ children, accent }: { children: ReactNode; accent?: boolean }) {
+  return (
+    <div
+      style={{
+        padding: "12px 14px",
+        background: accent ? "var(--lp-yellow)" : "var(--lp-base-deep)",
+        color: accent ? "var(--lp-ink)" : "var(--lp-ink-faint)",
+        fontSize: 10,
         textTransform: "uppercase",
-        letterSpacing: "0.1em",
-        fontWeight: 600,
-        borderRight: "1px solid var(--border)",
+        letterSpacing: "0.10em",
+        fontWeight: 700,
+        borderRight: "1px solid var(--lp-border-mid)",
+        borderBottom: "2px solid var(--lp-border)",
       }}
     >
       {children}
     </div>
   );
 }
-
 function CompRow({ cells }: { cells: string[] }) {
   return (
     <>
@@ -996,13 +1610,20 @@ function CompRow({ cells }: { cells: string[] }) {
           <div
             key={i}
             style={{
-              padding: "12px 16px",
-              borderTop: "1px solid var(--border)",
-              borderRight: i < cells.length - 1 ? "1px solid var(--border)" : "none",
-              color: isFirst ? "var(--text)" : isLast ? "var(--cyan)" : "var(--text-tertiary)",
-              fontWeight: isFirst ? 500 : 400,
-              background: isLast ? "rgba(255, 176, 32, 0.04)" : "transparent",
-              fontSize: 12.5,
+              padding: "10px 14px",
+              borderTop: "1px solid var(--lp-border-mid)",
+              borderRight: i < cells.length - 1 ? "1px solid var(--lp-border-mid)" : undefined,
+              color: isFirst
+                ? "var(--lp-ink)"
+                : isLast && isCheck
+                  ? "var(--lp-cobalt)"
+                  : isLast
+                    ? "var(--lp-ink-soft)"
+                    : "var(--lp-ink-ghost)",
+              fontWeight: isFirst ? 600 : 400,
+              background: isLast ? "var(--lp-yellow-dim)" : "transparent",
+              fontSize: 12,
+              fontFamily: isLast ? "var(--font-mono)" : "inherit",
             }}
           >
             {c}
@@ -1013,64 +1634,186 @@ function CompRow({ cells }: { cells: string[] }) {
   );
 }
 
-interface HowCardProps {
-  n: string;
-  label: string;
-  title: string;
-  desc: string;
+/* ══════════════════════════════════════════════════════════════════════
+   Reusable design primitives (landing-scoped)
+══════════════════════════════════════════════════════════════════════ */
+
+type StickerVariant = "purple" | "magenta" | "cobalt" | "yellow" | "outline";
+
+function StickerBadge({
+  children,
+  variant = "purple",
+  style,
+}: {
+  children: ReactNode;
+  variant?: StickerVariant;
+  style?: CSSProperties;
+}) {
+  return (
+    <span className={`lp-sticker lp-sticker-${variant}`} style={style}>
+      {children}
+    </span>
+  );
 }
-function HowCard({ n, label, title, desc }: HowCardProps) {
+
+interface WindowPanelProps {
+  title: string;
+  children: ReactNode;
+  style?: CSSProperties;
+  className?: string;
+  onClick?: () => void;
+}
+function WindowPanel({ title, children, style, className, onClick }: WindowPanelProps) {
+  const base = `lp-window${onClick ? " lp-window-clickable" : ""}`;
   return (
     <div
-      style={{
-        position: "relative",
-        padding: 28,
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: "var(--radius-lg)",
-        overflow: "hidden",
-      }}
+      className={className ? `${base} ${className}` : base}
+      style={style}
+      onClick={onClick}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 1,
-          background: "linear-gradient(90deg, transparent, var(--cyan), transparent)",
-          opacity: 0.3,
-        }}
-      />
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}>
-        <Mono color="text-tertiary" style={{ fontSize: 12 }}>
-          {n}
-        </Mono>
-        <Cap style={{ color: "var(--cyan)" }}>{label}</Cap>
+      <div className="lp-window-bar">
+        <div className="lp-window-dots">
+          <div className="lp-window-dot" style={{ background: "var(--lp-bleed)" }} />
+          <div className="lp-window-dot" style={{ background: "var(--lp-toxic)" }} />
+          <div className="lp-window-dot" style={{ background: "var(--lp-healthy)" }} />
+        </div>
+        <span className="lp-window-title">{title}</span>
       </div>
-      <h3 style={{ margin: "0 0 12px 0", fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 500, letterSpacing: "-0.02em" }}>
-        {title}
-      </h3>
-      <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.55, textWrap: "pretty" }}>
-        {desc}
-      </p>
+      <div className="lp-window-body">{children}</div>
     </div>
   );
 }
 
-interface TrustItemProps {
+const PHASE_TONE: Record<string, string> = {
+  VERIFIED:  "lp-tone-verified",
+  COMPUTED:  "lp-tone-computed",
+  ESTIMATED: "lp-tone-estimated",
+  EMULATED:  "lp-tone-emulated",
+  LABELED:   "lp-tone-labeled",
+};
+
+function LpPhaseRow({
+  n,
+  name,
+  label,
+  animated,
+}: {
+  n: string;
   name: string;
-  sub: string;
-}
-function TrustItem({ name, sub }: TrustItemProps) {
+  label: string;
+  animated?: boolean;
+}) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
-      <span style={{ fontFamily: "var(--font-display)", fontSize: 14, color: "var(--text)", letterSpacing: "-0.01em" }}>
+    <div
+      className={animated ? "lp-phase-enter" : undefined}
+      style={{
+        display: "flex",
+        gap: 10,
+        alignItems: "center",
+        padding: "2px 0",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 9,
+          color: "var(--lp-ink-ghost)",
+          minWidth: 18,
+        }}
+      >
+        {n}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 10,
+          color: "var(--lp-ink-soft)",
+          flex: 1,
+        }}
+      >
         {name}
       </span>
-      <Mono color="text-tertiary" style={{ fontSize: 10 }}>
-        {sub}
-      </Mono>
+      <span
+        className={PHASE_TONE[label] ?? ""}
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 8,
+          fontWeight: 700,
+          letterSpacing: "0.05em",
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function PixelArrow() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+      <path
+        d="M2.5 6.5h8M7 2.5l4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+      />
+    </svg>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+      <rect x="0.9" y="0.9" width="11.2" height="11.2" rx="1" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M5 4L9.5 6.5L5 9V4Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function PixelCursorMotif() {
+  return (
+    <div style={{ position: "relative", width: 22, height: 28 }}>
+      {/* Ghost trails */}
+      <svg
+        width="16"
+        height="20"
+        viewBox="0 0 16 20"
+        fill="none"
+        style={{
+          position: "absolute",
+          top: 6,
+          left: 4,
+          opacity: 0.12,
+        }}
+        aria-hidden
+      >
+        <path d="M2 1L2 16L6 12L9 18.5L11 17.5L8 11L13 11L2 1Z" fill="var(--lp-ink)" />
+      </svg>
+      <svg
+        width="16"
+        height="20"
+        viewBox="0 0 16 20"
+        fill="none"
+        style={{
+          position: "absolute",
+          top: 3,
+          left: 2,
+          opacity: 0.22,
+        }}
+        aria-hidden
+      >
+        <path d="M2 1L2 16L6 12L9 18.5L11 17.5L8 11L13 11L2 1Z" fill="var(--lp-ink)" />
+      </svg>
+      {/* Main cursor */}
+      <svg width="16" height="20" viewBox="0 0 16 20" fill="none" aria-hidden>
+        <path
+          d="M2 1L2 16L6 12L9 18.5L11 17.5L8 11L13 11L2 1Z"
+          fill="var(--lp-purple)"
+          stroke="oklch(0.985 0.012 300)"
+          strokeWidth="1.5"
+        />
+      </svg>
     </div>
   );
 }

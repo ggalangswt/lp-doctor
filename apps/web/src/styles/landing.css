@@ -1,0 +1,380 @@
+/* LP Doctor — Landing Design System — Neo-Y2K Cyber Arcade Hackathon */
+/* Scope: .landing-theme — does not affect Atlas, Diagnose, or Report  */
+
+.landing-theme {
+  /* ── Color palette (OKLCH) ─────────────────────────────────────── */
+  --lp-base:         oklch(0.97 0.018 300);
+  --lp-base-deep:    oklch(0.93 0.026 300);
+  --lp-base-deeper:  oklch(0.87 0.038 295);
+
+  --lp-ink:          oklch(0.15 0.042 288);
+  --lp-ink-soft:     oklch(0.28 0.04  288);
+  --lp-ink-faint:    oklch(0.50 0.035 288);
+  --lp-ink-ghost:    oklch(0.68 0.022 290);
+
+  --lp-purple:       oklch(0.50 0.26  296);
+  --lp-purple-light: oklch(0.67 0.16  296);
+  --lp-purple-dim:   oklch(0.50 0.26  296 / 0.10);
+  --lp-magenta:      oklch(0.60 0.27  348);
+  --lp-magenta-dim:  oklch(0.60 0.27  348 / 0.09);
+  --lp-cobalt:       oklch(0.50 0.23  258);
+  --lp-cobalt-dim:   oklch(0.50 0.23  258 / 0.09);
+  --lp-yellow:       oklch(0.90 0.20   99);
+  --lp-yellow-dim:   oklch(0.90 0.20   99 / 0.16);
+
+  --lp-bleed:        oklch(0.62 0.24   24);
+  --lp-healthy:      oklch(0.70 0.20  145);
+  --lp-toxic:        oklch(0.78 0.19   88);
+
+  --lp-border:       oklch(0.18 0.04  290);
+  --lp-border-soft:  oklch(0.18 0.04  290 / 0.12);
+  --lp-border-mid:   oklch(0.18 0.04  290 / 0.20);
+  --lp-shadow:       5px 5px 0  oklch(0.18 0.04 290);
+  --lp-shadow-sm:    3px 3px 0  oklch(0.18 0.04 290);
+  --lp-shadow-hover: 2px 2px 0  oklch(0.18 0.04 290);
+
+  /* ── Remap shared tokens so atoms and header render on light base ── */
+  --text:           oklch(0.15 0.042 288);
+  --text-secondary: oklch(0.32 0.04  288);
+  --text-tertiary:  oklch(0.52 0.035 288);
+  --text-faint:     oklch(0.68 0.022 290);
+  --surface:        oklch(0.94 0.022 300);
+  --surface-raised: oklch(0.96 0.018 300);
+  --border:         oklch(0.18 0.04  290 / 0.12);
+  --border-strong:  oklch(0.18 0.04  290 / 0.20);
+  --font-display:   'Barlow Condensed', 'Space Grotesk', system-ui, sans-serif;
+
+  background: var(--lp-base);
+  color: var(--lp-ink);
+}
+
+/* ── Chip overrides for light base ───────────────────────────────── */
+.landing-theme .chip {
+  background:   var(--lp-base-deep);
+  border-color: var(--lp-border-mid);
+  color:        var(--lp-ink-faint);
+}
+.landing-theme .chip-cyan {
+  color:        var(--lp-purple);
+  border-color: oklch(0.50 0.26 296 / 0.26);
+  background:   var(--lp-purple-dim);
+}
+.landing-theme .cap {
+  color: var(--lp-purple);
+}
+
+/* ── Window panel ─────────────────────────────────────────────────── */
+.lp-window {
+  background:  oklch(0.985 0.012 300);
+  border:      2px solid var(--lp-border);
+  border-radius: 3px;
+  box-shadow:  var(--lp-shadow);
+  overflow:    hidden;
+}
+.lp-window-clickable {
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  display: block;
+  transition: box-shadow 90ms ease-out, transform 90ms ease-out;
+}
+.lp-window-clickable:hover {
+  box-shadow: var(--lp-shadow-hover);
+  transform:  translate(2px, 2px);
+}
+.lp-window-clickable:active {
+  box-shadow: none;
+  transform:  translate(4px, 4px);
+}
+.lp-window-bar {
+  display:     flex;
+  align-items: center;
+  gap:         7px;
+  padding:     7px 10px;
+  background:  var(--lp-base-deep);
+  border-bottom: 1px solid var(--lp-border-soft);
+  user-select: none;
+}
+.lp-window-dots { display: flex; gap: 4px; flex-shrink: 0; }
+.lp-window-dot  { width: 8px; height: 8px; border-radius: 1px; }
+.lp-window-title {
+  font-family:    var(--font-mono);
+  font-size:      10px;
+  color:          var(--lp-ink-faint);
+  letter-spacing: 0.02em;
+  flex: 1;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+  white-space:    nowrap;
+}
+.lp-window-body { padding: 14px 16px; }
+
+/* ── Sticker badge ────────────────────────────────────────────────── */
+.lp-sticker {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            4px;
+  padding:        4px 9px;
+  font-family:    var(--font-mono);
+  font-size:      9px;
+  font-weight:    700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border:         2px solid var(--lp-border);
+  box-shadow:     var(--lp-shadow-sm);
+  border-radius:  2px;
+  white-space:    nowrap;
+  line-height:    1.35;
+}
+.lp-sticker-purple  { background: var(--lp-purple);  color: oklch(0.97 0.015 300); }
+.lp-sticker-magenta { background: var(--lp-magenta); color: oklch(0.97 0.015 300); }
+.lp-sticker-cobalt  { background: var(--lp-cobalt);  color: oklch(0.97 0.015 300); }
+.lp-sticker-yellow  { background: var(--lp-yellow);  color: oklch(0.15 0.04  288); }
+.lp-sticker-outline {
+  background:   oklch(0.985 0.012 300);
+  color:        var(--lp-ink);
+}
+
+/* ── Primary CTA — neon yellow, pixel hard shadow ──────────────────── */
+.lp-btn-primary {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        13px 22px;
+  font-size:      13px;
+  font-weight:    700;
+  font-family:    var(--font-sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background:     var(--lp-yellow);
+  color:          var(--lp-ink);
+  border:         2px solid var(--lp-border);
+  border-radius:  2px;
+  box-shadow:     var(--lp-shadow);
+  cursor:         pointer;
+  transition:     box-shadow 90ms ease-out, transform 90ms ease-out;
+  line-height:    1;
+}
+.lp-btn-primary:hover  { box-shadow: var(--lp-shadow-hover); transform: translate(2px, 2px); }
+.lp-btn-primary:active { box-shadow: none; transform: translate(4px, 4px); }
+.lp-btn-primary:focus-visible { outline: 2px solid var(--lp-purple); outline-offset: 3px; }
+
+/* ── Ghost CTA — cobalt border ────────────────────────────────────── */
+.lp-btn-ghost {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        13px 22px;
+  font-size:      13px;
+  font-weight:    600;
+  font-family:    var(--font-sans);
+  letter-spacing: 0.01em;
+  background:     transparent;
+  color:          var(--lp-cobalt);
+  border:         2px solid var(--lp-cobalt);
+  border-radius:  2px;
+  box-shadow:     var(--lp-shadow-sm);
+  cursor:         pointer;
+  transition:     box-shadow 90ms ease-out, transform 90ms ease-out, background 110ms;
+  line-height:    1;
+}
+.lp-btn-ghost:hover  { box-shadow: var(--lp-shadow-hover); transform: translate(2px, 2px); background: var(--lp-cobalt-dim); }
+.lp-btn-ghost:active { box-shadow: none; transform: translate(3px, 3px); }
+.lp-btn-ghost:focus-visible { outline: 2px solid var(--lp-cobalt); outline-offset: 3px; }
+
+/* ── Score counter digits (stats section) ─────────────────────────── */
+.lp-score-digit {
+  font-family:    var(--font-mono);
+  font-size:      clamp(2.2rem, 5vw, 3.5rem);
+  font-weight:    700;
+  letter-spacing: -0.05em;
+  color:          var(--lp-purple);
+  line-height:    1;
+}
+
+/* ── Marquee ticker ────────────────────────────────────────────────── */
+.lp-marquee-wrap  { overflow: hidden; width: 100%; }
+.lp-marquee-track {
+  display:   flex;
+  width:     max-content;
+  animation: lp-marquee 32s linear infinite;
+}
+@keyframes lp-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Wireframe perspective grid ────────────────────────────────────── */
+.lp-grid-bg {
+  position:       absolute;
+  inset:          0;
+  pointer-events: none;
+  overflow:       hidden;
+  z-index:        0;
+}
+.lp-grid-bg::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      oklch(0.50 0.26 296 / 0.065) 0px, transparent 1px,
+      transparent 47px, oklch(0.50 0.26 296 / 0.065) 48px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      oklch(0.50 0.26 296 / 0.065) 0px, transparent 1px,
+      transparent 47px, oklch(0.50 0.26 296 / 0.065) 48px
+    );
+  transform:        perspective(800px) rotateX(24deg) scaleX(1.18);
+  transform-origin: 50% 0%;
+  animation:        lp-grid-drift 14s linear infinite;
+}
+@keyframes lp-grid-drift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 48px; }
+}
+
+/* ── Phase row enter animation ─────────────────────────────────────── */
+.lp-phase-enter {
+  animation: node-appear 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Honesty label tones ───────────────────────────────────────────── */
+.lp-tone-verified  { color: var(--lp-healthy); }
+.lp-tone-computed  { color: var(--lp-cobalt);  }
+.lp-tone-estimated { color: var(--lp-toxic);   }
+.lp-tone-emulated  { color: var(--lp-bleed);   }
+.lp-tone-labeled   { color: var(--lp-purple);  }
+
+/* ── Caret blink ────────────────────────────────────────────────────── */
+.lp-caret {
+  display:        inline-block;
+  width:          2px;
+  height:         11px;
+  background:     var(--lp-purple);
+  animation:      caret 1s step-end infinite;
+  vertical-align: middle;
+  margin-left:    3px;
+  border-radius:  1px;
+}
+
+/* ── Scroll-reveal ──────────────────────────────────────────────────── */
+.lp-reveal {
+  opacity:    0;
+  transform:  translateY(10px);
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lp-reveal.lp-visible {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+/* ── Page-load hero reveal ──────────────────────────────────────────── */
+@keyframes lp-fadein {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── AppHeader ConnectButton — landing override ─────────────────────── */
+/* Disconnected + connecting: match lp-btn-primary visual exactly.       */
+/* !important required to beat inline style={{ padding, fontSize }}       */
+/* in ConnectButton.tsx. Scoped to header so hero CTAs are untouched.    */
+.landing-theme header .btn.btn-primary {
+  background:     var(--lp-yellow)  !important;
+  color:          var(--lp-ink)     !important;
+  border:         2px solid var(--lp-border) !important;
+  border-radius:  2px               !important;
+  box-shadow:     var(--lp-shadow)  !important;
+  font-weight:    700               !important;
+  font-family:    var(--font-sans)  !important;
+  font-size:      12px              !important;
+  letter-spacing: 0.05em           !important;
+  text-transform: uppercase         !important;
+  padding:        11px 18px        !important;
+  transition: box-shadow 90ms ease-out, transform 90ms ease-out !important;
+}
+.landing-theme header .btn.btn-primary:not(:disabled):hover {
+  box-shadow: var(--lp-shadow-hover) !important;
+  transform:  translate(2px, 2px)    !important;
+}
+.landing-theme header .btn.btn-primary:not(:disabled):active {
+  box-shadow: none             !important;
+  transform:  translate(4px, 4px) !important;
+}
+.landing-theme header .btn.btn-primary:focus-visible {
+  outline:        2px solid var(--lp-purple) !important;
+  outline-offset: 3px !important;
+}
+/* Connecting (wagmi isPending → disabled) */
+.landing-theme header .btn.btn-primary:disabled {
+  opacity:    0.6         !important;
+  cursor:     wait        !important;
+  animation:  pulse-soft 1.4s ease-in-out infinite !important;
+  transform:  none        !important;
+  box-shadow: var(--lp-shadow) !important;
+}
+
+/* Connected state (btn-ghost): compact informational chip.              */
+/* Hover → bleed color signals "click to disconnect" (destructive hint). */
+.landing-theme header .btn.btn-ghost {
+  background:     transparent            !important;
+  color:          var(--lp-ink-soft)     !important;
+  border:         1.5px solid var(--lp-border-mid) !important;
+  border-radius:  2px                    !important;
+  box-shadow:     none                   !important;
+  font-family:    var(--font-mono)       !important;
+  font-size:      11px                   !important;
+  font-weight:    500                    !important;
+  letter-spacing: 0.02em                 !important;
+  text-transform: none                   !important;
+  padding:        8px 12px              !important;
+  transition: border-color 120ms, color 120ms, background 120ms !important;
+}
+.landing-theme header .btn.btn-ghost:hover {
+  border-color: var(--lp-bleed)               !important;
+  color:        var(--lp-bleed)               !important;
+  background:   oklch(0.62 0.24 24 / 0.06)   !important;
+  transform:    none                          !important;
+  box-shadow:   none                          !important;
+}
+.landing-theme header .btn.btn-ghost:focus-visible {
+  outline:        2px solid var(--lp-cobalt) !important;
+  outline-offset: 3px                        !important;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .lp-hero-grid  { flex-direction: column !important; }
+  .lp-hero-right { flex: none !important; width: 100% !important; max-width: 100% !important; }
+}
+@media (max-width: 767px) {
+  .lp-grid-bg::before  { display: none; }
+  .lp-hero-right       { display: none !important; }
+  .lp-hero-stream-mobile { display: flex !important; }
+  .lp-stats-grid       { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .lp-products-grid    { grid-template-columns: 1fr !important; }
+  .lp-method-grid      { grid-template-columns: 1fr !important; }
+  .lp-comp-wrap        { overflow-x: auto; }
+  .lp-comp-table       { min-width: 660px; }
+  .lp-sticker          { transform: none !important; }
+  .lp-how-grid         { grid-template-columns: 1fr !important; }
+  .lp-agent-grid       { grid-template-columns: 1fr !important; }
+  .lp-hero-cols        { grid-template-columns: 1fr !important; }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .lp-marquee-track    { animation: none; }
+  .lp-grid-bg::before  { animation: none; }
+  .lp-phase-enter      { animation: none; }
+  .lp-caret            { animation: none; opacity: 1; }
+  .lp-reveal           { opacity: 1; transform: none; transition: none; }
+  .lp-window-clickable { transition: none; }
+  .lp-btn-primary,
+  .lp-btn-ghost        { transition: none; }
+}
