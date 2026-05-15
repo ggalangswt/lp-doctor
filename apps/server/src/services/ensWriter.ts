@@ -63,7 +63,11 @@ const NETWORKS = { mainnet, sepolia } as const;
 
 export class EnsWriterClient {
   isReady(): boolean {
-    return Boolean(config.ENS_PARENT_PRIVATE_KEY);
+    return Boolean(
+      config.ENS_PARENT_PRIVATE_KEY &&
+        config.ENS_PARENT_NAME &&
+        config.ENS_RESOLVER_ADDRESS,
+    );
   }
 
   async publish(args: {
@@ -89,8 +93,15 @@ export class EnsWriterClient {
     ];
 
     if (!this.isReady() || !config.ENS_PARENT_PRIVATE_KEY) {
+      const missing = [
+        !config.ENS_PARENT_PRIVATE_KEY ? "ENS_PARENT_PRIVATE_KEY" : null,
+        !config.ENS_PARENT_NAME ? "ENS_PARENT_NAME" : null,
+        !config.ENS_RESOLVER_ADDRESS ? "ENS_RESOLVER_ADDRESS" : null,
+      ]
+        .filter(Boolean)
+        .join(", ");
       logger.info(
-        `ens stub publish (no parent key) tokenId=${args.tokenId} keys=${records.length}`,
+        `ens stub publish (missing ${missing || "configuration"}) tokenId=${args.tokenId} keys=${records.length}`,
       );
       return {
         parentName: config.ENS_PARENT_NAME,
