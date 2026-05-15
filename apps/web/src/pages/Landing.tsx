@@ -1109,12 +1109,6 @@ function HeroComposition({ nav }: { nav: (path: string) => void }) {
         minHeight: 480,
       }}
     >
-      {/* Wireframe grid in this zone */}
-      <div
-        className="lp-grid-bg"
-        style={{ borderRadius: 3 }}
-      />
-
       {/* Panel B: verdict.rootHash — upper-right, static, behind */}
       <div
         style={{

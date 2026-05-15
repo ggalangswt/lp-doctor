@@ -233,11 +233,6 @@
     );
   transform:        perspective(800px) rotateX(24deg) scaleX(1.18);
   transform-origin: 50% 0%;
-  animation:        lp-grid-drift 14s linear infinite;
-}
-@keyframes lp-grid-drift {
-  0%   { background-position: 0 0; }
-  100% { background-position: 0 48px; }
 }
 
 /* ── Phase row enter animation ─────────────────────────────────────── */
@@ -388,7 +383,6 @@
 /* ── Reduced motion ─────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .lp-marquee-track    { animation: none; }
-  .lp-grid-bg::before  { animation: none; }
   .lp-phase-enter      { animation: none; }
   .lp-caret            { animation: none; opacity: 1; }
   .lp-reveal           { opacity: 1; transform: none; transition: none; }
