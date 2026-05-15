@@ -1,0 +1,18 @@
+{
+  "network": "0g-newton",
+  "chainId": 16602,
+  "rpcUrl": "https://evmrpc-testnet.0g.ai",
+  "deployer": "0x95eEe5d9d8d7D734EB29613E7Fd8e2875349b344",
+  "contracts": {
+    "LPDoctorReports": {
+      "address": "0x3b733eC427eeA5C379Bbd0CF50Dc0b931C5E00d3",
+      "deployTx": "0x481f4fae2db47cdbf4e38c47c75265e9b1fc97697a0c5ecabe10cba2bf55d4ba",
+      "blockNumber": 30586793
+    },
+    "LPDoctorAgent": {
+      "address": "0x938f3B7841b3faCbBE967F90B548d991e9882c6C",
+      "deployTx": "0x4b90325602a22957b878bcbb40a7c0ce50a33be993133e034cf64bf4db6ad4d8",
+      "blockNumber": 30586793
+    }
+  }
+}

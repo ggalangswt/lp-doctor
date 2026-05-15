@@ -1,0 +1,91 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+model Pool {
+  id             String   @id // "<chainId>-<poolAddress>"
+  chainId        Int
+  address        String
+  token0         String
+  token1         String
+  feeTier        Int
+  tickSpacing    Int
+  hooks          String?
+  tvlUsdCached   Decimal? @db.Decimal(38, 18)
+  lastSyncBlock  BigInt?
+  createdAt      DateTime @default(now())
+  positions      Position[]
+
+  @@index([chainId, address])
+}
+
+model Position {
+  id               String    @id // "<chainId>-<version>-<tokenId>"
+  chainId          Int
+  version          Int // 3 or 4
+  tokenId          BigInt
+  owner            String
+  poolId           String
+  pool             Pool      @relation(fields: [poolId], references: [id])
+  tickLower        Int
+  tickUpper        Int
+  liquidity        BigInt
+  depositedToken0  Decimal   @db.Decimal(38, 18)
+  depositedToken1  Decimal   @db.Decimal(38, 18)
+  collectedFees0   Decimal   @db.Decimal(38, 18)
+  collectedFees1   Decimal   @db.Decimal(38, 18)
+  createdAtBlock   BigInt
+  lastSyncedAt     DateTime?
+  diagnostics      DiagnosticJob[]
+
+  @@unique([chainId, version, tokenId])
+  @@index([owner])
+}
+
+model DiagnosticJob {
+  id              String    @id @default(cuid())
+  positionId      String
+  position        Position  @relation(fields: [positionId], references: [id])
+  status          String // pending | running | done | failed
+  startedAt       DateTime  @default(now())
+  finishedAt      DateTime?
+  reportRootHash  String?
+  errorMessage    String?
+}
+
+model Report {
+  rootHash          String   @id
+  user              String
+  positionId        String
+  chainTxHash       String
+  teeSignature      String
+  teeOracleAddress  String
+  createdAt         DateTime @default(now())
+
+  @@index([user])
+  @@index([positionId])
+}
+
+model HookRegistry {
+  address          String   @id
+  flagsBitmap      Int
+  family           String
+  name             String?
+  auditStatus      String   @default("UNKNOWN")
+  sourceUrl        String?
+  tvlUsdCached     Decimal? @db.Decimal(38, 18)
+  volumeUsdCached  Decimal? @db.Decimal(38, 18)
+  poolsCount       Int?
+  firstSeenBlock   BigInt?
+  lastUpdated      DateTime @default(now())
+  notes            String?
+
+  @@index([family])
+}

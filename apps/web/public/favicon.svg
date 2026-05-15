@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Prism triangle — amber stroke, no backplate so the favicon
+       inherits the browser tab background (light or dark). Stroke
+       widths bumped vs the in-app Logo so the mark stays legible at
+       16x16 favicon scale. -->
+  <polygon
+    points="16,4 28,26 4,26"
+    stroke="#FFB020"
+    stroke-width="2"
+    fill="rgba(255, 176, 32, 0.12)"
+    stroke-linejoin="round"
+  />
+  <!-- Incoming beam — neutral mid-grey so it stays visible on both
+       light and dark tabs (white would vanish on light, black would
+       vanish on dark). -->
+  <line x1="3" y1="16" x2="14" y2="16" stroke="#9aa0a6" stroke-width="1.6" stroke-linecap="round" />
+  <!-- 5 spectral fan lines exiting the prism -->
+  <line x1="17" y1="16" x2="29" y2="9"  stroke="#FFB020" stroke-width="1.4" stroke-linecap="round" />
+  <line x1="17" y1="16" x2="29" y2="14" stroke="#F5D266" stroke-width="1.4" stroke-linecap="round" />
+  <line x1="17" y1="16" x2="29" y2="18" stroke="#8EE887" stroke-width="1.4" stroke-linecap="round" />
+  <line x1="17" y1="16" x2="29" y2="22" stroke="#FF5E4F" stroke-width="1.4" stroke-linecap="round" />
+  <line x1="17" y1="16" x2="29" y2="26" stroke="#C59CFF" stroke-width="1.4" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,41 @@
+# LPDoctor internal Caddy — runs inside the project's docker-compose.
+# Sits behind the global VPS Caddy (which terminates TLS for lpdoctor.xyz).
+# This file routes by path within the LPDoctor stack:
+#   /api/*   → backend (lpdoctor-server :3001)
+#   /health  → backend  (so the global Caddy can probe directly too)
+#   /        → frontend (lpdoctor-web :80, nginx serving the Vite build)
+#
+# The global Caddy on the VPS reverse-proxies lpdoctor.xyz → this internal
+# Caddy on whatever port docker-compose exposes it (default 8480).
+
+:80 {
+  encode gzip
+
+  handle /api/* {
+    reverse_proxy lpdoctor-server:3001 {
+      header_up Host {host}
+      header_up X-Real-IP {remote}
+      header_up X-Forwarded-For {remote}
+      header_up X-Forwarded-Proto {scheme}
+      flush_interval -1
+    }
+  }
+
+  handle /health {
+    reverse_proxy lpdoctor-server:3001 {
+      header_up Host {host}
+      header_up X-Real-IP {remote}
+      header_up X-Forwarded-For {remote}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  handle {
+    reverse_proxy lpdoctor-web:80 {
+      header_up Host {host}
+      header_up X-Real-IP {remote}
+      header_up X-Forwarded-For {remote}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+}

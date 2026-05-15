@@ -1,0 +1,42 @@
+{
+  "name": "@lpdoctor/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "prisma generate",
+    "dev": "sh -c 'if [ -f ../../.env ]; then ENV_FILE=../../.env; elif [ -f .env ]; then ENV_FILE=.env; else ENV_FILE=../../.env.example; fi; tsx watch --env-file=$ENV_FILE src/index.ts'",
+    "prebuild": "prisma generate",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@0gfoundation/0g-ts-sdk": "^1.2.6",
+    "@0glabs/0g-serving-broker": "^0.7.5",
+    "@lpdoctor/agent": "workspace:*",
+    "@lpdoctor/core": "workspace:*",
+    "@prisma/client": "^6.1.0",
+    "bullmq": "^5.30.0",
+    "cors": "^2.8.5",
+    "ethers": "^6.13.1",
+    "express": "^4.21.0",
+    "graphql-request": "^7.2.0",
+    "ioredis": "^5.4.0",
+    "langchain": "^0.3.10",
+    "openai": "^4.70.0",
+    "viem": "^2.22.0",
+    "winston": "^3.17.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "prisma": "^6.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@lpdoctor/agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lpdoctor/core": "workspace:*",
+    "@uniswap/sdk-core": "^5.9.0",
+    "@uniswap/v3-sdk": "^3.25.0",
+    "jsbi": "^3.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "graphql-request": "^7.2.0",
+    "typescript": "^5.7.0",
+    "viem": "^2.22.0",
+    "vitest": "^2.1.0"
+  }
+}

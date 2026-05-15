@@ -1,0 +1,26 @@
+{
+  "name": "lpdoctor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "dev:server": "pnpm --filter @lpdoctor/server run dev",
+    "dev:web": "pnpm --filter @lpdoctor/web run dev",
+    "dev:mcp": "pnpm --filter @lpdoctor/mcp-server run dev",
+    "build": "pnpm -r run build",
+    "db:generate": "pnpm --filter @lpdoctor/server exec prisma generate",
+    "db:push": "pnpm --filter @lpdoctor/server exec prisma db push",
+    "db:migrate": "pnpm --filter @lpdoctor/server exec prisma migrate dev",
+    "db:studio": "pnpm --filter @lpdoctor/server exec prisma studio",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v && docker compose up -d",
+    "test": "pnpm -r run test",
+    "test:server": "pnpm --filter @lpdoctor/server run test"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

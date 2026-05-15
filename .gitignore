@@ -1,0 +1,54 @@
+# Deps
+node_modules/
+.pnp
+.pnp.js
+.yarn-integrity
+
+# Builds
+dist/
+build/
+out/
+.next/
+.turbo/
+coverage/
+
+# Envs
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System
+.DS_Store
+.vscode/
+.idea/
+
+# Foundry
+cache/
+artifacts/
+
+# Research (not project code — kept out of this repo intentionally)
+.firecrawl/
+
+AI_ATTRIBUTION.md
+
+# TS incremental build info
+*.tsbuildinfo
+
+# Playwright test artifacts (per-run output, not source-of-truth)
+apps/web/test-results/
+apps/web/playwright-report/
+
+# Foundry — installed deps (forge install adds these as submodules; we
+# don't track them, contributors run forge install themselves).
+.gitmodules
+contracts/lib/
+contracts/foundry.lock
+# Playwright visual-tour screenshot artifacts (regenerated on each run)
+apps/web/screenshots/

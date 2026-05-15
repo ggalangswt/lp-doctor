@@ -1,0 +1,2 @@
+-- pgvector is created by Prisma via the previewFeatures = ["postgresqlExtensions"]
+-- flag in schema.prisma. No-op here to avoid double-creation conflicts.

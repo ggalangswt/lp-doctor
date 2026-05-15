@@ -1,0 +1,110 @@
+# LPDoctor production stack — runs on the VPS behind the global Caddy.
+# Layout: global Caddy (host) → lpdoctor-caddy (this stack) → server / web.
+# The internal Caddy is exposed on host port 8480; the global Caddy
+# reverse-proxies lpdoctor.xyz to that port (or directly to the
+# lpdoctor-caddy container IP — see VPS Caddyfile).
+#
+# Bring up:
+#   docker compose -f docker-compose.prod.yml up -d --build
+# Bring down:
+#   docker compose -f docker-compose.prod.yml down
+# Logs:
+#   docker compose -f docker-compose.prod.yml logs -f server
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: lpdoctor-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lpdoctor
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lpdoctor_prod}
+      POSTGRES_DB: lpdoctor
+    volumes:
+      - lpdoctor_pgdata:/var/lib/postgresql/data
+      - ./docker/init-pgvector.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lpdoctor"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - lpdoctor-internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: lpdoctor-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - lpdoctor-internal
+
+  server:
+    build:
+      context: .
+      target: server
+    container_name: lpdoctor-server
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://lpdoctor:${POSTGRES_PASSWORD:-lpdoctor_prod}@lpdoctor-postgres:5432/lpdoctor
+      REDIS_URL: redis://lpdoctor-redis:6379
+      PORT: "3001"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - lpdoctor-internal
+
+  web:
+    build:
+      context: .
+      target: web
+    container_name: lpdoctor-web
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost/nginx-health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - lpdoctor-internal
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: lpdoctor-caddy
+    restart: unless-stopped
+    depends_on:
+      - server
+      - web
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - lpdoctor_caddy_data:/data
+      - lpdoctor_caddy_config:/config
+    ports:
+      - "8480:80"
+    networks:
+      - lpdoctor-internal
+
+volumes:
+  lpdoctor_pgdata:
+  lpdoctor_caddy_data:
+  lpdoctor_caddy_config:
+
+networks:
+  lpdoctor-internal:
+    name: lpdoctor-internal
+    driver: bridge
