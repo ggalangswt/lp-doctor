@@ -17,13 +17,11 @@ import {
 // when a redeploy points the page at a fresh contract.
 const DEFAULT_AGENT_CONTRACT =
   "0x938f3B7841b3faCbBE967F90B548d991e9882c6C" as Address;
-const AGENT_ADDRESS = (import.meta.env.VITE_LPDOCTOR_AGENT_CONTRACT ??
-  import.meta.env.VITE_LPLENS_AGENT_CONTRACT ??
-  DEFAULT_AGENT_CONTRACT) as Address;
+const AGENT_ADDRESS = (
+  import.meta.env.VITE_LPDOCTOR_AGENT_CONTRACT ?? DEFAULT_AGENT_CONTRACT
+) as Address;
 const AGENT_TOKEN_ID = BigInt(
-  (import.meta.env.VITE_LPDOCTOR_AGENT_TOKEN_ID as string | undefined) ??
-    (import.meta.env.VITE_LPLENS_AGENT_TOKEN_ID as string | undefined) ??
-    "1",
+  (import.meta.env.VITE_LPDOCTOR_AGENT_TOKEN_ID as string | undefined) ?? "1",
 );
 const NEWTON_RPC =
   (import.meta.env.VITE_OG_NEWTON_RPC as string | undefined) ??

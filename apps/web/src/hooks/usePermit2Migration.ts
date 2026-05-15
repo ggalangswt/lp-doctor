@@ -12,7 +12,6 @@ import {
 
 const API_BASE_URL =
   (import.meta.env.VITE_LPDOCTOR_API_URL as string | undefined) ??
-  (import.meta.env.VITE_LPLENS_API_URL as string | undefined) ??
   "http://localhost:3001";
 
 // Builds the EIP-712 PermitSingle for Uniswap's Permit2 contract and
