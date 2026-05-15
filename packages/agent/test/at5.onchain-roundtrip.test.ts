@@ -3,7 +3,7 @@ import { createPublicClient, defineChain, http, type Hex } from "viem";
 
 // AT-5 — On-chain anchor round-trip.
 // Verifies that a previously-anchored report's metadata can be read
-// back from the LPDoctorReports registry on 0G Newton from a process
+// back from the LPDoctorReports registry on 0G Galileo from a process
 // that does NOT trust the LPDoctor server. This is the test that
 // underwrites the demo's "composability" beat: any agent with the
 // rootHash + the contract address + an RPC URL can independently
@@ -26,7 +26,7 @@ const LPDOCTOR_REPORTS_CONTRACT =
   ("0x3b733eC427eeA5C379Bbd0CF50Dc0b931C5E00d3" as Hex);
 
 const RPC_URL =
-  process.env.OG_NEWTON_RPC ?? "https://evmrpc-testnet.0g.ai";
+  process.env.OG_GALILEO_RPC ?? "https://evmrpc-testnet.0g.ai";
 
 const ROOT_HASH = process.env.LPDOCTOR_AT5_ROOTHASH as Hex | undefined;
 const EXPECTED_TOKEN_ID = process.env.LPDOCTOR_AT5_TOKENID;
@@ -34,9 +34,9 @@ const EXPECTED_PUBLISHER = process.env.LPDOCTOR_AT5_PUBLISHER as
   | Hex
   | undefined;
 
-const og0Newton = defineChain({
+const og0Galileo = defineChain({
   id: 16602,
-  name: "0G Newton Testnet",
+  name: "0G Galileo Testnet",
   nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
   rpcUrls: { default: { http: [RPC_URL] } },
 });
@@ -68,7 +68,7 @@ describe.skipIf(!ROOT_HASH || !EXPECTED_TOKEN_ID || !EXPECTED_PUBLISHER)(
   "AT-5 — on-chain anchor round-trip",
   () => {
     const client = createPublicClient({
-      chain: og0Newton,
+      chain: og0Galileo,
       transport: http(RPC_URL),
     });
 
@@ -103,7 +103,7 @@ describe.skipIf(!ROOT_HASH || !EXPECTED_TOKEN_ID || !EXPECTED_PUBLISHER)(
 describe("AT-5 — registry contract reachable", () => {
   it("reportCount(<arbitrary>) returns a uint", async () => {
     const client = createPublicClient({
-      chain: og0Newton,
+      chain: og0Galileo,
       transport: http(RPC_URL),
     });
 

@@ -6,7 +6,7 @@ import { LPDoctorReports } from "../src/LPDoctorReports.sol";
 import { LPDoctorAgent } from "../src/LPDoctorAgent.sol";
 
 /// @notice Deploys LPDoctorReports + LPDoctorAgent on the target chain (0G
-/// Newton testnet by default; pass --rpc-url to swap). After deploy,
+/// Galileo testnet by default; pass --rpc-url to swap). After deploy,
 /// copy the printed addresses into the project root .env as
 /// LPDOCTOR_REPORTS_CONTRACT and LPDOCTOR_AGENT_CONTRACT.
 contract Deploy is Script {

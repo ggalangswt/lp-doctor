@@ -11,7 +11,6 @@ fs_permissions = [{ access = "read-write", path = "./deployments" }]
 remappings = ["forge-std/=lib/forge-std/src/"]
 
 [rpc_endpoints]
-og_newton = "${OG_NEWTON_RPC}"
 og_galileo = "${OG_GALILEO_RPC}"
 sepolia = "${SEPOLIA_RPC}"
 mainnet = "${MAINNET_RPC}"
