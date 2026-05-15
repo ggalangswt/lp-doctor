@@ -77,7 +77,7 @@ export async function lookupReportOnChain(
   try {
     const chain = defineChain({
       id: chainId,
-      name: "0G Newton Testnet",
+      name: "0G Galileo Testnet",
       nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
       rpcUrls: { default: { http: [rpcUrl] } },
     });
@@ -144,7 +144,7 @@ export const lookupReportOnChainToolDefinition = {
       },
       chainId: {
         type: "number",
-        description: "0G chain id. Defaults to 16602 (Newton testnet).",
+        description: "0G chain id. Defaults to 16602 (Galileo testnet).",
       },
     },
     required: ["rootHash"],

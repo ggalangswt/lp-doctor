@@ -35,7 +35,7 @@ async function main() {
         LPDOCTOR_API_URL: "http://localhost:3001",
         LPDOCTOR_AGENT_CONTRACT: "0x938f3B7841b3faCbBE967F90B548d991e9882c6C",
         LPDOCTOR_AGENT_TOKEN_ID: "1",
-        OG_NEWTON_RPC: "https://evmrpc-testnet.0g.ai",
+        OG_GALILEO_RPC: "https://evmrpc-testnet.0g.ai",
       },
     }),
   );

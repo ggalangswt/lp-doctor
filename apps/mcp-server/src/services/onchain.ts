@@ -56,7 +56,7 @@ export class OnchainClient {
       contract: (cfg?.contract ?? process.env.LPDOCTOR_AGENT_CONTRACT) as
         | Address
         | undefined,
-      rpcUrl: cfg?.rpcUrl ?? process.env.OG_NEWTON_RPC ?? DEFAULT_RPC,
+      rpcUrl: cfg?.rpcUrl ?? process.env.OG_GALILEO_RPC ?? DEFAULT_RPC,
       chainId: cfg?.chainId ?? DEFAULT_CHAIN_ID,
     };
   }
@@ -101,7 +101,7 @@ export class OnchainClient {
   private publicClient() {
     const chain = defineChain({
       id: this.cfg.chainId,
-      name: "0G Newton Testnet",
+      name: "0G Galileo Testnet",
       nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
       rpcUrls: { default: { http: [this.cfg.rpcUrl] } },
     });
