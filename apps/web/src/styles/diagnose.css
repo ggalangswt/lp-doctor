@@ -654,52 +654,6 @@
 }
 
 @media (max-width: 767px) {
-  .diagnose-theme > header {
-    width: calc(100% - 28px);
-    min-height: auto;
-    margin: 14px auto 0;
-    padding: 10px 12px;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 10px 12px !important;
-    justify-content: flex-start !important;
-  }
-
-  .diagnose-theme > header > a {
-    max-width: 136px;
-    min-width: 0;
-    flex: 0 1 136px;
-  }
-
-  .diagnose-theme > header nav {
-    min-width: 0;
-    flex: 1 1 170px;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: flex-end !important;
-    gap: 8px 10px !important;
-    font-size: 12px !important;
-  }
-
-  .diagnose-theme > header nav .chip {
-    height: auto;
-    max-width: 126px;
-    min-height: 22px;
-    white-space: normal;
-    text-align: center;
-    line-height: 1.15;
-  }
-
-  .diagnose-theme > header nav .btn {
-    max-width: 158px;
-    min-height: 42px;
-    padding: 9px 12px;
-    text-align: center;
-    justify-content: center;
-    white-space: normal;
-    line-height: 1.05;
-  }
-
   .diagnose-shell {
     width: calc(100% - 28px);
     padding: 34px 0 78px;

@@ -733,38 +733,6 @@
 }
 
 @media (max-width: 767px) {
-  .atlas-theme > header {
-    padding: 16px 14px !important;
-    align-items: flex-start !important;
-    gap: 10px !important;
-  }
-
-  .atlas-theme > header > a {
-    gap: 8px !important;
-    flex-shrink: 0;
-  }
-
-  .atlas-theme > header > a .chip {
-    display: none;
-  }
-
-  .atlas-theme > header nav {
-    gap: 10px !important;
-    flex-wrap: wrap !important;
-    justify-content: flex-end !important;
-    min-width: 0;
-  }
-
-  .atlas-theme > header nav > span[title] {
-    display: none !important;
-  }
-
-  .atlas-theme > header .btn {
-    min-height: 44px;
-    padding: 10px 14px !important;
-    font-size: 11px !important;
-  }
-
   .atlas-shell {
     width: min(100% - 28px, 680px);
     padding: 28px 0 80px;

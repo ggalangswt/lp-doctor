@@ -46,6 +46,8 @@
 
   background: var(--lp-base);
   color: var(--lp-ink);
+  min-height: 100vh;
+  overflow-x: clip;
 }
 
 /* ── Chip overrides for light base ───────────────────────────────── */

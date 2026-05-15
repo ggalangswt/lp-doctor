@@ -39,22 +39,11 @@ interface Props {
 export function AppHeader({ right }: Props) {
   const { pathname } = useLocation();
   return (
-    <header
-      style={{
-        position: "relative",
-        zIndex: 2,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "18px 36px",
-      }}
-    >
+    <header className="app-header">
       <Link
+        className="app-header-brand"
         to="/"
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
           color: "var(--text)",
           textDecoration: "none",
         }}
@@ -74,15 +63,7 @@ export function AppHeader({ right }: Props) {
           {GIT_TAG}
         </Chip>
       </Link>
-      <nav
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 28,
-          fontSize: 13,
-          color: "var(--text-secondary)",
-        }}
-      >
+      <nav className="app-header-nav" aria-label="Primary navigation">
         {NAV.map((n) => {
           const active = n.matches ? n.matches(pathname) : pathname === n.to;
           const isExternal = n.to.startsWith("http");
@@ -99,6 +80,7 @@ export function AppHeader({ right }: Props) {
           return isExternal ? (
             <a
               key={n.to}
+              className="app-header-nav-link"
               href={n.to}
               target="_blank"
               rel="noreferrer"
@@ -107,7 +89,7 @@ export function AppHeader({ right }: Props) {
               {n.label}
             </a>
           ) : (
-            <Link key={n.to} to={n.to} style={sx}>
+            <Link key={n.to} className="app-header-nav-link" to={n.to} style={sx}>
               {n.label}
             </Link>
           );
@@ -119,8 +101,8 @@ export function AppHeader({ right }: Props) {
             the provider for its `teeType` field — only the broker-level
             "attestation present" guarantee is empirically verified. */}
         <span
+          className="app-header-attestation"
           title="Verdicts run on a 0G Compute provider with a broker-verifiable attestation report. See /agent for the live signer address."
-          style={{ display: "inline-flex", marginLeft: 4 }}
         >
           <Chip tone="cyan">0G Compute · TEE attested</Chip>
         </span>
