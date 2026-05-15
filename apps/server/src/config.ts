@@ -11,8 +11,7 @@ const schema = z.object({
   THE_GRAPH_KEY: z.string().optional(),
   UNISWAP_TRADING_API_KEY: z.string().optional(),
 
-  OG_NEWTON_RPC: z.string().url().default("https://evmrpc-testnet.0g.ai"),
-  OG_GALILEO_RPC: z.string().url().default("https://evmrpc.0g.ai"),
+  OG_GALILEO_RPC: z.string().url().default("https://evmrpc-testnet.0g.ai"),
   OG_INDEXER_RPC: z.string().url().default("https://indexer-storage-testnet-turbo.0g.ai"),
   OG_STORAGE_PRIVATE_KEY: z.string().optional(),
   OG_ANCHOR_PRIVATE_KEY: z.string().optional(),

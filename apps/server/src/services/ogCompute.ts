@@ -56,7 +56,7 @@ export class OgComputeClient {
     if (!config.OG_COMPUTE_PRIVATE_KEY) {
       throw new Error("OG_COMPUTE_PRIVATE_KEY not configured");
     }
-    const provider = new ethers.JsonRpcProvider(config.OG_NEWTON_RPC);
+    const provider = new ethers.JsonRpcProvider(config.OG_GALILEO_RPC);
     const wallet = new ethers.Wallet(config.OG_COMPUTE_PRIVATE_KEY, provider);
     this.broker = await createZGComputeNetworkBroker(wallet);
 

@@ -10,7 +10,7 @@ import { ogChain } from "../services/ogChain.js";
 //   1. recover the signer from the signature against the typed data
 //      and confirm it matches the claimed signer
 //   2. compute the typed-data digest (the hash that was actually signed)
-//   3. call LPDoctorAgent.recordMigration(tokenId, digest) on 0G Newton
+//   3. call LPDoctorAgent.recordMigration(tokenId, digest) on 0G Galileo
 //      so the iNFT's `migrationsTriggered` counter advances
 //
 // `tokenId` is the Uniswap LP NFT id the agent diagnosed; the digest

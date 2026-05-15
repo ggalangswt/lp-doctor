@@ -17,12 +17,12 @@ export interface UploadResult {
   stub: boolean;
 }
 
-const STORAGE_VIEW_BASE = "https://storagescan-newton.0g.ai/tx";
+const STORAGE_VIEW_BASE = "https://storagescan-galileo.0g.ai/tx";
 
 export class OgStorageClient {
   private indexer: Indexer | null = null;
   private signer: ethers.Wallet | null = null;
-  private rpcUrl = config.OG_NEWTON_RPC;
+  private rpcUrl = config.OG_GALILEO_RPC;
   private indexerRpc = config.OG_INDEXER_RPC;
 
   isReady(): boolean {
