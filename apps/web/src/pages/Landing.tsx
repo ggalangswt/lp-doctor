@@ -13,7 +13,7 @@ const HERO_STREAM: { n: string; name: string; label: string }[] = [
   { n: "06", name: "hook.replay (1k swaps)", label: "COMPUTED" },
 ];
 
-/* ── All 10 phases shown in the HOW section ───────────────────────── */
+/* ── All 9 phases shown in the HOW section ────────────────────────── */
 const ALL_PHASES: { n: string; name: string; label: string }[] = [
   { n: "01", name: "position.resolve",           label: "VERIFIED"  },
   { n: "03", name: "il.reconstruct",             label: "COMPUTED"  },
@@ -24,7 +24,6 @@ const ALL_PHASES: { n: string; name: string; label: string }[] = [
   { n: "10", name: "verdict.synthesize (TEE)",   label: "ESTIMATED" },
   { n: "08", name: "report.upload (0G)",         label: "VERIFIED"  },
   { n: "09", name: "anchor.0g-chain + iNFT update", label: "VERIFIED" },
-  { n: "11", name: "ens.publish (Sepolia)",      label: "VERIFIED"  },
 ];
 
 export function Landing() {
@@ -324,13 +323,13 @@ export function Landing() {
               {[
                 { name: "0G Labs",              sub: "AI-native L1 — TEE compute, storage, chain" },
                 { name: "Uniswap Foundation",   sub: "V3+V4 subgraphs, Trading API, Permit2" },
-                { name: "ENS Labs",             sub: "agent identity & output index" },
+                { name: "0G Chain",             sub: "report anchor + agent memory" },
                 { name: "ERC-7857",             sub: "iNFT standard for embedded intelligence" },
                 { name: "MCP",                  sub: "@modelcontextprotocol/sdk — agent-callable tools" },
                 { name: "0G APAC Hackathon 2026", sub: "Open Agents track" },
                 { name: "0G Labs",              sub: "AI-native L1 — TEE compute, storage, chain" },
                 { name: "Uniswap Foundation",   sub: "V3+V4 subgraphs, Trading API, Permit2" },
-                { name: "ENS Labs",             sub: "agent identity & output index" },
+                { name: "0G Chain",             sub: "report anchor + agent memory" },
                 { name: "ERC-7857",             sub: "iNFT standard for embedded intelligence" },
                 { name: "MCP",                  sub: "@modelcontextprotocol/sdk — agent-callable tools" },
                 { name: "0G APAC Hackathon 2026", sub: "Open Agents track" },
@@ -502,7 +501,7 @@ export function Landing() {
                 color: "var(--lp-ink)",
               }}
             >
-              Ten phases. Streamed live over SSE.
+              Nine phases. Streamed live over SSE.
             </h2>
             <p
               style={{
@@ -517,7 +516,7 @@ export function Landing() {
               watches in real time — position resolution, IL math, regime
               classification, hook discovery, swap-by-swap replay, migration
               preview, TEE verdict synthesis with hallucination guard, 0G
-              Storage upload, on-chain anchor, ENS publish.
+              Storage upload, and on-chain anchoring with agent memory updates.
             </p>
           </div>
 
@@ -527,7 +526,7 @@ export function Landing() {
         </div>
       </section>
 
-      {/* ── 5 · Five-path verification ────────────────────────────────── */}
+      {/* ── 5 · Four-path verification ────────────────────────────────── */}
       <section style={{ padding: "100px 36px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
@@ -662,7 +661,7 @@ export function Landing() {
                   { tag: "01", title: "mintLicense — 80/20 royalty", desc: "Pay 0.1 OG for a 24 h license to invoke gated MCP tools. Owner gets 80%, treasury 20%, automatic split." },
                   { tag: "02", title: "memoryRoot evolves per run",  desc: "Each diagnose updates agents(1).memoryRoot to the new 0G Storage blob." },
                   { tag: "03", title: "reputation + migrationsTriggered", desc: "Two on-chain counters move per run. recordMigration bumps when user signs." },
-                  { tag: "04", title: "6 MCP tools — 3 gated, 3 free", desc: "diagnose / preflight / migrate gated. lookupReport / lookupReportOnChain / resolveEnsRecord public." },
+                  { tag: "04", title: "5 MCP tools — 3 gated, 2 free", desc: "diagnose / preflight / migrate gated. lookupReport / lookupReportOnChain public." },
                 ].map((c) => (
                   <div
                     key={c.tag}
@@ -897,7 +896,7 @@ export function Landing() {
               },
               {
                 tag: "02 · HONESTY LAYER",
-                body: "Every numeric output carries one of five labels: VERIFIED, COMPUTED, ESTIMATED, EMULATED, LABELED. If the agent did not backtest a hook against the pool's real swaps, it says so. The hallucination guard fires before anchoring — unsupported claims never reach any of the five verification surfaces.",
+                body: "Every numeric output carries one of five labels: VERIFIED, COMPUTED, ESTIMATED, EMULATED, LABELED. If the agent did not backtest a hook against the pool's real swaps, it says so. The hallucination guard fires before anchoring — unsupported claims never reach any of the four verification surfaces.",
               },
               {
                 tag: "03 · V4 HOOK REPLAY, NOT HEURISTIC",
@@ -905,11 +904,11 @@ export function Landing() {
               },
               {
                 tag: "04 · SIGNED REPORT, NOT A SCREENSHOT",
-                body: "The verdict is a blob signed by a 0G Compute TEE-attested provider, pinned on 0G Storage, anchored on 0G Chain. Forwardable to a DAO. Verifiable offline by anyone with the rootHash and the registry address — no LP Doctor server in the trust path.",
+                body: "The verdict is a blob signed by a 0G Compute TEE-attested provider, pinned on 0G Storage, anchored on 0G Chain, and mirrored into agent memory. Forwardable to a DAO. Verifiable offline by anyone with the rootHash and the registry address — no LP Doctor server in the trust path.",
               },
               {
-                tag: "05 · ENS DOES REAL WORK",
-                body: "The agent's ENS name resolves its on-chain memory cursor. Five text records per diagnose key the rootHash, storageUrl, anchorTx, chainId, and verdict — indexed by Uniswap position tokenId. ENS becomes the queryable memory of the agent economy here. Not a vanity name.",
+                tag: "05 · MEMORY, NOT CHAT HISTORY",
+                body: "Each diagnose updates the agent's on-chain memory cursor, so the report becomes part of a persistent machine-readable state instead of a temporary UI event. The system keeps continuity without asking users to trust an off-chain session log.",
               },
             ].map((a) => (
               <AnchorEntry key={a.tag} tag={a.tag} body={a.body} />
@@ -1004,7 +1003,7 @@ export function Landing() {
               { name: "0G Chain",         sub: "LPDoctorReports + iNFT registry",   v: "purple"  as StickerVariant, rot: -1 },
               { name: "Uniswap V3 / V4",  sub: "mainnet · sepolia",                 v: "outline" as StickerVariant, rot: 3  },
               { name: "Permit2",          sub: "EIP-712 signed bundle",             v: "magenta" as StickerVariant, rot: -2 },
-              { name: "ENS",              sub: "pending ENS setup",                 v: "outline" as StickerVariant, rot: 4  },
+              { name: "Agent Memory",     sub: "persistent report cursor",          v: "outline" as StickerVariant, rot: 4  },
               { name: "ERC-7857",         sub: "iNFT agent identity",               v: "cobalt"  as StickerVariant, rot: -4 },
               { name: "MCP",              sub: "6 tools · agent-callable",          v: "yellow"  as StickerVariant, rot: 2  },
             ].map((t) => (
@@ -1333,8 +1332,7 @@ function VerificationPaths() {
     { n: "A", name: "LP Doctor REST",    sub: "GET /api/report/<rootHash>",          color: "var(--lp-purple)"  },
     { n: "B", name: "0G Chain registry", sub: "LPDoctorReports.reports(rootHash)",   color: "var(--lp-cobalt)"  },
     { n: "C", name: "iNFT memoryRoot",   sub: "agents(1).memoryRoot",                color: "var(--lp-cobalt)"  },
-    { n: "D", name: "ENS text record",   sub: "lpdoctor.<tokenId>.rootHash",         color: "var(--lp-magenta)" },
-    { n: "E", name: "0G Storage merkle", sub: "root re-derived from blob",           color: "var(--lp-cobalt)"  },
+    { n: "D", name: "0G Storage merkle", sub: "root re-derived from blob",           color: "var(--lp-cobalt)"  },
   ];
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);

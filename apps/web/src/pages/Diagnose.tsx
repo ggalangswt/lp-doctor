@@ -27,10 +27,6 @@ import {
   type VerdictMeta,
 } from "../components/VerdictPanel.js";
 import {
-  EnsPanel,
-  type EnsPublication,
-} from "../components/EnsPanel.js";
-import {
   HookScoringPanel,
   type HookScoringResult,
 } from "../components/HookScoringPanel.js";
@@ -62,7 +58,6 @@ const PHASES = [
   { phase: 8, code: "report.upload", label: "Upload report" },
   { phase: 9, code: "anchor.0g", label: "Anchor root" },
   { phase: 10, code: "verdict.synthesize", label: "TEE verdict" },
-  { phase: 11, code: "ens.publish", label: "Publish ENS" },
 ];
 
 function pickToolResult<T>(events: DiagnosticEvent[], tool: string): T | null {
@@ -144,7 +139,6 @@ export function Diagnose() {
   const provenance = pickReportUploaded(events);
   const anchor = pickReportAnchored(events);
   const verdict = pickVerdict(events);
-  const ensPublication = pickToolResult<EnsPublication>(events, "publishEnsRecords");
   const scoring = pickToolResult<HookScoringResult>(events, "scoreHook");
 
   const provenanceFullyVerified =
@@ -165,7 +159,6 @@ export function Diagnose() {
     if (migration) out.push("EMULATED");
     if (provenance) out.push(provenanceFullyVerified ? "VERIFIED" : "EMULATED");
     if (verdict) out.push(verdict.stub ? "EMULATED" : "ESTIMATED");
-    if (ensPublication) out.push(ensPublication.stub ? "EMULATED" : "VERIFIED");
     return out;
   }, [
     resolved,
@@ -176,14 +169,13 @@ export function Diagnose() {
     provenance,
     provenanceFullyVerified,
     verdict,
-    ensPublication,
   ]);
 
   const completed = PHASES.filter((p) => phaseState(events, p.phase) === "complete").length;
   const activePhase = PHASES.find((p) => phaseState(events, p.phase) === "active");
   const latestTool = toolEvents[toolEvents.length - 1];
   const hasEvidence =
-    ilBreakdown || regime || hooks || scoring || migration || provenance || verdict || ensPublication;
+    ilBreakdown || regime || hooks || scoring || migration || provenance || verdict;
 
   return (
     <div className="diagnose-theme">
@@ -285,7 +277,6 @@ export function Diagnose() {
               <ReportProvenancePanel provenance={provenance} anchor={anchor} />
             )}
             {verdict && <VerdictPanel verdict={verdict} />}
-            {ensPublication && <EnsPanel publication={ensPublication} />}
           </section>
 
           <aside className="diagnose-rail" aria-label="Live stream rail">
