@@ -6,23 +6,23 @@ import "../styles/landing.css";
 
 /* ── Live-stream phases shown in the hero window ──────────────────── */
 const HERO_STREAM: { n: string; name: string; label: string }[] = [
-  { n: "01", name: "position.resolve",      label: "VERIFIED" },
-  { n: "03", name: "il.reconstruct",        label: "COMPUTED" },
-  { n: "04", name: "regime.classify",       label: "ESTIMATED" },
-  { n: "05", name: "hooks.discover",        label: "LABELED" },
+  { n: "01", name: "position.resolve", label: "VERIFIED" },
+  { n: "03", name: "il.reconstruct", label: "COMPUTED" },
+  { n: "04", name: "regime.classify", label: "ESTIMATED" },
+  { n: "05", name: "hooks.discover", label: "LABELED" },
   { n: "06", name: "hook.replay (1k swaps)", label: "COMPUTED" },
 ];
 
 /* ── All 9 phases shown in the HOW section ────────────────────────── */
 const ALL_PHASES: { n: string; name: string; label: string }[] = [
-  { n: "01", name: "position.resolve",           label: "VERIFIED"  },
-  { n: "03", name: "il.reconstruct",             label: "COMPUTED"  },
-  { n: "04", name: "regime.classify",            label: "ESTIMATED" },
-  { n: "05", name: "hooks.discover",             label: "LABELED"   },
-  { n: "06", name: "hook.replay (1k swaps)",     label: "COMPUTED"  },
-  { n: "07", name: "migration.preview",          label: "COMPUTED"  },
-  { n: "10", name: "verdict.synthesize (TEE)",   label: "ESTIMATED" },
-  { n: "08", name: "report.upload (0G)",         label: "VERIFIED"  },
+  { n: "01", name: "position.resolve", label: "VERIFIED" },
+  { n: "03", name: "il.reconstruct", label: "COMPUTED" },
+  { n: "04", name: "regime.classify", label: "ESTIMATED" },
+  { n: "05", name: "hooks.discover", label: "LABELED" },
+  { n: "06", name: "hook.replay (1k swaps)", label: "COMPUTED" },
+  { n: "07", name: "migration.preview", label: "COMPUTED" },
+  { n: "10", name: "verdict.synthesize (TEE)", label: "ESTIMATED" },
+  { n: "08", name: "report.upload (0G)", label: "VERIFIED" },
   { n: "09", name: "anchor.0g-chain + iNFT update", label: "VERIFIED" },
 ];
 
@@ -165,7 +165,7 @@ export function Landing() {
                   }}
                 >
                   <button className="lp-btn-primary" onClick={() => nav("/atlas")}>
-                    Connect wallet <PixelArrow />
+                    Open the Atlas <PixelArrow />
                   </button>
                   <button
                     className="lp-btn-ghost"
@@ -321,17 +321,17 @@ export function Landing() {
           <div className="lp-marquee-wrap" style={{ flex: 1 }}>
             <div className="lp-marquee-track">
               {[
-                { name: "0G Labs",              sub: "AI-native L1 — TEE compute, storage, chain" },
-                { name: "Uniswap Foundation",   sub: "V3+V4 subgraphs, Trading API, Permit2" },
-                { name: "0G Chain",             sub: "report anchor + agent memory" },
-                { name: "ERC-7857",             sub: "iNFT standard for embedded intelligence" },
-                { name: "MCP",                  sub: "@modelcontextprotocol/sdk — agent-callable tools" },
+                { name: "0G Labs", sub: "AI-native L1 — TEE compute, storage, chain" },
+                { name: "Uniswap Foundation", sub: "V3+V4 subgraphs, Trading API, Permit2" },
+                { name: "0G Chain", sub: "report anchor + agent memory" },
+                { name: "ERC-7857", sub: "iNFT standard for embedded intelligence" },
+                { name: "MCP", sub: "@modelcontextprotocol/sdk — agent-callable tools" },
                 { name: "0G APAC Hackathon 2026", sub: "Open Agents track" },
-                { name: "0G Labs",              sub: "AI-native L1 — TEE compute, storage, chain" },
-                { name: "Uniswap Foundation",   sub: "V3+V4 subgraphs, Trading API, Permit2" },
-                { name: "0G Chain",             sub: "report anchor + agent memory" },
-                { name: "ERC-7857",             sub: "iNFT standard for embedded intelligence" },
-                { name: "MCP",                  sub: "@modelcontextprotocol/sdk — agent-callable tools" },
+                { name: "0G Labs", sub: "AI-native L1 — TEE compute, storage, chain" },
+                { name: "Uniswap Foundation", sub: "V3+V4 subgraphs, Trading API, Permit2" },
+                { name: "0G Chain", sub: "report anchor + agent memory" },
+                { name: "ERC-7857", sub: "iNFT standard for embedded intelligence" },
+                { name: "MCP", sub: "@modelcontextprotocol/sdk — agent-callable tools" },
                 { name: "0G APAC Hackathon 2026", sub: "Open Agents track" },
               ].map((p, i) => (
                 <MarqueeItem key={i} name={p.name} sub={p.sub} />
@@ -664,7 +664,7 @@ export function Landing() {
               >
                 {[
                   { tag: "01", title: "mintLicense — 80/20 royalty", desc: "Pay 0.1 OG for a 24 h license to invoke gated MCP tools. Owner gets 80%, treasury 20%, automatic split." },
-                  { tag: "02", title: "memoryRoot evolves per run",  desc: "Each diagnose updates agents(1).memoryRoot to the new 0G Storage blob." },
+                  { tag: "02", title: "memoryRoot evolves per run", desc: "Each diagnose updates agents(1).memoryRoot to the new 0G Storage blob." },
                   { tag: "03", title: "reputation + migrationsTriggered", desc: "Two on-chain counters move per run. recordMigration bumps when user signs." },
                   { tag: "04", title: "5 MCP tools — 3 gated, 2 free", desc: "diagnose / preflight / migrate gated. lookupReport / lookupReportOnChain public." },
                 ].map((c) => (
@@ -1003,14 +1003,14 @@ export function Landing() {
             }}
           >
             {[
-              { name: "0G Compute",       sub: "TEE · broker-attested",             v: "purple"  as StickerVariant, rot: -3 },
-              { name: "0G Storage",       sub: "merkle rootHash anchored",           v: "cobalt"  as StickerVariant, rot: 2  },
-              { name: "0G Chain",         sub: "LPDoctorReports + iNFT registry",   v: "purple"  as StickerVariant, rot: -1 },
-              { name: "Uniswap V3 / V4",  sub: "live pools · permit2",              v: "outline" as StickerVariant, rot: 3  },
-              { name: "Permit2",          sub: "EIP-712 signed bundle",             v: "magenta" as StickerVariant, rot: -2 },
-              { name: "Agent Memory",     sub: "persistent report cursor",          v: "outline" as StickerVariant, rot: 4  },
-              { name: "ERC-7857",         sub: "iNFT agent identity",               v: "cobalt"  as StickerVariant, rot: -4 },
-              { name: "MCP",              sub: "5 tools · agent-callable",          v: "yellow"  as StickerVariant, rot: 2  },
+              { name: "0G Compute", sub: "TEE · broker-attested", v: "purple" as StickerVariant, rot: -3 },
+              { name: "0G Storage", sub: "merkle rootHash anchored", v: "cobalt" as StickerVariant, rot: 2 },
+              { name: "0G Chain", sub: "LPDoctorReports + iNFT registry", v: "purple" as StickerVariant, rot: -1 },
+              { name: "Uniswap V3 / V4", sub: "live pools · permit2", v: "outline" as StickerVariant, rot: 3 },
+              { name: "Permit2", sub: "EIP-712 signed bundle", v: "magenta" as StickerVariant, rot: -2 },
+              { name: "Agent Memory", sub: "persistent report cursor", v: "outline" as StickerVariant, rot: 4 },
+              { name: "ERC-7857", sub: "iNFT agent identity", v: "cobalt" as StickerVariant, rot: -4 },
+              { name: "MCP", sub: "5 tools · agent-callable", v: "yellow" as StickerVariant, rot: 2 },
             ].map((t) => (
               <div
                 key={t.name}
@@ -1328,10 +1328,10 @@ function ScrollPhasePanel({ phases }: { phases: typeof ALL_PHASES }) {
 /* ── Verification path cards ──────────────────────────────────────── */
 function VerificationPaths() {
   const paths = [
-    { n: "A", name: "LP Doctor REST",    sub: "GET /api/report/<rootHash>",          color: "var(--lp-purple)"  },
-    { n: "B", name: "0G Chain registry", sub: "LPDoctorReports.reports(rootHash)",   color: "var(--lp-cobalt)"  },
-    { n: "C", name: "iNFT memoryRoot",   sub: "agents(1).memoryRoot",                color: "var(--lp-cobalt)"  },
-    { n: "D", name: "0G Storage merkle", sub: "root re-derived from blob",           color: "var(--lp-cobalt)"  },
+    { n: "A", name: "LP Doctor REST", sub: "GET /api/report/<rootHash>", color: "var(--lp-purple)" },
+    { n: "B", name: "0G Chain registry", sub: "LPDoctorReports.reports(rootHash)", color: "var(--lp-cobalt)" },
+    { n: "C", name: "iNFT memoryRoot", sub: "agents(1).memoryRoot", color: "var(--lp-cobalt)" },
+    { n: "D", name: "0G Storage merkle", sub: "root re-derived from blob", color: "var(--lp-cobalt)" },
   ];
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -1696,11 +1696,11 @@ function WindowPanel({ title, children, style, className, onClick }: WindowPanel
 }
 
 const PHASE_TONE: Record<string, string> = {
-  VERIFIED:  "lp-tone-verified",
-  COMPUTED:  "lp-tone-computed",
+  VERIFIED: "lp-tone-verified",
+  COMPUTED: "lp-tone-computed",
   ESTIMATED: "lp-tone-estimated",
-  EMULATED:  "lp-tone-emulated",
-  LABELED:   "lp-tone-labeled",
+  EMULATED: "lp-tone-emulated",
+  LABELED: "lp-tone-labeled",
 };
 
 function LpPhaseRow({
