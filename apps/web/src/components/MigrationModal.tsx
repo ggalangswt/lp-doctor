@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "./ConnectButton.js";
@@ -42,6 +42,30 @@ function shortHash(s: string): string {
   if (s.length <= 18) return s;
   return `${s.slice(0, 10)}…${s.slice(-6)}`;
 }
+
+const MODAL_THEME_VARS = {
+  "--diagnose-base": "oklch(0.97 0.018 300)",
+  "--diagnose-base-deep": "oklch(0.93 0.026 300)",
+  "--diagnose-surface": "oklch(0.985 0.012 300)",
+  "--diagnose-surface-2": "oklch(0.955 0.018 300)",
+  "--diagnose-ink": "oklch(0.15 0.042 288)",
+  "--diagnose-ink-soft": "oklch(0.28 0.04 288)",
+  "--diagnose-ink-faint": "oklch(0.50 0.035 288)",
+  "--diagnose-purple": "oklch(0.50 0.26 296)",
+  "--diagnose-magenta": "oklch(0.60 0.27 348)",
+  "--diagnose-cobalt": "oklch(0.50 0.23 258)",
+  "--diagnose-neon": "oklch(0.90 0.20 99)",
+  "--diagnose-bleed": "oklch(0.62 0.24 24)",
+  "--diagnose-healthy": "oklch(0.70 0.20 145)",
+  "--diagnose-toxic": "oklch(0.78 0.19 88)",
+  "--diagnose-border": "oklch(0.18 0.04 290)",
+  "--diagnose-border-soft": "oklch(0.18 0.04 290 / 0.14)",
+  "--diagnose-border-mid": "oklch(0.18 0.04 290 / 0.24)",
+  "--diagnose-shadow": "5px 5px 0 oklch(0.18 0.04 290)",
+  "--diagnose-shadow-sm": "3px 3px 0 oklch(0.18 0.04 290)",
+  "--font-display": "\"Barlow Condensed\", \"Space Grotesk\", system-ui, sans-serif",
+  "--font-mono": "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, monospace",
+} as CSSProperties;
 
 export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
   const { isConnected } = useAccount();
@@ -98,6 +122,7 @@ export function MigrationModal({ preview, lpTokenId, onClose }: Props) {
     <div
       onClick={onClose}
       style={{
+        ...MODAL_THEME_VARS,
         position: "fixed",
         inset: 0,
         zIndex: 100,
