@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "lpdoctor": {
+      "command": "node",
+      "args": [
+        "/ABSOLUTE/PATH/TO/LP-Doctor/apps/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "LPDOCTOR_API_URL": "https://lp-doctor-mainnet.up.railway.app",
+        "LPDOCTOR_AGENT_CONTRACT": "0xE9446bC93d430e431F204611206B11633aD96F94",
+        "LPDOCTOR_REPORTS_CONTRACT": "0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7",
+        "LPDOCTOR_AGENT_TOKEN_ID": "1",
+        "OG_GALILEO_RPC": "https://evmrpc.0g.ai"
+      }
+    }
+  }
+}
