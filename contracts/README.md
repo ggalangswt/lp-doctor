@@ -1,8 +1,8 @@
 # LPDoctor Contracts
 
-Solidity 0.8.24, Foundry. For current testing, target **0G Galileo testnet**
-(`chainId = 16602`, RPC `https://evmrpc-testnet.0g.ai`). Older Newton
-references in this repo are legacy.
+Solidity 0.8.24, Foundry. The live deployment target is **0G Mainnet**
+(`chainId = 16661`, RPC `https://evmrpc.0g.ai`). Older Galileo / Newton
+references in the repo are historical.
 
 ## Layout
 
@@ -22,10 +22,10 @@ forge build
 forge test -vv
 ```
 
-## Deploy (0G Galileo testnet)
+## Deploy (0G Mainnet)
 
 ```bash
-export OG_GALILEO_RPC=https://evmrpc-testnet.0g.ai
+export OG_GALILEO_RPC=https://evmrpc.0g.ai
 export WALLET_DEPLOYER_PK=0x...
 
 forge script script/Deploy.s.sol \
@@ -45,11 +45,8 @@ the project root `.env` as `LPDOCTOR_REPORTS_CONTRACT`,
 
 - ERC-7857 (iNFT) draft — modeled on the Alpha Dawg reference impl
   with the licensing + memory-hash extensions.
-- 0G's current public testnet is Galileo. Official 0G docs and 0G's
-  April 23, 2025 announcement say Galileo is a clean replacement for
-  Newton and contracts should be redeployed there.
-- The live Galileo RPC `https://evmrpc-testnet.0g.ai` returned
-  `eth_chainId = 0x40da` on May 15, 2026, i.e. `16602`. If you see
-  `16601` in older guides, prefer the RPC truth.
+- The live 0G Mainnet RPC `https://evmrpc.0g.ai` returns
+  `eth_chainId = 16661`. If you see old Galileo / Newton values in
+  historical docs, prefer the RPC truth.
 - `viem` is fine for read paths, but for contract deployment we still
   prefer Foundry's native cheatcodes over ad-hoc runtime RPC plumbing.

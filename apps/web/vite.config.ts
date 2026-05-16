@@ -18,7 +18,7 @@ function readGitTag(): string {
   }
 }
 
-const DEFAULT_API_BASE_URL = "https://lp-doctor-production.up.railway.app";
+const DEFAULT_API_BASE_URL = "https://lp-doctor-mainnet.up.railway.app";
 
 function resolveApiBaseUrl(mode: string): string {
   const env = loadEnv(mode, "../../", "");
@@ -28,14 +28,18 @@ function resolveApiBaseUrl(mode: string): string {
     DEFAULT_API_BASE_URL;
   const trimmed = raw.trim();
   if (!trimmed) return DEFAULT_API_BASE_URL;
-  if (trimmed.includes("localhost:3001")) return DEFAULT_API_BASE_URL;
+  if (
+    trimmed.includes("localhost:3001") ||
+    trimmed.includes("lp-doctor-production.up.railway.app")
+  ) {
+    return DEFAULT_API_BASE_URL;
+  }
   return trimmed.replace(/\/+$/, "");
 }
 
 // Load env from the workspace root so VITE_LPDOCTOR_AGENT_CONTRACT,
-// VITE_LPDOCTOR_API_URL, VITE_OG_GALILEO_RPC etc. resolved by /agent +
-// /developers + usePermit2Migration come from the same .env the
-// server reads — single source of truth across server + web.
+// VITE_LPDOCTOR_API_URL, VITE_OG_GALILEO_RPC etc. resolved by /agent
+// and the main diagnostic surfaces come from the same env source.
 export default defineConfig(({ mode }) => {
   const apiBaseUrl = resolveApiBaseUrl(mode);
 

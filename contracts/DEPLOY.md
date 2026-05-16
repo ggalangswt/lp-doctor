@@ -1,18 +1,17 @@
-# Deploy LPDoctor contracts to 0G Galileo testnet
+# Deploy LPDoctor contracts to 0G Mainnet
 
-As of May 15, 2026, 0G's current public testnet is **Galileo**. Newton is
-legacy/deprecated, so treat any old Newton deployment in this repo as
-historical only and redeploy your own contracts on Galileo.
+This repo now targets **0G Mainnet** for the live LP Doctor deployment.
+Treat old Galileo / Newton examples in the repo as historical only.
 
-One-liner — deploy `LPDoctorReports` and `LPDoctorAgent` to Galileo testnet
-(`chainId = 16602`):
+One-liner — deploy `LPDoctorReports` and `LPDoctorAgent` to 0G Mainnet
+(`chainId = 16661`):
 
 ```bash
 cd contracts
 
-# Required: a deployer key with at least a small amount of test 0G on Galileo
+# Required: a deployer key with enough 0G for mainnet contract deployment
 export WALLET_DEPLOYER_PK=0x...
-export OG_GALILEO_RPC=https://evmrpc-testnet.0g.ai
+export OG_GALILEO_RPC=https://evmrpc.0g.ai
 
 # Optional: mint the agent iNFT in the same tx, with a code-image hash
 # (32 bytes hex). Leave unset to skip the mint and call `LPDoctorAgent.mint`
@@ -48,16 +47,15 @@ cast call $LPDOCTOR_REPORTS_CONTRACT \
 
 If you anchored at least one report, the count goes up by one per call to `publishReport`.
 
-## Galileo network details
+## Mainnet network details
 
-- Chain name: `0G Galileo Testnet`
-- RPC URL: `https://evmrpc-testnet.0g.ai`
-- Chain ID: `16602`
+- Chain name: `0G Mainnet`
+- RPC URL: `https://evmrpc.0g.ai`
+- Chain ID: `16661`
 
-This chain ID was verified directly against the live RPC
-`https://evmrpc-testnet.0g.ai` via `eth_chainId` on May 15, 2026. Some
-older 0G docs and community references still show `16601`; treat those
-as stale.
+This chain ID should be verified directly against the live RPC
+`https://evmrpc.0g.ai` via `eth_chainId` before broadcasting if you want
+an extra sanity check.
 
 ## Re-deploying / migrating
 

@@ -3,8 +3,8 @@
 LP Doctor is an AI-native diagnostic copilot for Uniswap liquidity providers. It explains why an LP position is underperforming, simulates better V4 hook alternatives, and turns the result into a verifiable report backed by the 0G stack.
 
 **Live frontend:** https://lpdoctor.vercel.app/  
-**Live backend:** https://lp-doctor-production.up.railway.app  
-**Current public demo mode:** Ethereum mainnet for Uniswap data + 0G Galileo for report persistence, anchoring, and agent memory
+**Live backend:** https://lp-doctor-mainnet.up.railway.app  
+**Current public demo mode:** Ethereum mainnet for Uniswap data + 0G Mainnet for report persistence, anchoring, and agent memory
 
 ## Why This Project Matters
 
@@ -118,8 +118,8 @@ That ordering is intentional: the verdict is generated before storage upload so 
 ### Public URLs
 
 - Frontend: `https://lpdoctor.vercel.app/`
-- Backend API: `https://lp-doctor-production.up.railway.app`
-- Health: `https://lp-doctor-production.up.railway.app/health`
+- Backend API: `https://lp-doctor-mainnet.up.railway.app`
+- Health: `https://lp-doctor-mainnet.up.railway.app/health`
 
 ### Fastest Reviewer Test
 
@@ -128,15 +128,15 @@ These URLs are enough to confirm the product is live:
 - `https://lpdoctor.vercel.app/atlas`
 - `https://lpdoctor.vercel.app/diagnose/605311`
 - `https://lpdoctor.vercel.app/agent`
-- `https://lp-doctor-production.up.railway.app/health`
+- `https://lp-doctor-mainnet.up.railway.app/health`
 
 ### Deployed Contracts Used By The Current Demo
 
 | Network | Contract | Address |
 | --- | --- | --- |
-| 0G Galileo (`16602`) | `LPDoctorReports` | `0x9803BE5349EeDF7C28aC1914b743757ce043b7cC` |
-| 0G Galileo (`16602`) | `LPDoctorAgent` | `0xe8701E0C2cdb6708d98343572E63CFe7118A62C8` |
-| 0G Galileo (`16602`) | Agent token ID | `1` |
+| 0G Mainnet (`16661`) | `LPDoctorReports` | `0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7` |
+| 0G Mainnet (`16661`) | `LPDoctorAgent` | `0xE9446bC93d430e431F204611206B11633aD96F94` |
+| 0G Mainnet (`16661`) | Agent token ID | `1` |
 
 ### Public API Endpoints
 
@@ -248,7 +248,7 @@ If the 0G signing keys are missing, LP Doctor still runs, but the relevant adapt
 
 ### Faucet / Funding Note
 
-For reviewers who want to reproduce the full write-path locally, the backend wallets need funded 0G Galileo balances. Use the current official 0G Galileo faucet / docs for testnet funding before retrying the diagnose flow with real `0G` write adapters enabled.
+For reviewers who want to reproduce the full write-path locally, the backend wallets need funded 0G Mainnet balances. Make sure the runtime wallet has enough 0G for compute bootstrap, storage uploads, on-chain anchors, and agent memory updates before retrying the diagnose flow with real `0G` write adapters enabled.
 
 ## MCP Server
 
@@ -274,9 +274,9 @@ See [apps/mcp-server/README.md](apps/mcp-server/README.md) for configuration det
 
 ## Current Limitations
 
-- The public demo currently uses **Ethereum mainnet** for Uniswap reads and **0G Galileo** for report writes.
+- The public demo currently uses **Ethereum mainnet** for Uniswap reads and **0G Mainnet** for report writes.
 - The migration flow builds Permit2 typed data and records the signed digest, but it does not execute the swap bundle on the user's behalf.
-- The frontend is mainnet-facing in presentation, but the currently deployed 0G write-path is still the Galileo demo environment.
+- The live backend is now running against the mainnet LPDoctor contracts and mainnet 0G adapters.
 
 ## License
 

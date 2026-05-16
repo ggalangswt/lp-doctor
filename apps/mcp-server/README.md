@@ -34,11 +34,11 @@ The current MCP server exposes **6 tools total**:
 Typical runtime variables:
 
 ```env
-LPDOCTOR_API_URL=https://lp-doctor-production.up.railway.app
-LPDOCTOR_AGENT_CONTRACT=0xe8701E0C2cdb6708d98343572E63CFe7118A62C8
-LPDOCTOR_REPORTS_CONTRACT=0x9803BE5349EeDF7C28aC1914b743757ce043b7cC
+LPDOCTOR_API_URL=https://lp-doctor-mainnet.up.railway.app
+LPDOCTOR_AGENT_CONTRACT=0xE9446bC93d430e431F204611206B11633aD96F94
+LPDOCTOR_REPORTS_CONTRACT=0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7
 LPDOCTOR_AGENT_TOKEN_ID=1
-OG_GALILEO_RPC=https://evmrpc-testnet.0g.ai
+OG_GALILEO_RPC=https://evmrpc.0g.ai
 ```
 
 ## Local Run
@@ -64,11 +64,11 @@ Add an MCP server entry similar to this:
         "/absolute/path/to/LP-Doctor/apps/mcp-server/dist/index.js"
       ],
       "env": {
-        "LPDOCTOR_API_URL": "https://lp-doctor-production.up.railway.app",
-        "LPDOCTOR_AGENT_CONTRACT": "0xe8701E0C2cdb6708d98343572E63CFe7118A62C8",
-        "LPDOCTOR_REPORTS_CONTRACT": "0x9803BE5349EeDF7C28aC1914b743757ce043b7cC",
+        "LPDOCTOR_API_URL": "https://lp-doctor-mainnet.up.railway.app",
+        "LPDOCTOR_AGENT_CONTRACT": "0xE9446bC93d430e431F204611206B11633aD96F94",
+        "LPDOCTOR_REPORTS_CONTRACT": "0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7",
         "LPDOCTOR_AGENT_TOKEN_ID": "1",
-        "OG_GALILEO_RPC": "https://evmrpc-testnet.0g.ai"
+        "OG_GALILEO_RPC": "https://evmrpc.0g.ai"
       }
     }
   }

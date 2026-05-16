@@ -10,8 +10,8 @@ import {
   type Address,
 } from "viem";
 
-const DEFAULT_RPC = "https://evmrpc-testnet.0g.ai";
-const DEFAULT_CHAIN_ID = 16602;
+const DEFAULT_RPC = "https://evmrpc.0g.ai";
+const DEFAULT_CHAIN_ID = 16661;
 
 const LPDOCTOR_AGENT_READ_ABI = [
   {
@@ -101,7 +101,7 @@ export class OnchainClient {
   private publicClient() {
     const chain = defineChain({
       id: this.cfg.chainId,
-      name: "0G Galileo Testnet",
+      name: "0G Mainnet",
       nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
       rpcUrls: { default: { http: [this.cfg.rpcUrl] } },
     });

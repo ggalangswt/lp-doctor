@@ -3,7 +3,7 @@
 This document is the judge-facing walkthrough for the current LP Doctor build. It is optimized for a short hackathon demo that highlights both product value and 0G integration.
 
 - Frontend: `https://lpdoctor.vercel.app/`
-- Backend: `https://lp-doctor-production.up.railway.app`
+- Backend: `https://lp-doctor-mainnet.up.railway.app`
 
 ## Suggested 3-Minute Demo Script
 
@@ -110,6 +110,6 @@ pnpm dev:web
 
 ## Judge Notes
 
-- The current public deployment uses Ethereum mainnet data for Uniswap reads and 0G Galileo for the write path.
+- The current public deployment uses Ethereum mainnet data for Uniswap reads and 0G Mainnet for the write path.
 - If 0G signer keys are missing in a local setup, the write adapters fall back to deterministic stubs and the UI labels that output accordingly.
 - The current build does **not** depend on ENS.

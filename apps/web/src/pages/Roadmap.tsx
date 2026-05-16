@@ -67,13 +67,13 @@ function PixelArrow() {
 const PHASES = [
   {
     phase: "NOW",
-    version: "v0.1 · Galileo Testnet",
+    version: "v0.1 · 0G Mainnet",
     label: "SHIPPED",
     labelVariant: "healthy" as const,
     accent: "var(--lp-healthy)",
     sticker: "yellow" as StickerVariant,
     stickerText: "LIVE",
-    description: "Hackathon demo on 0G Galileo testnet. Core diagnostic pipeline running end-to-end with real chain data.",
+    description: "Hackathon demo on 0G Mainnet. Core diagnostic pipeline is running end-to-end with real chain data and live 0G write-paths.",
     items: [
       { done: true,  text: "LP NFT resolution from Uniswap subgraph" },
       { done: true,  text: "IL reconstruction from tick range + sqrtPriceX96" },
@@ -82,10 +82,9 @@ const PHASES = [
       { done: true,  text: "Migration preview with Permit2 bundle" },
       { done: true,  text: "Verdict synthesis inside 0G Compute TEE" },
       { done: true,  text: "Report upload to 0G Storage" },
-      { done: true,  text: "On-chain anchor tx on 0G Galileo" },
-      { done: true,  text: "ENS text record publication (Sepolia)" },
+      { done: true,  text: "On-chain anchor tx on 0G Mainnet" },
       { done: true,  text: "ERC-7857 iNFT — memoryRoot + reputation + counter" },
-      { done: true,  text: "MCP server: 6 tools (3 gated, 3 free)" },
+      { done: true,  text: "MCP server: 5 product tools + ping" },
       { done: true,  text: "Atlas wallet scanner + 6 demo wallets" },
       { done: true,  text: "Five verification paths from one rootHash" },
     ],
@@ -106,7 +105,7 @@ const PHASES = [
       { done: false, text: "Batch diagnosis: scan full wallet in one run" },
       { done: false, text: "Range re-entry signals: alert when out-of-range positions can be rebalanced profitably" },
       { done: false, text: "mintLicense revenue live: 0.1 OG / 24h with 80/20 split" },
-      { done: false, text: "0G Galileo mainnet iNFT upgrade" },
+      { done: false, text: "Expanded mainnet agent monetization + license flows" },
       { done: false, text: "Diagnose history: per-wallet report timeline" },
       { done: false, text: "IPFS pinning for all anchored reports" },
     ],
@@ -198,7 +197,8 @@ export function Roadmap() {
           }}
         >
           LP Doctor is hackathon-native, but not hackathon-shaped. Phase 1 ships the
-          full diagnostic pipeline on testnet. Phase 2 brings real execution on mainnet.
+          full diagnostic pipeline on mainnet. Phase 2 brings real execution and richer
+          automation on top of that base.
           Phase 3 turns LP Doctor into infrastructure for the agent economy.
         </p>
       </section>
@@ -376,7 +376,7 @@ export function Roadmap() {
           Diagnose a real position.
         </h2>
         <p style={{ margin: "0 auto 32px", maxWidth: "42ch", fontSize: 14, color: "var(--lp-ink-soft)", lineHeight: 1.6 }}>
-          The full pipeline is running on 0G Galileo testnet. Paste a tokenId or pick
+          The full pipeline is running on 0G Mainnet. Paste a tokenId or pick
           a demo wallet.
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>

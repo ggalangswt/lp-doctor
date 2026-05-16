@@ -36,7 +36,7 @@ Production requests must hit the deployed backend directly. The frontend resolve
 
 1. `VITE_LPDOCTOR_API_URL`
 2. `VITE_API_URL`
-3. fallback: `https://lp-doctor-production.up.railway.app`
+3. fallback: `https://lp-doctor-mainnet.up.railway.app`
 
 This is important because Vite's local dev proxy only exists in development. In Vercel / static hosting, relative `/api/...` requests would otherwise hit the frontend origin and fail.
 

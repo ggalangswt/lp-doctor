@@ -51,8 +51,8 @@ export interface LookupReportOnChainResult {
   error?: string;
 }
 
-const DEFAULT_CHAIN_ID = 16602;
-const DEFAULT_RPC = "https://evmrpc-testnet.0g.ai";
+const DEFAULT_CHAIN_ID = 16661;
+const DEFAULT_RPC = "https://evmrpc.0g.ai";
 const DEFAULT_REPORTS =
   process.env.LPDOCTOR_REPORTS_CONTRACT ?? "";
 
@@ -77,7 +77,7 @@ export async function lookupReportOnChain(
   try {
     const chain = defineChain({
       id: chainId,
-      name: "0G Galileo Testnet",
+      name: "0G Mainnet",
       nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
       rpcUrls: { default: { http: [rpcUrl] } },
     });
@@ -140,11 +140,11 @@ export const lookupReportOnChainToolDefinition = {
       },
       rpcUrl: {
         type: "string",
-        description: "0G RPC URL. Defaults to https://evmrpc-testnet.0g.ai.",
+        description: "0G RPC URL. Defaults to https://evmrpc.0g.ai.",
       },
       chainId: {
         type: "number",
-        description: "0G chain id. Defaults to 16602 (Galileo testnet).",
+        description: "0G chain id. Defaults to 16661 (0G Mainnet).",
       },
     },
     required: ["rootHash"],

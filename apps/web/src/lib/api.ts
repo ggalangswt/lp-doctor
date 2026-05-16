@@ -2,14 +2,18 @@
 // /api and /health to the configured backend base URL. In production we must
 // hit the deployed backend directly.
 
-const DEFAULT_API_BASE_URL = "https://lp-doctor-production.up.railway.app";
+const DEFAULT_API_BASE_URL = "https://lp-doctor-mainnet.up.railway.app";
 
 export function resolveApiBaseUrl(): string {
   const raw =
     (import.meta.env.VITE_LPDOCTOR_API_URL as string | undefined) ??
     (import.meta.env.VITE_API_URL as string | undefined) ??
     DEFAULT_API_BASE_URL;
-  if (!raw.trim() || raw.includes("localhost:3001")) {
+  if (
+    !raw.trim() ||
+    raw.includes("localhost:3001") ||
+    raw.includes("lp-doctor-production.up.railway.app")
+  ) {
     return DEFAULT_API_BASE_URL;
   }
   return raw.replace(/\/+$/, "");

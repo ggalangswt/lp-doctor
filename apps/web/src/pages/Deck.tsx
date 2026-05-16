@@ -89,7 +89,6 @@ const PHASES = [
   { n: "10", name: "verdict.synthesize (TEE)",   label: "ESTIMATED", color: "var(--lp-toxic)" },
   { n: "08", name: "report.upload (0G Storage)", label: "VERIFIED",  color: "var(--lp-cobalt)" },
   { n: "09", name: "anchor.0g-chain + iNFT",     label: "VERIFIED",  color: "var(--lp-cobalt)" },
-  { n: "11", name: "ens.publish (Sepolia)",       label: "VERIFIED",  color: "var(--lp-cobalt)" },
 ];
 
 const STACK = [
@@ -98,8 +97,8 @@ const STACK = [
   { name: "0G Compute",    role: "TEE execution — verdict signed inside enclave", variant: "cobalt" as StickerVariant },
   { name: "ERC-7857",      role: "iNFT agent identity — memoryRoot on chain",  variant: "magenta" as StickerVariant },
   { name: "Uniswap V4",    role: "Hook discovery + swap replay against hooks", variant: "purple" as StickerVariant },
-  { name: "ENS",           role: "Agent memory cursor — 5 text records/run",   variant: "purple" as StickerVariant },
-  { name: "MCP",           role: "6 tools — 3 gated, 3 free — agent-callable", variant: "yellow" as StickerVariant },
+  { name: "Agent Memory",  role: "ERC-7857 memoryRoot + reputation updated on-chain", variant: "purple" as StickerVariant },
+  { name: "MCP",           role: "5 product tools + ping — agent-callable", variant: "yellow" as StickerVariant },
   { name: "Permit2",       role: "EIP-712 migration bundle — user keeps custody", variant: "magenta" as StickerVariant },
 ];
 
@@ -113,7 +112,7 @@ const OG_INTEGRATIONS = [
   {
     index: "B",
     title: "0G Chain anchor tx",
-    body: "After upload, the agent submits an on-chain tx on 0G Galileo storing the rootHash, storageUrl, tokenId, and verdict. The tx hash becomes the second verification path.",
+    body: "After upload, the agent submits an on-chain tx on 0G Mainnet storing the rootHash, storageUrl, tokenId, and verdict. The tx hash becomes the second verification path.",
     color: "var(--lp-cobalt)",
   },
   {
@@ -124,8 +123,8 @@ const OG_INTEGRATIONS = [
   },
   {
     index: "D",
-    title: "ERC-7857 iNFT on 0G Galileo",
-    body: "LP Doctor/01 is an autonomous agent NFT on 0G Galileo. Its memoryRoot evolves per diagnosis, reputation increments per run, and migrationsTriggered bumps when users sign Permit2 bundles.",
+    title: "ERC-7857 iNFT on 0G Mainnet",
+    body: "LP Doctor/01 is an autonomous agent NFT on 0G Mainnet. Its memoryRoot evolves per diagnosis, reputation increments per run, and migrationsTriggered bumps when users sign Permit2 bundles.",
     color: "var(--lp-magenta)",
   },
 ];
@@ -133,9 +132,9 @@ const OG_INTEGRATIONS = [
 const VERIFY_PATHS = [
   { id: "A", label: "0G Storage URL",     method: "Re-fetch blob, hash the JSON, compare rootHash" },
   { id: "B", label: "0G Chain anchor tx", method: "Read tx calldata or event, extract rootHash" },
-  { id: "C", label: "ENS text record",    method: "resolveEnsRecord MCP tool or eth_call on Sepolia" },
+  { id: "C", label: "REST report cache",  method: "Fetch by rootHash from LP Doctor API and compare anchor fields" },
   { id: "D", label: "IPFS CID",           method: "Fetch via any IPFS gateway, recompute SHA-256" },
-  { id: "E", label: "iNFT memoryRoot",    method: "agents(1).memoryRoot on 0G Galileo = latest blob" },
+  { id: "E", label: "iNFT memoryRoot",    method: "agents(1).memoryRoot on 0G Mainnet = latest blob" },
 ];
 
 /* ─── Page ──────────────────────────────────────────────────────────── */
@@ -191,7 +190,7 @@ export function Deck() {
             An autonomous diagnostic agent for Uniswap V3 and V4 LPs. It explains
             why a position is bleeding, simulates V4 hooks against real swap history,
             and publishes a verifiable signed report anchored to 0G Storage, 0G Chain,
-            ENS, and an ERC-7857 iNFT.
+            and an ERC-7857 iNFT.
           </p>
 
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 32 }}>
@@ -339,7 +338,7 @@ export function Deck() {
               {
                 n: "3",
                 title: "Anchor",
-                body: "Sign the verdict inside a 0G Compute TEE. Upload the report to 0G Storage. Anchor rootHash on 0G Chain. Publish five ENS text records. Update the ERC-7857 iNFT memoryRoot. Five verification paths, one rootHash.",
+                body: "Sign the verdict inside a 0G Compute TEE. Upload the report to 0G Storage. Anchor rootHash on 0G Chain. Update the ERC-7857 iNFT memoryRoot. Multiple independent verification paths, one rootHash.",
                 color: "var(--lp-cobalt)",
               },
             ].map((c, i) => (

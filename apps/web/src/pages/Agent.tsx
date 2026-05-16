@@ -81,15 +81,6 @@ const MCP_TOOLS = [
   { name: "migrate",            gated: true,  desc: "Trigger migration preview + Permit2 bundle for a diagnosed position." },
   { name: "lookupReport",       gated: false, desc: "Fetch a signed report by rootHash from 0G Storage or IPFS." },
   { name: "lookupReportOnChain",gated: false, desc: "Resolve report anchor from 0G Chain tx by rootHash." },
-  { name: "resolveEnsRecord",   gated: false, desc: "Resolve ENS text records for lpdoctor.<tokenId>.* on Sepolia." },
-];
-
-const ENS_RECORDS = [
-  { key: "lpdoctor.<tokenId>.rootHash",    value: "SHA-256 report root" },
-  { key: "lpdoctor.<tokenId>.storageUrl",  value: "0G Storage blob URL" },
-  { key: "lpdoctor.<tokenId>.anchorTx",    value: "0G Chain anchor tx hash" },
-  { key: "lpdoctor.<tokenId>.chainId",     value: "Chain that was diagnosed" },
-  { key: "lpdoctor.<tokenId>.verdict",     value: "HEALTHY / DRIFTING / BLEEDING" },
 ];
 
 /* ─── Page ──────────────────────────────────────────────────────────── */
@@ -97,8 +88,8 @@ const ENS_RECORDS = [
 export function Agent() {
   const { data, loading, error } = useAgentLiveState();
 
-  const explorerBase = "https://chainscan-galileo.0g.ai";
-  const contractUrl  = `${explorerBase}/address/${data?.contract ?? "0x938f3B7841b3faCbBE967F90B548d991e9882c6C"}`;
+  const explorerBase = "https://chainscan.0g.ai";
+  const contractUrl  = `${explorerBase}/address/${data?.contract ?? "0xE9446bC93d430e431F204611206B11633aD96F94"}`;
 
   return (
     <div className="landing-theme" style={{ minHeight: "100vh" }}>
@@ -118,8 +109,8 @@ export function Agent() {
       >
         <div style={{ display: "flex", alignItems: "flex-start", gap: 24, flexWrap: "wrap", marginBottom: 16 }}>
           <StickerBadge variant="magenta">ERC-7857</StickerBadge>
-          <StickerBadge variant="cobalt">0G GALILEO</StickerBadge>
-          <StickerBadge variant="yellow">TESTNET · LIVE</StickerBadge>
+          <StickerBadge variant="cobalt">0G MAINNET</StickerBadge>
+          <StickerBadge variant="yellow">LIVE · ONCHAIN</StickerBadge>
         </div>
 
         <Cap style={{ marginBottom: 12 }}>AGENT IDENTITY · LP DOCTOR/01</Cap>
@@ -149,7 +140,7 @@ export function Agent() {
             lineHeight: 1.65,
           }}
         >
-          LP Doctor/01 is an ERC-7857 autonomous agent on 0G Galileo. Its memoryRoot,
+          LP Doctor/01 is an ERC-7857 autonomous agent on 0G Mainnet. Its memoryRoot,
           reputation counter, and migrationsTriggered all move on chain with every
           diagnosis. This page reads them live — no server in the trust path.
         </p>
@@ -218,7 +209,7 @@ export function Agent() {
           {/* Detail rows */}
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             {[
-              { label: "CONTRACT",       value: data?.contract ?? "0x938f3B7841b3faCbBE967F90B548d991e9882c6C", href: contractUrl, mono: true },
+              { label: "CONTRACT",       value: data?.contract ?? "0xE9446bC93d430e431F204611206B11633aD96F94", href: contractUrl, mono: true },
               { label: "TOKEN ID",       value: data ? `#${data.tokenId}` : "#1",           href: undefined, mono: true },
               { label: "OWNER",          value: data?.owner ?? "…",                          href: data?.owner ? `${explorerBase}/address/${data.owner}` : undefined, mono: true },
               { label: "MEMORY ROOT",    value: data?.memoryRoot ? shortHex(data.memoryRoot) : "…", href: undefined, mono: true },
@@ -381,7 +372,7 @@ export function Agent() {
         </WindowPanel>
 
         {/* MCP tools table */}
-        <WindowPanel title="mcp.tools · 6 registered">
+        <WindowPanel title="mcp.tools · 5 product tools">
           <div
             style={{
               display: "grid",
@@ -471,76 +462,6 @@ export function Agent() {
                   </span>
                 </div>
               </>
-            ))}
-          </div>
-        </WindowPanel>
-      </section>
-
-      {/* ── ENS identity ──────────────────────────────────────────────── */}
-      <section
-        style={{
-          position: "relative",
-          zIndex: 1,
-          padding: "0 36px 60px",
-          maxWidth: 1280,
-          margin: "0 auto",
-        }}
-      >
-        <WindowPanel title="ens.identity · lpdoctor.eth on Sepolia">
-          <p
-            style={{
-              margin: "0 0 16px",
-              fontSize: 13,
-              color: "var(--lp-ink-soft)",
-              lineHeight: 1.6,
-              maxWidth: "72ch",
-            }}
-          >
-            LP Doctor resolves its agent memory through ENS text records. After each
-            diagnosis, five records are published under the agent's ENS name, keyed by
-            the Uniswap tokenId. Any user or agent can query them without trusting LP
-            Doctor's server.
-          </p>
-          <div
-            style={{
-              border: "1.5px solid var(--lp-border-soft)",
-              borderRadius: 2,
-              overflow: "hidden",
-            }}
-          >
-            {/* Table header */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(260px,1fr) 1fr",
-                background: "var(--lp-base-deep)",
-                borderBottom: "1.5px solid var(--lp-border)",
-              }}
-            >
-              <div style={{ padding: "7px 14px", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--lp-ink-ghost)" }}>
-                ENS TEXT RECORD KEY
-              </div>
-              <div style={{ padding: "7px 14px", borderLeft: "1px solid var(--lp-border-soft)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--lp-ink-ghost)" }}>
-                VALUE
-              </div>
-            </div>
-            {ENS_RECORDS.map(({ key, value }, i) => (
-              <div
-                key={key}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(260px,1fr) 1fr",
-                  borderBottom: i < ENS_RECORDS.length - 1 ? "1px solid var(--lp-border-soft)" : "none",
-                  background: i % 2 === 0 ? "transparent" : "color-mix(in oklch, var(--lp-purple) 2%, transparent)",
-                }}
-              >
-                <div style={{ padding: "9px 14px", fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lp-cobalt)" }}>
-                  {key}
-                </div>
-                <div style={{ padding: "9px 14px", borderLeft: "1px solid var(--lp-border-soft)", fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lp-ink-faint)" }}>
-                  {value}
-                </div>
-              </div>
             ))}
           </div>
         </WindowPanel>

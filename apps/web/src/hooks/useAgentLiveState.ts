@@ -13,22 +13,29 @@ import {
 // a screenshot. No-op (returns null) when the contract address isn't
 // configured at build time.
 
-// Defaults match the live deployment on 0G Galileo — env overrides win
-// when a redeploy points the page at a fresh contract.
+// Defaults match the live mainnet deployment — env overrides win when
+// a redeploy points the page at a fresh contract.
 const DEFAULT_AGENT_CONTRACT =
-  "0x938f3B7841b3faCbBE967F90B548d991e9882c6C" as Address;
+  "0xE9446bC93d430e431F204611206B11633aD96F94" as Address;
+const rawAgentAddress =
+  import.meta.env.VITE_LPDOCTOR_AGENT_CONTRACT as string | undefined;
 const AGENT_ADDRESS = (
-  import.meta.env.VITE_LPDOCTOR_AGENT_CONTRACT ?? DEFAULT_AGENT_CONTRACT
+  !rawAgentAddress ||
+  rawAgentAddress.toLowerCase() ===
+    "0xe8701e0c2cdb6708d98343572e63cfe7118a62c8"
+    ? DEFAULT_AGENT_CONTRACT
+    : rawAgentAddress
 ) as Address;
 const AGENT_TOKEN_ID = BigInt(
   (import.meta.env.VITE_LPDOCTOR_AGENT_TOKEN_ID as string | undefined) ?? "1",
 );
+const rawRpc = import.meta.env.VITE_OG_GALILEO_RPC as string | undefined;
 const NEWTON_RPC =
-  (import.meta.env.VITE_OG_GALILEO_RPC as string | undefined) ??
-  "https://evmrpc-testnet.0g.ai";
-const NEWTON_CHAIN_ID = Number(
-  (import.meta.env.VITE_OG_CHAIN_ID as string | undefined) ?? "16602",
-);
+  !rawRpc || rawRpc.includes("testnet")
+    ? "https://evmrpc.0g.ai"
+    : rawRpc;
+const rawChainId = (import.meta.env.VITE_OG_CHAIN_ID as string | undefined) ?? "16661";
+const NEWTON_CHAIN_ID = Number(rawChainId === "16602" ? "16661" : rawChainId);
 
 const ABI = [
   {
@@ -65,7 +72,7 @@ const ABI = [
 
 const newtonChain = defineChain({
   id: NEWTON_CHAIN_ID,
-  name: "0G Galileo Testnet",
+  name: "0G Mainnet",
   nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
   rpcUrls: { default: { http: [NEWTON_RPC] } },
 });
