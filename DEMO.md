@@ -110,6 +110,6 @@ pnpm dev:web
 
 ## Judge Notes
 
-- The current public deployment uses Ethereum mainnet data for Uniswap reads and 0G Mainnet for the write path.
+- The current public deployment uses Ethereum mainnet data for Uniswap reads and 0G Aristotle Mainnet for the write path.
 - If 0G signer keys are missing in a local setup, the write adapters fall back to deterministic stubs and the UI labels that output accordingly.
 - The current build does **not** depend on ENS.

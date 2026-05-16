@@ -66,7 +66,7 @@ const TOOLS: ToolRow[] = [
     access: "FREE",
     price: "FREE",
     description:
-      "Reads LPDoctorReports directly on 0G Mainnet to verify that a given rootHash was anchored onchain.",
+      "Reads LPDoctorReports directly on 0G Aristotle Mainnet to verify that a given rootHash was anchored onchain.",
   },
 ];
 
@@ -136,7 +136,7 @@ export function Developers() {
           />
           <MetricCard
             title="Mainnet backend"
-            value="0G Mainnet + Ethereum reads"
+            value="Aristotle Mainnet + Ethereum reads"
             desc="MCP calls the live backend instead of duplicating pipeline logic."
           />
           <MetricCard
@@ -227,7 +227,7 @@ export function Developers() {
             <code>caller</code> when invoking gated tools.
           </p>
           <pre style={codeBlock()}>
-{`# 1. mint a 24 h license on 0G Mainnet
+{`# 1. mint a 24 h license on 0G Aristotle Mainnet
 cast send ${AGENT_CONTRACT} \\
   "mintLicense(uint256,address,uint64)" \\
   ${AGENT_TOKEN_ID} <yourAddress> $(($(date +%s) + 86400)) \\

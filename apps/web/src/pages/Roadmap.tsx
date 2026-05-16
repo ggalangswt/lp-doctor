@@ -67,13 +67,13 @@ function PixelArrow() {
 const PHASES = [
   {
     phase: "NOW",
-    version: "v0.1 · 0G Mainnet",
+    version: "v0.1 · Aristotle Mainnet",
     label: "SHIPPED",
     labelVariant: "healthy" as const,
     accent: "var(--lp-healthy)",
     sticker: "yellow" as StickerVariant,
     stickerText: "LIVE",
-    description: "Hackathon demo on 0G Mainnet. Core diagnostic pipeline is running end-to-end with real chain data and live 0G write-paths.",
+    description: "Hackathon demo on 0G Aristotle Mainnet. Core diagnostic pipeline is running end-to-end with real chain data and live 0G write-paths.",
     items: [
       { done: true,  text: "LP NFT resolution from Uniswap subgraph" },
       { done: true,  text: "IL reconstruction from tick range + sqrtPriceX96" },
@@ -82,7 +82,7 @@ const PHASES = [
       { done: true,  text: "Migration preview with Permit2 bundle" },
       { done: true,  text: "Verdict synthesis inside 0G Compute TEE" },
       { done: true,  text: "Report upload to 0G Storage" },
-      { done: true,  text: "On-chain anchor tx on 0G Mainnet" },
+      { done: true,  text: "On-chain anchor tx on 0G Aristotle Mainnet" },
       { done: true,  text: "ERC-7857 iNFT — memoryRoot + reputation + counter" },
       { done: true,  text: "MCP server: 5 product tools + ping" },
       { done: true,  text: "Atlas wallet scanner + 6 demo wallets" },
@@ -197,7 +197,7 @@ export function Roadmap() {
           }}
         >
           LP Doctor is hackathon-native, but not hackathon-shaped. Phase 1 ships the
-          full diagnostic pipeline on mainnet. Phase 2 brings real execution and richer
+          full diagnostic pipeline on Aristotle Mainnet. Phase 2 brings real execution and richer
           automation on top of that base.
           Phase 3 turns LP Doctor into infrastructure for the agent economy.
         </p>
@@ -376,7 +376,7 @@ export function Roadmap() {
           Diagnose a real position.
         </h2>
         <p style={{ margin: "0 auto 32px", maxWidth: "42ch", fontSize: 14, color: "var(--lp-ink-soft)", lineHeight: 1.6 }}>
-          The full pipeline is running on 0G Mainnet. Paste a tokenId or pick
+          The full pipeline is running on 0G Aristotle Mainnet. Paste a tokenId or pick
           a demo wallet.
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>

@@ -4,7 +4,7 @@ LP Doctor is an AI-native diagnostic copilot for Uniswap liquidity providers. It
 
 **Live frontend:** https://lpdoctor.vercel.app/  
 **Live backend:** https://lp-doctor-mainnet.up.railway.app  
-**Current public demo mode:** Ethereum mainnet for Uniswap data + 0G Mainnet for report persistence, anchoring, and agent memory
+**Current public demo mode:** Ethereum mainnet for Uniswap data + 0G Aristotle Mainnet for report persistence, anchoring, and agent memory
 
 ## Why This Project Matters
 
@@ -134,9 +134,9 @@ These URLs are enough to confirm the product is live:
 
 | Network | Contract | Address |
 | --- | --- | --- |
-| 0G Mainnet (`16661`) | `LPDoctorReports` | `0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7` |
-| 0G Mainnet (`16661`) | `LPDoctorAgent` | `0xE9446bC93d430e431F204611206B11633aD96F94` |
-| 0G Mainnet (`16661`) | Agent token ID | `1` |
+| 0G Aristotle Mainnet (`16661`) | `LPDoctorReports` | `0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7` |
+| 0G Aristotle Mainnet (`16661`) | `LPDoctorAgent` | `0xE9446bC93d430e431F204611206B11633aD96F94` |
+| 0G Aristotle Mainnet (`16661`) | Agent token ID | `1` |
 
 ### Public API Endpoints
 
@@ -248,7 +248,7 @@ If the 0G signing keys are missing, LP Doctor still runs, but the relevant adapt
 
 ### Faucet / Funding Note
 
-For reviewers who want to reproduce the full write-path locally, the backend wallets need funded 0G Mainnet balances. Make sure the runtime wallet has enough 0G for compute bootstrap, storage uploads, on-chain anchors, and agent memory updates before retrying the diagnose flow with real `0G` write adapters enabled.
+For reviewers who want to reproduce the full write-path locally, the backend wallets need funded 0G Aristotle Mainnet balances. Make sure the runtime wallet has enough 0G for compute bootstrap, storage uploads, on-chain anchors, and agent memory updates before retrying the diagnose flow with real `0G` write adapters enabled.
 
 ## MCP Server
 
@@ -274,7 +274,7 @@ See [apps/mcp-server/README.md](apps/mcp-server/README.md) for configuration det
 
 ## Current Limitations
 
-- The public demo currently uses **Ethereum mainnet** for Uniswap reads and **0G Mainnet** for report writes.
+- The public demo currently uses **Ethereum mainnet** for Uniswap reads and **0G Aristotle Mainnet** for report writes.
 - The migration flow builds Permit2 typed data and records the signed digest, but it does not execute the swap bundle on the user's behalf.
 - The live backend is now running against the mainnet LPDoctor contracts and mainnet 0G adapters.
 

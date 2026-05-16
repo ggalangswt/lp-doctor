@@ -112,7 +112,7 @@ const OG_INTEGRATIONS = [
   {
     index: "B",
     title: "0G Chain anchor tx",
-    body: "After upload, the agent submits an on-chain tx on 0G Mainnet storing the rootHash, storageUrl, tokenId, and verdict. The tx hash becomes the second verification path.",
+    body: "After upload, the agent submits an on-chain tx on 0G Aristotle Mainnet storing the rootHash, storageUrl, tokenId, and verdict. The tx hash becomes the second verification path.",
     color: "var(--lp-cobalt)",
   },
   {
@@ -123,8 +123,8 @@ const OG_INTEGRATIONS = [
   },
   {
     index: "D",
-    title: "ERC-7857 iNFT on 0G Mainnet",
-    body: "LP Doctor/01 is an autonomous agent NFT on 0G Mainnet. Its memoryRoot evolves per diagnosis, reputation increments per run, and migrationsTriggered bumps when users sign Permit2 bundles.",
+    title: "ERC-7857 iNFT on Aristotle Mainnet",
+    body: "LP Doctor/01 is an autonomous agent NFT on 0G Aristotle Mainnet. Its memoryRoot evolves per diagnosis, reputation increments per run, and migrationsTriggered bumps when users sign Permit2 bundles.",
     color: "var(--lp-magenta)",
   },
 ];
@@ -134,7 +134,7 @@ const VERIFY_PATHS = [
   { id: "B", label: "0G Chain anchor tx", method: "Read tx calldata or event, extract rootHash" },
   { id: "C", label: "REST report cache",  method: "Fetch by rootHash from LP Doctor API and compare anchor fields" },
   { id: "D", label: "IPFS CID",           method: "Fetch via any IPFS gateway, recompute SHA-256" },
-  { id: "E", label: "iNFT memoryRoot",    method: "agents(1).memoryRoot on 0G Mainnet = latest blob" },
+  { id: "E", label: "iNFT memoryRoot",    method: "agents(1).memoryRoot on 0G Aristotle Mainnet = latest blob" },
 ];
 
 /* ─── Page ──────────────────────────────────────────────────────────── */

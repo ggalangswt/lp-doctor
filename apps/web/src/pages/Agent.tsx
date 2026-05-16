@@ -109,7 +109,7 @@ export function Agent() {
       >
         <div style={{ display: "flex", alignItems: "flex-start", gap: 24, flexWrap: "wrap", marginBottom: 16 }}>
           <StickerBadge variant="magenta">ERC-7857</StickerBadge>
-          <StickerBadge variant="cobalt">0G MAINNET</StickerBadge>
+          <StickerBadge variant="cobalt">ARISTOTLE MAINNET</StickerBadge>
           <StickerBadge variant="yellow">LIVE · ONCHAIN</StickerBadge>
         </div>
 
@@ -140,7 +140,7 @@ export function Agent() {
             lineHeight: 1.65,
           }}
         >
-          LP Doctor/01 is an ERC-7857 autonomous agent on 0G Mainnet. Its memoryRoot,
+          LP Doctor/01 is an ERC-7857 autonomous agent on 0G Aristotle Mainnet. Its memoryRoot,
           reputation counter, and migrationsTriggered all move on chain with every
           diagnosis. This page reads them live — no server in the trust path.
         </p>

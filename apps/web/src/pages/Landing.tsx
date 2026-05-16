@@ -181,7 +181,7 @@ export function Landing() {
                     variant="purple"
                     style={{ transform: "rotate(-2deg)", display: "inline-flex" }}
                   >
-                    0G APAC HACKATHON 2026 · MAINNET PATH
+                    0G APAC HACKATHON 2026 · ARISTOTLE MAINNET
                   </StickerBadge>
                 </div>
               </div>
@@ -970,7 +970,7 @@ export function Landing() {
               Open the Atlas <PixelArrow />
             </button>
             <StickerBadge variant="magenta" style={{ transform: "rotate(-3deg)" }}>
-              MAINNET PATH
+              ARISTOTLE MAINNET
             </StickerBadge>
           </div>
         </div>
@@ -1070,7 +1070,7 @@ export function Landing() {
                 color: "oklch(0.97 0.015 300 / 0.5)",
               }}
             >
-              MAINNET PATH
+              ARISTOTLE MAINNET
             </span>
             <StickerBadge
               variant="yellow"
