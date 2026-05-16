@@ -17,7 +17,10 @@ export interface UploadResult {
   stub: boolean;
 }
 
-const STORAGE_VIEW_BASE = "https://storagescan-galileo.0g.ai/tx";
+const STORAGE_VIEW_BASE =
+  config.OG_CHAIN_ID === 16661
+    ? "https://storagescan.0g.ai/tx"
+    : "https://storagescan-galileo.0g.ai/tx";
 
 export class OgStorageClient {
   private indexer: Indexer | null = null;

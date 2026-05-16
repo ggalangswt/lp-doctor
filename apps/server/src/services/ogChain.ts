@@ -18,9 +18,9 @@ import { logger } from "../logger.js";
 // puts the hash on chain but without the registry indexing. Last fallback
 // is a deterministic stub — used when no signing key is set.
 
-const zeroGGalileo = defineChain({
+const zeroGChain = defineChain({
   id: config.OG_CHAIN_ID,
-  name: "0G Galileo Testnet",
+  name: config.OG_CHAIN_ID === 16661 ? "0G Mainnet" : "0G Galileo Testnet",
   nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
   rpcUrls: { default: { http: [config.OG_GALILEO_RPC] } },
 });
@@ -34,7 +34,10 @@ export interface AnchorReceipt {
   stub: boolean;
 }
 
-const EXPLORER_BASE = "https://chainscan-galileo.0g.ai/tx";
+const EXPLORER_BASE =
+  config.OG_CHAIN_ID === 16661
+    ? "https://chainscan.0g.ai/tx"
+    : "https://chainscan-galileo.0g.ai/tx";
 
 const LPDOCTOR_REPORTS_ABI = [
   {
@@ -160,11 +163,11 @@ export class OgChainClient {
     );
     const wallet = createWalletClient({
       account,
-      chain: zeroGGalileo,
+      chain: zeroGChain,
       transport: http(),
     });
     const publicClient = createPublicClient({
-      chain: zeroGGalileo,
+      chain: zeroGChain,
       transport: http(),
     });
 
@@ -193,7 +196,7 @@ export class OgChainClient {
         });
       }
 
-      // 0G Galileo blocks are fast but RPC propagation can lag. Generous
+      // 0G blocks are fast but RPC propagation can lag. Generous
       // timeout + slow polling avoids "tx not yet on a block" races.
       const receipt = await publicClient.waitForTransactionReceipt({
         hash: txHash,
@@ -298,15 +301,15 @@ export class OgChainClient {
       const account = privateKeyToAccount(
         normalizeHex(config.OG_ANCHOR_PRIVATE_KEY),
       );
-      const wallet = createWalletClient({
-        account,
-        chain: zeroGGalileo,
-        transport: http(),
-      });
-      const publicClient = createPublicClient({
-        chain: zeroGGalileo,
-        transport: http(),
-      });
+        const wallet = createWalletClient({
+          account,
+          chain: zeroGChain,
+          transport: http(),
+        });
+        const publicClient = createPublicClient({
+          chain: zeroGChain,
+          transport: http(),
+        });
       const agentAddr = contract as Hex;
       const before = await this.readAgentState(publicClient, agentAddr, tokenId);
 
@@ -441,15 +444,15 @@ export class OgChainClient {
       const account = privateKeyToAccount(
         normalizeHex(config.OG_ANCHOR_PRIVATE_KEY),
       );
-      const wallet = createWalletClient({
-        account,
-        chain: zeroGGalileo,
-        transport: http(),
-      });
-      const publicClient = createPublicClient({
-        chain: zeroGGalileo,
-        transport: http(),
-      });
+        const wallet = createWalletClient({
+          account,
+          chain: zeroGChain,
+          transport: http(),
+        });
+        const publicClient = createPublicClient({
+          chain: zeroGChain,
+          transport: http(),
+        });
       const agentAddr = contract as Hex;
 
       const txHash = await wallet.writeContract({

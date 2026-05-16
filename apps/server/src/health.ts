@@ -25,6 +25,7 @@ export interface HealthInputs {
 }
 
 export function buildHealthResponse(input: HealthInputs) {
+  const network = input.chainId === 16661 ? "0g-mainnet" : "0g-galileo";
   const readPathStatus: HealthState =
     input.subgraphV3Ready && input.subgraphV4Ready ? "ready" : "degraded";
   const writePathStatus: HealthState =
@@ -50,7 +51,7 @@ export function buildHealthResponse(input: HealthInputs) {
       writePath: writePathStatus,
     },
     chain: {
-      network: "0g-galileo",
+      network,
       chainId: input.chainId,
       rpc: input.galileoRpcConfigured ? "configured" : "missing",
       reportsContract: input.reportsContractConfigured
