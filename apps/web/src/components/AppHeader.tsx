@@ -31,6 +31,10 @@ const NAV: NavItem[] = [
     label: "Agent",
   },
   {
+    to: "/developers",
+    label: "Developers",
+  },
+  {
     to: "/deck",
     label: "Deck",
   },

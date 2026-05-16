@@ -1,6 +1,6 @@
 # @lpdoctor/mcp-server
 
-Model Context Protocol server for LP Doctor. It exposes the product as typed tools over stdio so Claude Desktop, Cursor, or other MCP-aware agents can call the LP Doctor backend.
+Model Context Protocol server for LP Doctor. It exposes the product as typed tools over stdio so Claude Desktop, Cursor, or other MCP-aware agents can call the live LP Doctor backend.
 
 ## Tool Surface
 
@@ -51,6 +51,8 @@ pnpm --filter @lpdoctor/mcp-server start
 
 The transport is stdio.
 
+Hosted MCP is not live yet. Today the supported mode is local self-hosting via STDIO.
+
 ## Claude Desktop Example
 
 Add an MCP server entry similar to this:
@@ -99,5 +101,7 @@ You should see all 6 tools in the response.
 ## Design Notes
 
 - The MCP server does not replace the LP Doctor backend; it wraps it.
+- The free surface is `ping`, `lookupReport`, and `lookupReportOnChain`.
+- The gated surface is `diagnose`, `preflight`, and `migrate`, enforced by `LPDoctorAgent.isLicensed`.
 - `lookupReportOnChain` is the trust-minimized verification path.
 - `migrate` prepares typed data only. It does not submit transactions on behalf of the user.
