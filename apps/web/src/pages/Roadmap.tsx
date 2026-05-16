@@ -91,15 +91,14 @@ const PHASES = [
   },
   {
     phase: "NEXT",
-    version: "v0.2 · Mainnet Launch",
+    version: "v0.2 · Execution Expansion",
     label: "PLANNED",
     labelVariant: "cobalt" as const,
     accent: "var(--lp-cobalt)",
     sticker: "cobalt" as StickerVariant,
     stickerText: "Q3 2026",
-    description: "Mainnet deployment with execution capabilities. Real migrations, real fees, expanded hook coverage.",
+    description: "The base mainnet stack is already live. The next phase adds real execution, richer coverage, and broader monetization on top of the Aristotle deployment.",
     items: [
-      { done: false, text: "Mainnet deployment on Ethereum + 0G" },
       { done: false, text: "Real Permit2 migration execution (not preview-only)" },
       { done: false, text: "Expanded V4 hook registry: 10+ hook families" },
       { done: false, text: "Batch diagnosis: scan full wallet in one run" },
@@ -197,8 +196,8 @@ export function Roadmap() {
           }}
         >
           LP Doctor is hackathon-native, but not hackathon-shaped. Phase 1 ships the
-          full diagnostic pipeline on Aristotle Mainnet. Phase 2 brings real execution and richer
-          automation on top of that base.
+          full diagnostic pipeline on Aristotle Mainnet. Phase 2 focuses on execution
+          and richer automation on top of that base.
           Phase 3 turns LP Doctor into infrastructure for the agent economy.
         </p>
       </section>

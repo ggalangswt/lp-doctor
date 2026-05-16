@@ -1,9 +1,9 @@
-# Deploy LPDoctor contracts to 0G Mainnet
+# Deploy LPDoctor contracts to 0G Aristotle Mainnet
 
-This repo now targets **0G Mainnet** for the live LP Doctor deployment.
+This repo now targets **0G Aristotle Mainnet** for the live LP Doctor deployment.
 Treat old Galileo / Newton examples in the repo as historical only.
 
-One-liner — deploy `LPDoctorReports` and `LPDoctorAgent` to 0G Mainnet
+One-liner — deploy `LPDoctorReports` and `LPDoctorAgent` to 0G Aristotle Mainnet
 (`chainId = 16661`):
 
 ```bash
@@ -49,7 +49,7 @@ If you anchored at least one report, the count goes up by one per call to `publi
 
 ## Mainnet network details
 
-- Chain name: `0G Mainnet`
+- Chain name: `0G Aristotle Mainnet`
 - RPC URL: `https://evmrpc.0g.ai`
 - Chain ID: `16661`
 
@@ -61,6 +61,10 @@ an extra sanity check.
 
 The contracts use no proxies on purpose — the registry is append-only and the iNFT is non-upgradeable. To redeploy, change `LPDOCTOR_REPORTS_CONTRACT` / `LPDOCTOR_AGENT_CONTRACT` in `.env`; the old contracts stay on chain and remain queryable by their previous address.
 
-## What if I don't have a deployer key?
+## Live deployed addresses
 
-Skip the deploy. The server's `ogChain` adapter falls back to a raw self-tx with the rootHash as calldata when `LPDOCTOR_REPORTS_CONTRACT` is empty — the rootHash still hits 0G Chain, just without the per-tokenId index. Panels label themselves accordingly so the demo is honest about what's contract-anchored vs raw-tx-anchored.
+- `LPDoctorReports`: `0x23Ce8A133B96a0186B8f2cB547553DfF00a3CBd7`
+- `LPDoctorAgent`: `0xE9446bC93d430e431F204611206B11633aD96F94`
+- `tokenId`: `1`
+
+These are the contracts currently used by the public mainnet backend.
